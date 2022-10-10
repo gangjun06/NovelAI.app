@@ -30,7 +30,7 @@ export const TagCard = ({ title, text }: Props) => {
       className={classNames(
         "border shadow-sm rounded-sm px-4 py-4",
         darkMode
-          ? "bg-zinc-700/50 border-zinc-800 text-gray-300"
+          ? "bg-zinc-700/50 border-zinc-600 text-gray-300"
           : "bg-white border-gray-300"
       )}
     >
