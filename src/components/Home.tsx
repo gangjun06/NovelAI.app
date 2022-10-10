@@ -88,7 +88,7 @@ export const Home: NextPage = () => {
         }}
       >
         <div className="bg-slate-50 min-h-full pb-4">
-          <header className="pt-32">
+          <header className="pt-32 px-4">
             <h1 className="text-center text-4xl font-bold">
               NovelAI 태그 생성기
             </h1>
@@ -97,7 +97,8 @@ export const Home: NextPage = () => {
                 본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
               </b>
               <br />
-              NovelAI 사용시 유용한 태그를 찾는 사이트입니다.
+              NovelAI 사용시 유용한 태그를 찾는 사이트입니다.{" "}
+              <a href="https://arca.live/b/aiart/60305526">태그출처</a>
               <br />
               아직 개발 중이며 로드맵은{" "}
               <a href="https://github.com/gangjun06/NovelAI-helper/issues/1">
@@ -148,7 +149,7 @@ export const Home: NextPage = () => {
                 ))}
               </div>
             </section>
-            <section className="mt-4 grid grid-cols-4 gap-4">
+            <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
               {filtered.map(({ id, category, subCategory, name, tags }) => (
                 <TagCard
                   key={id}

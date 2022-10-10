@@ -45,7 +45,7 @@ export const ResultBar = () => {
         <Droppable droppableId="result-bar" direction="horizontal">
           {(provided, snapshot) => (
             <div
-              className="w-full flex items-center px-6 flex-grow"
+              className="w-full flex items-center px-6 flex-grow gap-y-2 overflow-x-scroll"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -92,7 +92,7 @@ export const ResultBar = () => {
           )}
         </Droppable>
       )}
-      <div className="mr-6 flex gap-x-3">
+      <div className="flex gap-x-3">
         <button
           className={classNames(
             "transition text-black rounded px-4 py-1.5 shadow-sm flex-none",
@@ -107,7 +107,7 @@ export const ResultBar = () => {
         </button>
         <button
           className={classNames(
-            "transition rounded px-4 py-1.5 shadow-sm flex-none",
+            "transition rounded px-4 py-1.5 shadow-sm flex-none mr-6",
             promptList.length < 1
               ? "bg-gray-100 text-gray-400"
               : "bg-primary-600 hover:bg-primary-700 text-white"
