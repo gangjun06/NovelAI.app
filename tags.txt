@@ -1,3 +1,7 @@
+작화/화질 : 옵션1 NSFW, masterpiece, masterpiece*portrait
+작화/화질 : 옵션2 highres, high_quality, high_quality_anime, high_resolution
+작화/화질 : 옵션3 sidelighting, super detail, hyper detail, intricate_details, detailed *sth*
+작화/화질 : 옵션4 poorly_drawn, bad_hands, bad_feet, bad_anatomy, bad_proportions
 작화/화풍 : 게임 CG game_cg
 작화/화풍 : 미소녀 bishoujo
 작화/화풍 : 픽셀 pixel_art

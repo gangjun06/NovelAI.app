@@ -19,3 +19,7 @@ input.copy-to-clipboard {
   top: 0;
   left: 0;
 }
+
+a {
+  @apply text-primary-800;
+}

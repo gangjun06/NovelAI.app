@@ -96,8 +96,40 @@ export const Home: NextPage = () => {
       >
         <div className="bg-slate-50 min-h-full pb-4">
           <header className="pt-32">
-            <h1 className="text-center text-4xl font-bold">NovelAI 태그찾기</h1>
-            <div></div>
+            <h1 className="text-center text-4xl font-bold">
+              NovelAI 태그 생성기
+            </h1>
+            <div className="text-center text-gray-800 mt-1">
+              <b>
+                본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
+              </b>
+              <br />
+              NovelAI 사용시 유용한 태그를 찾는 사이트입니다.
+              <br />
+              아직 개발 중이며 로드맵은{" "}
+              <a href="https://github.com/gangjun06/novelai-helper">
+                이곳
+              </a>{" "}
+              에서 보실 수 있습니다.
+              <br />
+              <div className="flex gap-3 justify-center mt-1">
+                <a href="mailto:me@gangjun.dev">문의</a>
+                <a
+                  href="https://github.com/gangjun06"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  소스코드(깃허브)
+                </a>
+                <a
+                  href="https://toss.me/gangjun"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  개발자에게 커피 선물하기
+                </a>
+              </div>
+            </div>
           </header>
           <main className="container mx-auto px-4 mt-8">
             <section className="flex w-full items-center flex-col">

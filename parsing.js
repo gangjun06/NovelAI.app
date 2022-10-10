@@ -2,7 +2,7 @@ const { readFileSync, writeFileSync } = require("fs");
 const { randomUUID } = require("crypto");
 
 const regex = new RegExp(
-  "^([가-힇]+)/([가-힇]+) : ([가-힇 ]+) ([a-zA-Z_, ]+)$"
+  "^([가-힇]+)/([가-힇]+) : ([가-힇0-9 ]+) ([a-zA-Z_,* ]+)$"
 );
 
 const main = async () => {

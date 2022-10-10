@@ -1,5 +1,33 @@
 [
   {
+    "id": "eef62f49-d6d3-4144-829c-7909771fe440",
+    "category": "작화",
+    "subCategory": "화질",
+    "name": "옵션1",
+    "tags": "NSFW, masterpiece, masterpiece*portrait"
+  },
+  {
+    "id": "1d62a8a3-a4a5-4245-9c21-1f82ec5eaf6c",
+    "category": "작화",
+    "subCategory": "화질",
+    "name": "옵션2",
+    "tags": "highres, high_quality, high_quality_anime, high_resolution"
+  },
+  {
+    "id": "21d349d1-5c34-40e5-83f9-f85ad8b5c0ae",
+    "category": "작화",
+    "subCategory": "화질",
+    "name": "옵션3",
+    "tags": "sidelighting, super detail, hyper detail, intricate_details, detailed *sth*"
+  },
+  {
+    "id": "46351c86-6890-4aa4-a05e-2d8a62cd32e5",
+    "category": "작화",
+    "subCategory": "화질",
+    "name": "옵션4",
+    "tags": "poorly_drawn, bad_hands, bad_feet, bad_anatomy, bad_proportions"
+  },
+  {
     "id": "009c6394-d685-4970-b7d5-840bf4a1f414",
     "category": "작화",
     "subCategory": "화풍",

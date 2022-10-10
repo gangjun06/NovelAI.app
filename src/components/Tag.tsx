@@ -7,6 +7,7 @@ interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["div"]> {
   selected?: boolean;
   onSelect?: () => void;
   disabled?: boolean;
+  ignoreDisabled?: boolean;
   left?: () => JSX.Element;
 }
 
@@ -16,6 +17,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
       label,
       selected,
       disabled = false,
+      ignoreDisabled = false,
       onSelect,
       className,
       left: Left,
@@ -31,7 +33,9 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
           !disabled && " hover:bg-gray-100 cursor-pointer",
           className
         )}
-        onClick={!disabled && selected ? onSelect : undefined}
+        onClick={
+          (ignoreDisabled || !disabled) && selected ? onSelect : undefined
+        }
         ref={ref}
         {...props}
       >
@@ -51,7 +55,9 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
             disabled ? "text-gray-500" : "text-gray-800",
             "py-0.5, pr-2"
           )}
-          onClick={!disabled && !selected ? onSelect : undefined}
+          onClick={
+            (ignoreDisabled || !disabled) && !selected ? onSelect : undefined
+          }
         >
           {label}
         </span>
