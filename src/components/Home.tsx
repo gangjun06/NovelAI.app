@@ -2,10 +2,16 @@ import type { NextPage } from "next";
 import { useCallback, useMemo, useState } from "react";
 import { NextSeo } from "next-seo";
 import tags from "~/assets/tags.json";
-import { Tag, TagCard } from "~/components";
+import {
+  Tag,
+  TagCard,
+  ResultBar,
+  updatePromptListAtom,
+  NSFWToggle,
+  showNSFWAtom,
+} from "~/components";
 import { useDebounce } from "use-debounce";
-import { ResultBar, updatePromptListAtom } from "~/components/ResultBar";
-import { useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
@@ -15,17 +21,32 @@ export const Home: NextPage = () => {
   const [text, setText] = useState("");
   const [debouncedText] = useDebounce(text, 300);
   const updatePromptList = useSetAtom(updatePromptListAtom);
+  const showNSFW = useAtomValue(showNSFWAtom);
 
   const disabled = useMemo(() => text.length > 0, [text]);
   const onSelectTag = useCallback((label: string) => {
     setSelected((prev) => (prev === label ? "" : label));
   }, []);
 
+  const filteredTag = useMemo(
+    () => [
+      ...new Set(
+        tags
+          .filter(({ nsfw }) => !nsfw || (nsfw && showNSFW))
+          .reduce<string[]>((a, b) => [...a, b.category], [])
+      ),
+    ],
+    [showNSFW]
+  );
+
   const filtered = useMemo(() => {
     if (!disabled) {
       return selected === ""
         ? tags
-        : tags.filter(({ category }) => category === selected);
+        : tags.filter(
+            ({ category, nsfw }) =>
+              category === selected && (!nsfw || (nsfw && showNSFW))
+          );
     }
     const matched =
       debouncedText.match(searchRegex)?.map((text) => {
@@ -47,6 +68,7 @@ export const Home: NextPage = () => {
     if (!matched) return [];
 
     const result = tags.filter((tag) => {
+      if (tag.nsfw && !showNSFW) return false;
       for (const data of matched) {
         if (data.isFull) {
           if (data.isEnglish)
@@ -77,7 +99,7 @@ export const Home: NextPage = () => {
       return false;
     });
     return result;
-  }, [debouncedText, disabled, selected]);
+  }, [debouncedText, disabled, selected, showNSFW]);
 
   return (
     <>
@@ -87,7 +109,7 @@ export const Home: NextPage = () => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
-        <div className="bg-slate-50 min-h-full pb-4">
+        <div className="bg-slate-50 min-h-full">
           <header className="pt-32 px-4">
             <h1 className="text-center text-4xl font-bold">
               NovelAI 태그 생성기
@@ -125,7 +147,8 @@ export const Home: NextPage = () => {
               </div>
             </div>
           </header>
-          <main className="container mx-auto px-4 mt-8">
+          <NSFWToggle />
+          <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
               <input
                 value={text}
@@ -134,11 +157,7 @@ export const Home: NextPage = () => {
                 className="basic"
               />
               <div className="flex flex-wrap gap-2 mt-3 select-none">
-                {[
-                  ...new Set(
-                    tags.reduce<string[]>((a, b) => [...a, b.category], [])
-                  ),
-                ].map((text) => (
+                {filteredTag.map((text) => (
                   <Tag
                     label={text}
                     key={text}
@@ -149,7 +168,7 @@ export const Home: NextPage = () => {
                 ))}
               </div>
             </section>
-            <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
               {filtered.map(({ id, category, subCategory, name, tags }) => (
                 <TagCard
                   key={id}

@@ -2427,7 +2427,7 @@
 성기/부위 : 포피 foreskin
 성기/부위 : 포경 phimosis
 성기/부위 : 고환 testicles
-자지/길이 : 자지가 작다 small_
+자지/길이 : 자지가 작다 small_penis
 자지/길이 : 자지가 크다 large_penis
 자지/길이 : 자지가 매우 크다 huge_penis
 자지/길이 : 자지가 엄청 크다 gigantic_penis
