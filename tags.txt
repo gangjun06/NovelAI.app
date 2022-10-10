@@ -1,4 +1,3 @@
-임시/테스트 : 아 A
 작화/화풍 : 게임 CG game_cg
 작화/화풍 : 미소녀 bishoujo
 작화/화풍 : 픽셀 pixel_art
