@@ -23,6 +23,8 @@ jobs:
 
       - name: Build App
         run: yarn build && touch ./out/.nojekyll
+        env:
+          NEXT_PUBLIC_GA_ID: ${{ secrets.GA }}
 
       - name: Verify Build
         run: ls -la out
