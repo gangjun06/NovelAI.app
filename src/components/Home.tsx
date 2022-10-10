@@ -100,7 +100,7 @@ export const Home: NextPage = () => {
               NovelAI 사용시 유용한 태그를 찾는 사이트입니다.
               <br />
               아직 개발 중이며 로드맵은{" "}
-              <a href="https://github.com/gangjun06/novelai-helper">
+              <a href="https://github.com/gangjun06/NovelAI-helper/issues/1">
                 이곳
               </a>{" "}
               에서 보실 수 있습니다.
@@ -108,7 +108,7 @@ export const Home: NextPage = () => {
               <div className="flex gap-3 justify-center mt-1">
                 <a href="mailto:me@gangjun.dev">문의</a>
                 <a
-                  href="https://github.com/gangjun06"
+                  href="https://github.com/gangjun06/novelai-helper"
                   target="_blank"
                   rel="noreferrer"
                 >
