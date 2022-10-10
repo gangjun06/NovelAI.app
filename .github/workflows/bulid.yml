@@ -27,6 +27,9 @@ jobs:
       - name: Verify Build
         run: ls -la out
 
+      - name: Setup CNAME
+        run: echo novelai.app >> CNAME
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:

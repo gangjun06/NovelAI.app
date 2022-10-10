@@ -1,20 +1,12 @@
-import type { GetServerSideProps, NextPage } from "next";
-import { CheckIcon } from "@heroicons/react/24/outline";
-import Head from "next/head";
-import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import type { NextPage } from "next";
+import { useCallback, useMemo, useState } from "react";
+import { NextSeo } from "next-seo";
 import tags from "~/assets/tags.json";
 import { Tag, TagCard } from "~/components";
 import { useDebounce } from "use-debounce";
-import {
-  promptListAtom,
-  ResultBar,
-  updatePromptListAtom,
-} from "~/components/ResultBar";
+import { ResultBar, updatePromptListAtom } from "~/components/ResultBar";
 import { useSetAtom } from "jotai";
-import { DragDropContext, resetServerContext } from "react-beautiful-dnd";
-import dynamic from "next/dynamic";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
 
@@ -89,6 +81,7 @@ export const Home: NextPage = () => {
 
   return (
     <>
+      <NextSeo title="NovelAI Helper" description="NovelAI 태그 생성기" />
       <DragDropContext
         onDragEnd={({ destination, source }) => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
