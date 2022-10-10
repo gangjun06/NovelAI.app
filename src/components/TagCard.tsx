@@ -11,7 +11,7 @@ export const TagCard = ({ title, text }: Props) => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
 
   const appendTag = (tag: string) => {
-    setPromptList((prev) => [...prev, { tag }]);
+    setPromptList((prev) => [...prev, { tag, pinned: false }]);
   };
 
   return (
@@ -21,7 +21,6 @@ export const TagCard = ({ title, text }: Props) => {
         {text.split(", ").map((text, index) => (
           <Tag
             key={index}
-            left={() => <div className="flex"></div>}
             onSelect={() => appendTag(text)}
             label={text}
             disabled={!!promptList.find((d) => d.tag === text)}

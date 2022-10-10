@@ -1,12 +1,16 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { atom, useAtom, useAtomValue } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import { Tag } from "./Tag";
 import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
 
-export const promptListAtom = atom<{ tag: string }[]>([]);
+export const promptListAtom = atomWithStorage<
+  { tag: string; pinned: boolean }[]
+>("prompt-list", []);
 export const updatePromptListAtom = atom(
   null,
   (get, set, { from, to }: { from: number; to: number }) => {
@@ -28,11 +32,11 @@ export const ResultBar = () => {
   }, [promptList]);
 
   const resetPrompt = useCallback(() => {
-    setPromptList([]);
+    setPromptList((prev) => prev.filter(({ pinned }) => pinned));
   }, [setPromptList]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-300 shadow-inner h-16 flex items-center justify-center">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-300 shadow-inner h-16 flex items-center justify-center select-none">
       {!promptList.length ? (
         <div className="text-gray-800 flex-grow px-6">
           태그를 클릭하여 이곳에 추가하세요!
@@ -50,6 +54,30 @@ export const ResultBar = () => {
                   {(provided, snapshot) => (
                     <Tag
                       key={key}
+                      selected={item.pinned}
+                      left={() =>
+                        item.pinned ? (
+                          <></>
+                        ) : (
+                          <TrashIcon
+                            width={18}
+                            height={18}
+                            onClick={() => {
+                              setPromptList((prev) =>
+                                prev.filter((_, index) => index !== key)
+                              );
+                            }}
+                          />
+                        )
+                      }
+                      onSelect={() => {
+                        setPromptList((prev) => {
+                          const cloned = [...prev];
+                          if (!cloned[key]) return cloned;
+                          cloned[key].pinned = !cloned[key].pinned;
+                          return cloned;
+                        });
+                      }}
                       label={item.tag}
                       ref={provided.innerRef}
                       {...provided.draggableProps}

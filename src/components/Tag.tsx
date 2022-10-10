@@ -12,18 +12,26 @@ interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["div"]> {
 
 export const Tag = forwardRef<HTMLDivElement, Props>(
   (
-    { label, selected, disabled, onSelect, className, left: Left, ...props },
+    {
+      label,
+      selected,
+      disabled = false,
+      onSelect,
+      className,
+      left: Left,
+      ...props
+    },
     ref
   ) => {
     return (
       <div
         className={classNames(
-          "bg-white border shadow-sm rounded-full px-2 py-0.5 flex max-w-fit gap-x-1 items-center",
+          "bg-white border shadow-sm rounded-full pl-2 flex max-w-fit gap-x-1 items-center",
           !disabled && (selected ? "border-primary-300" : "border-gray-300"),
           !disabled && " hover:bg-gray-100 cursor-pointer",
           className
         )}
-        onClick={!disabled ? onSelect : () => {}}
+        onClick={!disabled && selected ? onSelect : undefined}
         ref={ref}
         {...props}
       >
@@ -38,7 +46,13 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
           />
         )}
         {Left && <Left />}
-        <span className={disabled ? "text-gray-500" : "text-gray-800"}>
+        <span
+          className={classNames(
+            disabled ? "text-gray-500" : "text-gray-800",
+            "py-0.5, pr-2"
+          )}
+          onClick={!disabled && !selected ? onSelect : undefined}
+        >
           {label}
         </span>
       </div>

@@ -107,7 +107,7 @@ export const Home: NextPage = () => {
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3 select-none">
                 {[
                   ...new Set(
                     tags.reduce<string[]>((a, b) => [...a, b.category], [])
