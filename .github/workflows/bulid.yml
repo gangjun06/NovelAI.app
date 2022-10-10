@@ -1,0 +1,35 @@
+name: GitHub Pages deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v17
+        uses: actions/setup-node@v1
+        with:
+          node-version: 17
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Build App
+        run: yarn build && touch ./out/.nojekyll
+
+      - name: Verify Build
+        run: ls -la out
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: out
