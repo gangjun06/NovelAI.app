@@ -1,4 +1,6 @@
-import { useAtom, useSetAtom } from "jotai";
+import classNames from "classnames";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { darkModeAtom } from "./DarkModeToggle";
 import { promptListAtom } from "./ResultBar";
 import { Tag } from "./Tag";
 
@@ -9,6 +11,7 @@ interface Props {
 
 export const TagCard = ({ title, text }: Props) => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const darkMode = useAtomValue(darkModeAtom);
 
   const updateTag = (tag: string) => {
     setPromptList((prev) => {
@@ -23,7 +26,14 @@ export const TagCard = ({ title, text }: Props) => {
   };
 
   return (
-    <div className="border border-gray-300 bg-white shadow-sm rounded-sm px-4 py-4">
+    <div
+      className={classNames(
+        "border shadow-sm rounded-sm px-4 py-4",
+        darkMode
+          ? "bg-zinc-700/50 border-zinc-800 text-gray-300"
+          : "bg-white border-gray-300"
+      )}
+    >
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
         {text.split(", ").map((text, index) => (

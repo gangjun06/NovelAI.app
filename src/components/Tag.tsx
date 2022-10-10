@@ -1,6 +1,8 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import { useAtomValue } from "jotai";
 import React, { forwardRef, ReactElement } from "react";
+import { darkModeAtom } from "./DarkModeToggle";
 
 interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["div"]> {
   label: string;
@@ -25,12 +27,21 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
     },
     ref
   ) => {
+    const darkMode = useAtomValue(darkModeAtom);
+
     return (
       <div
         className={classNames(
-          "bg-white border shadow-sm rounded-full pl-2 flex max-w-fit gap-x-1 items-center",
-          !disabled && (selected ? "border-primary-300" : "border-gray-300"),
-          !disabled && " hover:bg-gray-100 cursor-pointer",
+          "border shadow-sm rounded-full pl-2 flex max-w-fit gap-x-1 items-center",
+          darkMode ? "bg-zinc-800 border-gray-600" : "bg-white",
+          darkMode
+            ? !disabled && (selected ? "border-primary-300" : "border-gray-600")
+            : !disabled &&
+                (selected ? "border-primary-300" : "border-gray-300"),
+          darkMode
+            ? !disabled && " hover:bg-gray-700 cursor-pointer"
+            : !disabled && " hover:bg-gray-100 cursor-pointer",
+
           className
         )}
         onClick={
@@ -45,14 +56,26 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
             height={20}
             className={classNames(
               "block",
-              disabled ? "text-gray-600" : "text-primary-600"
+              darkMode
+                ? disabled
+                  ? "text-gray-200"
+                  : "text-primary-600"
+                : disabled
+                ? "text-gray-600"
+                : "text-primary-600"
             )}
           />
         )}
         {Left && <Left />}
         <span
           className={classNames(
-            disabled ? "text-gray-500" : "text-gray-800",
+            darkMode
+              ? disabled
+                ? "text-gray-500"
+                : "text-gray-200"
+              : disabled
+              ? "text-gray-500"
+              : "text-gray-800",
             "py-0.5, pr-2"
           )}
           onClick={

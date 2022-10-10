@@ -1,16 +1,14 @@
 import classNames from "classnames";
-import { atom, useAtom, useAtomValue } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { darkModeAtom } from "./DarkModeToggle";
 
-export const showNSFWAtom = atomWithStorage("nsfw-on", false);
+export const darkModeAtom = atomWithStorage("darkmode", false);
 
-export const NSFWToggle = () => {
-  const [showNSFW, setShowNSFW] = useAtom(showNSFWAtom);
-  const darkMode = useAtomValue(darkModeAtom);
+export const DarkModeToggle = () => {
+  const [darkMode, setDarkMode] = useAtom(darkModeAtom);
   return (
     <div
-      onClick={() => setShowNSFW((p) => !p)}
+      onClick={() => setDarkMode((p) => !p)}
       className="flex justify-center items-center my-2 select-none"
     >
       <div
@@ -19,7 +17,7 @@ export const NSFWToggle = () => {
           darkMode ? "bg-zinc-800" : "bg-white"
         )}
       >
-        NSFW {showNSFW ? "ON" : "OFF"}
+        다크 모드 {darkMode ? "ON" : "OFF"}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
+import { darkModeAtom } from "./DarkModeToggle";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -25,6 +26,7 @@ export const updatePromptListAtom = atom(
 
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const darkMode = useAtomValue(darkModeAtom);
 
   const copyPrompt = useCallback(() => {
     copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
@@ -36,9 +38,19 @@ export const ResultBar = () => {
   }, [setPromptList]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-300 shadow-inner h-16 flex items-center justify-center select-none">
+    <div
+      className={classNames(
+        "fixed bottom-0 left-0 right-0 w-full border-t shadow-inner h-16 flex items-center justify-center select-none",
+        darkMode ? "bg-zinc-800 border-zinc-600" : "bg-white border-gray-300"
+      )}
+    >
       {!promptList.length ? (
-        <div className="text-gray-800 flex-grow px-6">
+        <div
+          className={classNames(
+            "flex-grow px-6",
+            darkMode ? "text-gray-200" : "text-gray-800"
+          )}
+        >
           태그를 클릭하여 이곳에 추가하세요!
         </div>
       ) : (
@@ -62,6 +74,7 @@ export const ResultBar = () => {
                           <TrashIcon
                             width={18}
                             height={18}
+                            color={darkMode ? "white" : undefined}
                             onClick={() => {
                               setPromptList((prev) =>
                                 prev.filter((_, index) => index !== key)
