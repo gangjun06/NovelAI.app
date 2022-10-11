@@ -105,7 +105,7 @@ export const ResultBar = () => {
           className={classNames(
             "transition text-black rounded px-4 py-1.5 shadow-sm flex-none",
             promptList.length < 1
-              ? "bg-gray-100 text-gray-400 dark:bg-zinc-500"
+              ? "bg-gray-100 text-gray-400 dark:bg-zinc-700"
               : "bg-white hover:bg-gray-100 border border-gray-300 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
           )}
           onClick={resetPrompt}
@@ -117,7 +117,7 @@ export const ResultBar = () => {
           className={classNames(
             "transition rounded px-4 py-1.5 shadow-sm flex-none mr-6",
             promptList.length < 1
-              ? "bg-gray-100 text-gray-400"
+              ? "bg-gray-100 text-gray-400 dark:bg-zinc-700"
               : "bg-primary-600 hover:bg-primary-700 text-white"
           )}
           onClick={copyPrompt}
