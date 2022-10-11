@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import type { AppProps } from "next/app";
 import { DragDropContext, resetServerContext } from "react-beautiful-dnd";
-import "~/styles/globals.css";
+import "~/styles/globals.scss";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
