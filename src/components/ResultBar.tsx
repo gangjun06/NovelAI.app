@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
+import { darkModeAtom } from "./DarkModeToggle";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -25,6 +26,7 @@ export const updatePromptListAtom = atom(
 
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const darkMode = useAtomValue(darkModeAtom);
 
   const copyPrompt = useCallback(() => {
     copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
@@ -36,9 +38,14 @@ export const ResultBar = () => {
   }, [setPromptList]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-300 shadow-inner h-16 flex items-center justify-center select-none">
+    <div
+      className={classNames(
+        darkMode && "dark",
+        "fixed bottom-0 left-0 right-0 w-full border-t shadow-inner h-16 flex items-center justify-center select-none bg-white dark:bg-zinc-800 border-zinc-600 dark:border-gray-300"
+      )}
+    >
       {!promptList.length ? (
-        <div className="text-gray-800 flex-grow px-6">
+        <div className="flex-grow px-6 text-gray-800 dark:text-gray-200">
           태그를 클릭하여 이곳에 추가하세요!
         </div>
       ) : (
@@ -60,6 +67,7 @@ export const ResultBar = () => {
                           <></>
                         ) : (
                           <TrashIcon
+                            className="dark:text-white"
                             width={18}
                             height={18}
                             onClick={() => {
@@ -97,8 +105,8 @@ export const ResultBar = () => {
           className={classNames(
             "transition text-black rounded px-4 py-1.5 shadow-sm flex-none",
             promptList.length < 1
-              ? "bg-gray-100 text-gray-400"
-              : "bg-white hover:bg-gray-100 border border-gray-300 "
+              ? "bg-gray-100 text-gray-400 dark:bg-zinc-700"
+              : "bg-white hover:bg-gray-100 border border-gray-300 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
           )}
           onClick={resetPrompt}
           disabled={promptList.length < 1}
@@ -109,7 +117,7 @@ export const ResultBar = () => {
           className={classNames(
             "transition rounded px-4 py-1.5 shadow-sm flex-none mr-6",
             promptList.length < 1
-              ? "bg-gray-100 text-gray-400"
+              ? "bg-gray-100 text-gray-400 dark:bg-zinc-700"
               : "bg-primary-600 hover:bg-primary-700 text-white"
           )}
           onClick={copyPrompt}
