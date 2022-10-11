@@ -121,21 +121,13 @@ export const Home: NextPage = () => {
         }}
       >
         <div
-          className={classNames(
-            "bg-slate-50 min-h-full",
-            darkMode && "darkmode"
-          )}
+          className={classNames(darkMode && "dark", "bg-slate-50 min-h-full")}
         >
           <header className="pt-32 px-4">
             <h1 className="text-center text-4xl font-bold">
               NovelAI 태그 생성기
             </h1>
-            <div
-              className={classNames(
-                "text-center  mt-1",
-                darkMode ? "text-zinc-400" : "text-gray-800"
-              )}
-            >
+            <div className="text-center mt-1 text-gray-800 dark:text-zinc-400">
               <b>
                 본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
               </b>

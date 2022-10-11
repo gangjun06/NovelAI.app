@@ -40,17 +40,12 @@ export const ResultBar = () => {
   return (
     <div
       className={classNames(
-        "fixed bottom-0 left-0 right-0 w-full border-t shadow-inner h-16 flex items-center justify-center select-none",
-        darkMode ? "bg-zinc-800 border-zinc-600" : "bg-white border-gray-300"
+        darkMode && "dark",
+        "fixed bottom-0 left-0 right-0 w-full border-t shadow-inner h-16 flex items-center justify-center select-none bg-white dark:bg-zinc-800 border-zinc-600 dark:border-gray-300"
       )}
     >
       {!promptList.length ? (
-        <div
-          className={classNames(
-            "flex-grow px-6",
-            darkMode ? "text-gray-200" : "text-gray-800"
-          )}
-        >
+        <div className="flex-grow px-6 text-gray-800 dark:text-gray-200">
           태그를 클릭하여 이곳에 추가하세요!
         </div>
       ) : (
@@ -72,9 +67,9 @@ export const ResultBar = () => {
                           <></>
                         ) : (
                           <TrashIcon
+                            className="dark:text-white"
                             width={18}
                             height={18}
-                            color={darkMode ? "white" : undefined}
                             onClick={() => {
                               setPromptList((prev) =>
                                 prev.filter((_, index) => index !== key)
