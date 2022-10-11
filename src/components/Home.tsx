@@ -125,7 +125,7 @@ export const Home: NextPage = () => {
               <a href="https://arca.live/b/aiart/60305526">태그출처</a>
               <br />
               아직 개발 중이며 로드맵은{" "}
-              <a href="https://github.com/gangjun06/NovelAI-helper/issues/1">
+              <a href="https://github.com/gangjun06/NovelAI.app/issues/1">
                 이곳
               </a>{" "}
               에서 보실 수 있습니다.
@@ -133,7 +133,7 @@ export const Home: NextPage = () => {
               <div className="flex gap-3 justify-center mt-1">
                 <a href="mailto:me@gangjun.dev">문의</a>
                 <a
-                  href="https://github.com/gangjun06/novelai-helper"
+                  href="https://github.com/gangjun06/NovelAI.app"
                   target="_blank"
                   rel="noreferrer"
                 >
