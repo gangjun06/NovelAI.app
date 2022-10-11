@@ -32,7 +32,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
           !disabled &&
             (selected
               ? "border-primary-300"
-              : "border-gray-300 dark:border-gray-600"),
+              : "border-base-light dark:border-gray-600"),
           !disabled && "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
         )}
         onClick={

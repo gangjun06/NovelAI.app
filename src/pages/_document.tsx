@@ -6,6 +6,7 @@ class Document extends NextDocument {
     return (
       <Html>
         <Head>
+          <script async src="/darkmode.js" />
           <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}

@@ -24,15 +24,6 @@ export const Home: NextPage = () => {
   const [debouncedText] = useDebounce(text, 300);
   const updatePromptList = useSetAtom(updatePromptListAtom);
   const showNSFW = useAtomValue(showNSFWAtom);
-  const [darkMode, setDarkMode] = useAtom(darkModeAtom);
-
-  useEffect(() => {
-    const isDarkMode =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    setDarkMode(isDarkMode);
-  }, [setDarkMode]);
 
   const disabled = useMemo(() => text.length > 0, [text]);
   const onSelectTag = useCallback((label: string) => {
@@ -120,9 +111,7 @@ export const Home: NextPage = () => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
-        <div
-          className={classNames(darkMode && "dark", "bg-slate-50 min-h-full")}
-        >
+        <div className={classNames("min-h-full")}>
           <header className="pt-32 px-4">
             <h1 className="text-center text-4xl font-bold">
               NovelAI 태그 생성기
@@ -172,7 +161,7 @@ export const Home: NextPage = () => {
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
-              <div className="flex flex-wrap gap-2 mt-3 select-none">
+              <div className="flex flex-wrap gap-2 mt-4 select-none">
                 {filteredTag.map((text) => (
                   <Tag
                     label={text}
