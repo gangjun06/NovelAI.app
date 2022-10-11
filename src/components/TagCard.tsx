@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { promptListAtom } from "./ResultBar";
 import { Tag } from "./Tag";
 
@@ -23,18 +23,20 @@ export const TagCard = ({ title, text }: Props) => {
   };
 
   return (
-    <div className="border border-gray-300 bg-white shadow-sm rounded-sm px-4 py-4">
+    <div className="border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light">
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
-        {text.split(", ").map((text, index) => (
-          <Tag
-            key={index}
-            onSelect={() => updateTag(text)}
-            label={text}
-            ignoreDisabled
-            disabled={!!promptList.find((d) => d.tag === text)}
-          />
-        ))}
+        {text.split(", ").map((text, index) => {
+          const selected = !!promptList.find((d) => d.tag === text);
+          return (
+            <Tag
+              key={index}
+              onSelect={() => updateTag(text)}
+              selected={selected}
+              label={text}
+            />
+          );
+        })}
       </div>
     </div>
   );

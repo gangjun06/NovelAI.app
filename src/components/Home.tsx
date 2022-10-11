@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { NextSeo } from "next-seo";
 import tags from "~/assets/tags.json";
 import {
@@ -13,6 +13,8 @@ import {
 import { useDebounce } from "use-debounce";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
+import { darkModeAtom, DarkModeToggle } from "./DarkModeToggle";
+import classNames from "classnames";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
 
@@ -109,12 +111,12 @@ export const Home: NextPage = () => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
-        <div className="bg-slate-50 min-h-full">
+        <div className={classNames("min-h-full")}>
           <header className="pt-32 px-4">
             <h1 className="text-center text-4xl font-bold">
               NovelAI 태그 생성기
             </h1>
-            <div className="text-center text-gray-800 mt-1">
+            <div className="text-center mt-1 text-gray-800 dark:text-zinc-400">
               <b>
                 본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
               </b>
@@ -147,7 +149,10 @@ export const Home: NextPage = () => {
               </div>
             </div>
           </header>
-          <NSFWToggle />
+          <div className="flex w-full justify-center gap-4 my-4">
+            <NSFWToggle />
+            <DarkModeToggle />
+          </div>
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
               <input
@@ -156,7 +161,7 @@ export const Home: NextPage = () => {
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
-              <div className="flex flex-wrap gap-2 mt-3 select-none">
+              <div className="flex flex-wrap gap-2 mt-4 select-none">
                 {filteredTag.map((text) => (
                   <Tag
                     label={text}

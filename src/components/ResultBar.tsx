@@ -7,6 +7,8 @@ import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
+import { darkModeAtom } from "./DarkModeToggle";
+import { Button } from "./Button";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -25,6 +27,7 @@ export const updatePromptListAtom = atom(
 
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const darkMode = useAtomValue(darkModeAtom);
 
   const copyPrompt = useCallback(() => {
     copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
@@ -36,16 +39,20 @@ export const ResultBar = () => {
   }, [setPromptList]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-300 shadow-inner h-16 flex items-center justify-center select-none">
+    <div
+      className={classNames(
+        "fixed bottom-0 left-0 right-0 w-full border-t shadow-inner h-16 flex items-center justify-center select-none bg-white dark:bg-zinc-800 border-base-light dark:border-base-dark"
+      )}
+    >
       {!promptList.length ? (
-        <div className="text-gray-800 flex-grow px-6">
+        <div className="flex-1 px-6 text-gray-800 dark:text-gray-200">
           태그를 클릭하여 이곳에 추가하세요!
         </div>
       ) : (
         <Droppable droppableId="result-bar" direction="horizontal">
           {(provided, snapshot) => (
             <div
-              className="w-full flex items-center px-6 flex-grow gap-y-2 overflow-x-scroll"
+              className="w-full flex items-center px-6 flex-1 gap-y-2 overflow-x-scroll"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -60,6 +67,7 @@ export const ResultBar = () => {
                           <></>
                         ) : (
                           <TrashIcon
+                            className="dark:text-white"
                             width={18}
                             height={18}
                             onClick={() => {
@@ -93,30 +101,17 @@ export const ResultBar = () => {
         </Droppable>
       )}
       <div className="flex gap-x-3">
-        <button
-          className={classNames(
-            "transition text-black rounded px-4 py-1.5 shadow-sm flex-none",
-            promptList.length < 1
-              ? "bg-gray-100 text-gray-400"
-              : "bg-white hover:bg-gray-100 border border-gray-300 "
-          )}
-          onClick={resetPrompt}
-          disabled={promptList.length < 1}
-        >
+        <Button onClick={resetPrompt} disabled={promptList.length < 1}>
           리셋
-        </button>
-        <button
-          className={classNames(
-            "transition rounded px-4 py-1.5 shadow-sm flex-none mr-6",
-            promptList.length < 1
-              ? "bg-gray-100 text-gray-400"
-              : "bg-primary-600 hover:bg-primary-700 text-white"
-          )}
+        </Button>
+        <Button
           onClick={copyPrompt}
           disabled={promptList.length < 1}
+          variant="primary"
+          className="mr-6"
         >
           복사
-        </button>
+        </Button>
       </div>
     </div>
   );

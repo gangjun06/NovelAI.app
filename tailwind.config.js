@@ -8,7 +8,14 @@ module.exports = {
       colors: {
         primary: colors.sky,
       },
+      borderColor: {
+        base: {
+          light: colors.gray["300"],
+          dark: colors.zinc["600"],
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],
+  darkMode: "class",
 };
