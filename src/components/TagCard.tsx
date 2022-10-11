@@ -1,4 +1,7 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import toast from "react-hot-toast";
+import { copyText } from "~/utils";
+import { copyAtom } from "./CopyToggle";
 import { promptListAtom } from "./ResultBar";
 import { Tag } from "./Tag";
 
@@ -8,9 +11,15 @@ interface Props {
 }
 
 export const TagCard = ({ title, text }: Props) => {
+  const copyEach = useAtomValue(copyAtom);
   const [promptList, setPromptList] = useAtom(promptListAtom);
 
   const updateTag = (tag: string) => {
+    if (copyEach) {
+      copyText(tag);
+      toast.success("태그를 복사하였습니다!");
+      return;
+    }
     setPromptList((prev) => {
       const index = prev.findIndex(({ tag: t }) => t === tag);
       if (index < 0) {

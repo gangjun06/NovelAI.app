@@ -15,6 +15,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
 import { darkModeAtom, DarkModeToggle } from "./DarkModeToggle";
 import classNames from "classnames";
+import { CopyToggle } from "./CopyToggle";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
 
@@ -152,6 +153,7 @@ export const Home: NextPage = () => {
           <div className="flex w-full justify-center gap-4 my-4">
             <NSFWToggle />
             <DarkModeToggle />
+            <CopyToggle />
           </div>
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">

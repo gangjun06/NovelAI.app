@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
 import { darkModeAtom } from "./DarkModeToggle";
 import { Button } from "./Button";
+import { copyAtom } from "./CopyToggle";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -27,7 +28,12 @@ export const updatePromptListAtom = atom(
 
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
-  const darkMode = useAtomValue(darkModeAtom);
+  const copyEach = useAtomValue(copyAtom);
+
+  const copyTag = useCallback((text: string) => {
+    copyText(text);
+    toast.success("프롬프트를 복사하였습니다!");
+  }, []);
 
   const copyPrompt = useCallback(() => {
     copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
@@ -82,6 +88,10 @@ export const ResultBar = () => {
                         )
                       }
                       onSelect={() => {
+                        if (copyEach) {
+                          copyTag(item.tag);
+                          return;
+                        }
                         setPromptList((prev) => {
                           const cloned = [...prev];
                           if (!cloned[key]) return cloned;
