@@ -31,3 +31,11 @@ a {
 .dark {
   @apply bg-[#1f2224] text-white;
 }
+
+.hide-scroll {
+  scrollbar-width: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}

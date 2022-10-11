@@ -52,9 +52,12 @@ export const ResultBar = () => {
         <Droppable droppableId="result-bar" direction="horizontal">
           {(provided, snapshot) => (
             <div
-              className="w-full flex items-center px-6 flex-1 gap-y-2 overflow-x-scroll"
+              className="w-full flex items-center px-6 flex-grow gap-y-2 overflow-x-scroll hide-scroll"
               {...provided.droppableProps}
               ref={provided.innerRef}
+              onWheel={(event) => {
+                event.currentTarget.scrollLeft += event.deltaY;
+              }}
             >
               {promptList.map((item, key) => (
                 <Draggable key={item.tag} index={key} draggableId={item.tag}>
