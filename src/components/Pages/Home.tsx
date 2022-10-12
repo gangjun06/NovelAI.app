@@ -3,17 +3,18 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { NextSeo } from "next-seo";
 import tags from "~/assets/tags.json";
 import {
-  Tag,
   TagCard,
   ResultBar,
   updatePromptListAtom,
   NSFWToggle,
   showNSFWAtom,
 } from "~/components";
+import { Tag } from "~/components/Base";
+
 import { useDebounce } from "use-debounce";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
-import { darkModeAtom, DarkModeToggle } from "./DarkModeToggle";
+import { darkModeAtom, DarkModeToggle } from "~/components/DarkModeToggle";
 import classNames from "classnames";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;

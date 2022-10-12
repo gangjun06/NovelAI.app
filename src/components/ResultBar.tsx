@@ -2,13 +2,13 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { Tag } from "./Tag";
+import { Tag } from "~/components/Base";
 import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
 import { darkModeAtom } from "./DarkModeToggle";
-import { Button } from "./Button";
+import { Button } from "./Base";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -62,22 +62,22 @@ export const ResultBar = () => {
                     <Tag
                       key={key}
                       selected={item.pinned}
-                      left={() =>
-                        item.pinned ? (
-                          <></>
-                        ) : (
-                          <TrashIcon
-                            className="dark:text-white"
-                            width={18}
-                            height={18}
-                            onClick={() => {
-                              setPromptList((prev) =>
-                                prev.filter((_, index) => index !== key)
-                              );
-                            }}
-                          />
-                        )
-                      }
+                      // left={() =>
+                      //   item.pinned ? (
+                      //     <></>
+                      //   ) : (
+                      //     <TrashIcon
+                      //       className="dark:text-white"
+                      //       width={18}
+                      //       height={18}
+                      //       onClick={() => {
+                      //         setPromptList((prev) =>
+                      //           prev.filter((_, index) => index !== key)
+                      //         );
+                      //       }}
+                      //     />
+                      //   )
+                      // }
                       onSelect={() => {
                         setPromptList((prev) => {
                           const cloned = [...prev];
