@@ -44,12 +44,23 @@ export const Home: NextPage = () => {
 
   const filtered = useMemo(() => {
     if (!disabled) {
-      return selected === ""
-        ? tags
-        : tags.filter(
-            ({ category, nsfw }) =>
-              category === selected && (!nsfw || (nsfw && showNSFW))
-          );
+      let result = []
+      for(let i=0;i<tags.length;i++){
+        const tag = tags[i]
+        if(selected === ""  ? true : tag.category === selected && (!tag.nsfw || (tag.nsfw && showNSFW))){
+          result.push()
+        }
+        result.push({
+          id: tag.id,
+          category: tag.category,
+          subCategory: tag.subCategory,
+          name: tag.name,
+          tags: tag.tags,
+          nsfw: tag.nsfw,
+          visible: selected === ""  ? true : tag.category === selected && (!tag.nsfw || (tag.nsfw && showNSFW))
+        })
+      }
+      return result
     }
     const matched =
       debouncedText.match(searchRegex)?.map((text) => {
@@ -70,40 +81,62 @@ export const Home: NextPage = () => {
       }) ?? null;
     if (!matched) return [];
 
-    const result = tags.filter((tag) => {
-      if (tag.nsfw && !showNSFW) return false;
-      for (const data of matched) {
-        if (data.isFull) {
-          if (data.isEnglish)
-            return tag.tags.toLowerCase().includes(data.keyword);
-          if (data.hasSpace) {
-            if (tag.name.includes(data.keyword)) return true;
-          } else {
-            if (tag.category.includes(data.keyword)) return true;
-            if (tag.subCategory.includes(data.keyword)) return true;
-            if (`${tag.category}/${tag.subCategory}`.includes(data.keyword))
-              return true;
+
+    let result = []
+
+
+
+    for(let i=0;i<tags.length;i++){
+      let tag = tags[i]
+      function check(){
+        if (tag.nsfw && !showNSFW) return false;
+        if(!matched){
+          return false
+        }
+        for (const data of matched) {
+          if (data.isFull) {
+            if (data.isEnglish)
+              return tag.tags.toLowerCase().includes(data.keyword);
+            if (data.hasSpace) {
+              if (tag.name.includes(data.keyword)) return true;
+            } else {
+              if (tag.category.includes(data.keyword)) return true;
+              if (tag.subCategory.includes(data.keyword)) return true;
+              if (`${tag.category}/${tag.subCategory}`.includes(data.keyword))
+                return true;
+            }
+            return false;
           }
-          return false;
+  
+          if (data.isCategory) {
+            return `${tag.category}/${tag.subCategory}`.includes(data.keyword);
+          }
+  
+          if (data.isEnglish) {
+            return tag.tags.toLowerCase().includes(data.keyword);
+          }
+  
+          if (tag.name.includes(data.keyword)) return true;
+          if (tag.category.includes(data.keyword)) return true;
+          if (tag.subCategory.includes(data.keyword)) return true;
         }
-
-        if (data.isCategory) {
-          return `${tag.category}/${tag.subCategory}`.includes(data.keyword);
-        }
-
-        if (data.isEnglish) {
-          return tag.tags.toLowerCase().includes(data.keyword);
-        }
-
-        if (tag.name.includes(data.keyword)) return true;
-        if (tag.category.includes(data.keyword)) return true;
-        if (tag.subCategory.includes(data.keyword)) return true;
+        return false;
       }
-      return false;
-    });
+      result.push({
+        id: tag.id,
+        category: tag.category,
+        subCategory: tag.subCategory,
+        name: tag.name,
+        tags: tag.tags,
+        nsfw: tag.nsfw,
+        visible: check()
+      })
+    }
+
     return result;
   }, [debouncedText, disabled, selected, showNSFW]);
 
+  console.log(filtered)
   return (
     <>
       <NextSeo title="NovelAI Helper" description="NovelAI 태그 생성기" />
@@ -176,11 +209,12 @@ export const Home: NextPage = () => {
               </div>
             </section>
             <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
-              {filtered.map(({ id, category, subCategory, name, tags }) => (
+              {filtered.map(({ id, category, subCategory, name, tags, visible }) => (
                 <TagCard
                   key={id}
                   title={`${category}/${subCategory} - ${name}`}
                   text={tags}
+                  visible={visible}
                 />
               ))}
             </section>

@@ -8,9 +8,10 @@ import { Tag } from "./Tag";
 interface Props {
   title: string;
   text: string;
+  visible:boolean
 }
 
-export const TagCard = ({ title, text }: Props) => {
+export const TagCard = ({ title, text, visible }: Props) => {
   const copyEach = useAtomValue(copyAtom);
   const [promptList, setPromptList] = useAtom(promptListAtom);
 
@@ -32,7 +33,8 @@ export const TagCard = ({ title, text }: Props) => {
   };
 
   return (
-    <div className="border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light">
+    <div className="border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light"
+        style={{display: visible ? 'block' : 'none'}}>
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
         {text.split(", ").map((text, index) => {
