@@ -9,7 +9,7 @@ import {
   NSFWToggle,
   showNSFWAtom,
 } from "~/components";
-import { Tag } from "~/components/Base";
+import { Tag } from "~/components/atoms";
 
 import { useDebounce } from "use-debounce";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";

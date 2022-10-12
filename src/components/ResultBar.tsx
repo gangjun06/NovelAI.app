@@ -2,13 +2,13 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { Tag } from "~/components/Base";
+import { Tag } from "~/components/atoms";
 import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { copyText } from "~/utils";
 import { darkModeAtom } from "./DarkModeToggle";
-import { Button } from "./Base";
+import { Button } from "./atoms";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]

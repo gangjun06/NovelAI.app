@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Tag } from "./Tag";
 
 export default {
-  title: "Common/Tag",
+  title: "Atoms/Tag",
   component: Tag,
 } as ComponentMeta<typeof Tag>;
 

@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { Button } from "./Base";
+import { Button } from "./atoms";
 
 export const showNSFWAtom = atomWithStorage("nsfw-on", false);
 
