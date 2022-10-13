@@ -16,93 +16,82 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { darkModeAtom, DarkModeToggle } from "./DarkModeToggle";
 import classNames from "classnames";
 import { CopyToggle } from "./CopyToggle";
-
-const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
+import { Tag as TagType, TagsData } from "~/types";
 
 export const Home: NextPage = () => {
-  const [selected, setSelected] = useState<string>("");
+  const [selectedGroup, setSelectedGroup] = useState<string>("");
+  const [selected, setSelected] = useState<string | null>(null);
   const [text, setText] = useState("");
-  const [debouncedText] = useDebounce(text, 300);
+  const [debouncedText] = useDebounce(text, 500);
   const updatePromptList = useSetAtom(updatePromptListAtom);
   const showNSFW = useAtomValue(showNSFWAtom);
 
   const disabled = useMemo(() => text.length > 0, [text]);
+  const onSelectGroup = useCallback((label: string) => {
+    setSelected(null);
+    setSelectedGroup((prev) => (prev === label ? "" : label));
+  }, []);
   const onSelectTag = useCallback((label: string) => {
     setSelected((prev) => (prev === label ? "" : label));
   }, []);
 
-  const filteredTag = useMemo(
-    () => [
-      ...new Set(
-        tags
-          .filter(({ nsfw }) => !nsfw || (nsfw && showNSFW))
-          .reduce<string[]>((a, b) => [...a, b.category], [])
+  const groupList = useMemo(
+    () =>
+      Object.keys(tags as unknown as TagsData).filter(
+        (str) => !str.startsWith("!") || showNSFW
       ),
-    ],
     [showNSFW]
   );
 
-  const filtered = useMemo(() => {
-    if (!disabled) {
-      return selected === ""
-        ? tags
-        : tags.filter(
-            ({ category, nsfw }) =>
-              category === selected && (!nsfw || (nsfw && showNSFW))
-          );
+  const categoryList = useMemo(() => {
+    const current = (tags as unknown as TagsData)[selectedGroup];
+    if (!current) return null;
+    const result: { [key: string]: boolean } = {};
+    for (const item of current) {
+      if (item.nsfw && !showNSFW) continue;
+      result[item.category] = true;
     }
-    const matched =
-      debouncedText.match(searchRegex)?.map((text) => {
-        text = text.toLowerCase();
-        if (text.startsWith('"')) {
-          return {
-            keyword: text.substring(1).slice(0, -1),
-            isFull: true,
-            isEnglish: !!text.match(/^[a-zA-Z_]+$/),
-            hasSpace: text.includes(" "),
-          };
-        }
-        return {
-          keyword: text,
-          isCategory: text.includes("/"),
-          isEnglish: !!text.match(/^[a-zA-Z_]+$/),
-        };
-      }) ?? null;
-    if (!matched) return [];
+    return Object.keys(result).reduce((a: string[], b) => [...a, b], []);
+  }, [selectedGroup, showNSFW]);
 
-    const result = tags.filter((tag) => {
-      if (tag.nsfw && !showNSFW) return false;
-      for (const data of matched) {
-        if (data.isFull) {
-          if (data.isEnglish)
-            return tag.tags.toLowerCase().includes(data.keyword);
-          if (data.hasSpace) {
-            if (tag.name.includes(data.keyword)) return true;
-          } else {
-            if (tag.category.includes(data.keyword)) return true;
-            if (tag.subCategory.includes(data.keyword)) return true;
-            if (`${tag.category}/${tag.subCategory}`.includes(data.keyword))
-              return true;
-          }
-          return false;
-        }
+  const filtered = useMemo(() => {
+    const result: TagType[] = [];
 
-        if (data.isCategory) {
-          return `${tag.category}/${tag.subCategory}`.includes(data.keyword);
-        }
-
-        if (data.isEnglish) {
-          return tag.tags.toLowerCase().includes(data.keyword);
-        }
-
-        if (tag.name.includes(data.keyword)) return true;
-        if (tag.category.includes(data.keyword)) return true;
-        if (tag.subCategory.includes(data.keyword)) return true;
+    if (!disabled) {
+      const current = (tags as unknown as TagsData)[selectedGroup];
+      if (!current) {
+        Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
+          if (!showNSFW && key.startsWith("!")) return;
+          list.forEach((item) => {
+            if (!showNSFW && item.nsfw) return;
+            result.push(item);
+          });
+        });
+        return result;
       }
-      return false;
+      return current.filter(
+        ({ category, nsfw }) =>
+          (selected ? category === selected : true) &&
+          (!nsfw || (nsfw && showNSFW))
+      );
+    }
+
+    Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
+      if (!showNSFW && key.startsWith("!")) return;
+      list.forEach((item) => {
+        if (!showNSFW && item.nsfw) return;
+        if (
+          !item.category.includes(debouncedText) &&
+          !item.subCategory.includes(debouncedText) &&
+          !item.name.includes(debouncedText) &&
+          !item.tags.includes(debouncedText)
+        )
+          return;
+        result.push(item);
+      });
     });
     return result;
-  }, [debouncedText, disabled, selected, showNSFW]);
+  }, [debouncedText, disabled, selected, selectedGroup, showNSFW]);
 
   return (
     <>
@@ -123,7 +112,9 @@ export const Home: NextPage = () => {
               </b>
               <br />
               NovelAI 사용시 유용한 태그를 찾는 사이트입니다.{" "}
-              <a href="https://arca.live/b/aiart/60305526">태그출처</a>
+              <a href="https://docs.google.com/spreadsheets/d/18CA__L4yQOs9xAQslP5FUvooD8i8Wz-D7yCnsIYqoBM/edit?usp=sharing">
+                태그목록
+              </a>
               <br />
               아직 개발 중이며 로드맵은{" "}
               <a href="https://github.com/gangjun06/NovelAI.app/issues/1">
@@ -163,24 +154,39 @@ export const Home: NextPage = () => {
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
-              <div className="flex flex-wrap gap-2 mt-4 select-none">
-                {filteredTag.map((text) => (
+              <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                {groupList.map((text) => (
                   <Tag
-                    label={text}
+                    label={text.replace("!", "")}
                     key={text}
                     disabled={disabled}
-                    selected={selected === text}
-                    onSelect={() => onSelectTag(text)}
+                    selected={selectedGroup === text}
+                    onSelect={() => onSelectGroup(text)}
                   />
                 ))}
               </div>
+              {categoryList && (
+                <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                  {categoryList.map((text) => (
+                    <Tag
+                      label={text}
+                      key={text}
+                      disabled={disabled}
+                      selected={selected === text}
+                      onSelect={() => onSelectTag(text)}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
             <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
-              {filtered.map(({ id, category, subCategory, name, tags }) => (
+              {filtered.map(({ category, subCategory, name, tags }) => (
                 <TagCard
-                  key={id}
-                  title={`${category}/${subCategory} - ${name}`}
-                  text={tags}
+                  key={`${category}/${subCategory}/${name}/${tags}`}
+                  title={`${category}${
+                    subCategory ? `/${subCategory}` : ""
+                  } - ${name}`}
+                  tags={tags}
                 />
               ))}
             </section>

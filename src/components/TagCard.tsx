@@ -7,10 +7,10 @@ import { Tag } from "./Tag";
 
 interface Props {
   title: string;
-  text: string;
+  tags: string[];
 }
 
-export const TagCard = ({ title, text }: Props) => {
+export const TagCard = ({ title, tags }: Props) => {
   const copyEach = useAtomValue(copyAtom);
   const [promptList, setPromptList] = useAtom(promptListAtom);
 
@@ -35,7 +35,7 @@ export const TagCard = ({ title, text }: Props) => {
     <div className="border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light">
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
-        {text.split(", ").map((text, index) => {
+        {tags.map((text, index) => {
           const selected = !!promptList.find((d) => d.tag === text);
           return (
             <Tag
