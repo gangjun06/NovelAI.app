@@ -6,10 +6,11 @@ import { Tag } from "./Tag";
 import { useCallback } from "react";
 import classNames from "classnames";
 import { toast } from "react-hot-toast";
-import { copyText } from "~/utils";
+import { copyText, replaceText } from "~/utils";
 import { darkModeAtom } from "./DarkModeToggle";
 import { Button } from "./Button";
 import { copyAtom } from "./CopyToggle";
+import { withUnderbarAtom } from "./PromptToggle";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -29,16 +30,24 @@ export const updatePromptListAtom = atom(
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
   const copyEach = useAtomValue(copyAtom);
+  const withUnderbar = useAtomValue(withUnderbarAtom);
 
-  const copyTag = useCallback((text: string) => {
-    copyText(text);
-    toast.success("프롬프트를 복사하였습니다!");
-  }, []);
+  const copyTag = useCallback(
+    (text: string) => {
+      copyText(replaceText(text, withUnderbar));
+      toast.success("프롬프트를 복사하였습니다!");
+    },
+    [withUnderbar]
+  );
 
   const copyPrompt = useCallback(() => {
-    copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
+    copyText(
+      promptList
+        .reduce((a, b) => `${a}${replaceText(b.tag, withUnderbar)}, `, "")
+        .slice(0, -2)
+    );
     toast.success("프롬프트를 복사하였습니다!");
-  }, [promptList]);
+  }, [promptList, withUnderbar]);
 
   const resetPrompt = useCallback(() => {
     setPromptList((prev) => prev.filter(({ pinned }) => pinned));

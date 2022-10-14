@@ -9,6 +9,7 @@ import {
   updatePromptListAtom,
   NSFWToggle,
   showNSFWAtom,
+  WithUnderbarToggle,
 } from "~/components";
 import { useDebounce } from "use-debounce";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
@@ -141,10 +142,11 @@ export const Home: NextPage = () => {
               </div>
             </div>
           </header>
-          <div className="flex w-full justify-center gap-4 my-4">
+          <div className="flex w-full justify-center gap-4 my-4 flex-wrap px-4">
             <NSFWToggle />
             <DarkModeToggle />
             <CopyToggle />
+            <WithUnderbarToggle />
           </div>
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">

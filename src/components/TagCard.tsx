@@ -1,7 +1,8 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import toast from "react-hot-toast";
-import { copyText } from "~/utils";
+import { copyText, replaceText } from "~/utils";
 import { copyAtom } from "./CopyToggle";
+import { withUnderbarAtom } from "./PromptToggle";
 import { promptListAtom } from "./ResultBar";
 import { Tag } from "./Tag";
 
@@ -13,10 +14,11 @@ interface Props {
 export const TagCard = ({ title, tags }: Props) => {
   const copyEach = useAtomValue(copyAtom);
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const withUnderbar = useAtomValue(withUnderbarAtom);
 
   const updateTag = (tag: string) => {
     if (copyEach) {
-      copyText(tag);
+      copyText(replaceText(tag, withUnderbar));
       toast.success("태그를 복사하였습니다!");
       return;
     }
