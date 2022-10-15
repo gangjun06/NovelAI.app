@@ -26,7 +26,7 @@ export const MainNav = ({}: Props) => {
   const { pathname } = useRouter();
 
   return (
-    <nav className="px-4 py-4 shadow sticky bg-white">
+    <nav className="px-4 py-4 shadow sticky bg-white dark:bg-zinc-900">
       <div className="sm:max-w-nav mx-auto flex justify-between items-center">
         <div className="flex gap-x-2 items-center">
           <Link href="/" passHref>

@@ -23,12 +23,19 @@
   }
 }
 
+html.dark {
+  background-color: rgb(24 24 27);
+}
+
+html:not(.dark) {
+  background-color: #ffffff;
+}
+
 html,
 body,
 #__next {
   height: 100%;
   overflow-x: hidden;
-  @apply bg-zinc-50;
   @apply text-base bg-base;
 }
 

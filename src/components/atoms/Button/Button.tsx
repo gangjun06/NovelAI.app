@@ -24,13 +24,14 @@ const btnClassNames = (
       "shadow-sm": variant !== "subtle",
       "bg-white hover:bg-gray-100 border border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
         !disabled && variant === "default",
-      "bg-primary-600 hover:bg-primary-700 text-white":
+      "bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white":
         !disabled && variant === "primary",
       "bg-primary-300/50 text-primary-600 hover:bg-primary-400/50 dark:bg-primary-700/50 dark:text-primary-300 dark:hover:bg-primary-600/50":
         !disabled && variant === "light",
       "hover:bg-primary-300/50 text-primary-600 hover:dark:bg-primary-700/50 dark:text-primary-300":
         !disabled && variant === "subtle",
-      "bg-primary-300/50": !disabled && variant === "subtle" && active,
+      "bg-primary-300/50 dark:bg-primary-700/50":
+        !disabled && variant === "subtle" && active,
       // : "hover:bg-primary-300/40 hover:text-primary-500"
     },
     otherClasses

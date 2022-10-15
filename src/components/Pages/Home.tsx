@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { NextSeo } from "next-seo";
 import tags from "~/assets/tags.json";
 import {
   TagCard,
@@ -12,10 +11,11 @@ import {
 import { Input, Tag } from "~/components/atoms";
 
 import { useDebounce } from "use-debounce";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
-import { darkModeAtom, DarkModeToggle } from "~/components/DarkModeToggle";
+import { DarkModeToggle } from "~/components/DarkModeToggle";
 import classNames from "classnames";
+import { MainTemplate } from "../template";
 
 const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
 
@@ -105,19 +105,18 @@ export const Home: NextPage = () => {
   }, [debouncedText, disabled, selected, showNSFW]);
 
   return (
-    <>
-      <NextSeo title="NovelAI Helper" description="NovelAI 태그 생성기" />
+    <MainTemplate title="태그생성기" description="NovelAI 태그 생성기">
       <DragDropContext
         onDragEnd={({ destination, source }) => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
         <div className={classNames("min-h-full")}>
-          <header className="pt-32 px-4">
-            <h1 className="text-center text-4xl font-bold">
-              NovelAI 태그 생성기
-            </h1>
-            <div className="text-center mt-1 text-gray-800 dark:text-zinc-400">
+          <h1 className="text-center text-4xl font-bold mt-8 text-title-color">
+            NovelAI 태그 생성기
+          </h1>
+          {/*<header className="pt-32 px-4">
+             <div className="text-center mt-1 text-gray-800 dark:text-zinc-400">
               <b>
                 본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
               </b>
@@ -149,11 +148,11 @@ export const Home: NextPage = () => {
                 </a>
               </div>
             </div>
-          </header>
-          <div className="flex w-full justify-center gap-4 my-4">
+          </header> */}
+          {/* <div className="flex w-full justify-center gap-4 my-4">
             <NSFWToggle />
             <DarkModeToggle />
-          </div>
+          </div> */}
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
               <Input
@@ -187,6 +186,6 @@ export const Home: NextPage = () => {
         </div>
         <ResultBar />
       </DragDropContext>
-    </>
+    </MainTemplate>
   );
 };
