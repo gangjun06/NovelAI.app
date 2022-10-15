@@ -1,9 +1,7 @@
 import classNames from "classnames";
 import { forwardRef, ReactNode } from "react";
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["input"]> {
-  children: string | ReactNode;
-}
+interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["input"]> {}
 
 export const Input = forwardRef<HTMLInputElement, Props>(
   ({ children, className, ...props }, ref) => {

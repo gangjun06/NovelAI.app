@@ -1,6 +1,7 @@
 import { Fragment, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import classNames from "classnames";
+import { Button } from "~/components/atoms";
 
 interface ModalProps {
   children: ReactNode;
@@ -47,30 +48,24 @@ export const Modal = ({
             >
               <Dialog.Panel
                 className={classNames(
-                  "bg-dark/60 w-full max-w-lg transform overflow-y-auto rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all"
+                  "bg-base text-base-color w-full max-w-lg transform overflow-y-auto rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all"
                 )}
               >
                 {title && (
                   <Dialog.Title
                     as="h3"
-                    className="w-full px-6 pt-5 text-2xl font-medium leading-6 text-gray-100"
+                    className="w-full px-6 pt-5 text-2xl font-medium leading-6 text-title-color"
                   >
                     {title}
                   </Dialog.Title>
                 )}
-                <div className="px-6 py-5 text-base text-gray-400">
-                  {children}
-                </div>
-                <div className="bg-dark flex justify-end gap-2 py-3 px-6">
+                <div className="px-6 py-5 text-base-color">{children}</div>
+                <div className="bg-gray-200 dark:bg-zinc-800 flex justify-end gap-2 py-3 px-6">
                   {buttons}
                   {closeBtn && (
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-violet-600 px-4 py-2 text-sm font-medium text-violet-100 hover:bg-violet-500 focus:outline-none"
-                      onClick={onClose}
-                    >
+                    <Button variant="primary" onClick={onClose}>
                       확인
-                    </button>
+                    </Button>
                   )}
                 </div>
               </Dialog.Panel>

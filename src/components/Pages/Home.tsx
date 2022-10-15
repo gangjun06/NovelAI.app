@@ -9,7 +9,7 @@ import {
   NSFWToggle,
   showNSFWAtom,
 } from "~/components";
-import { Tag } from "~/components/atoms";
+import { Input, Tag } from "~/components/atoms";
 
 import { useDebounce } from "use-debounce";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
@@ -156,7 +156,7 @@ export const Home: NextPage = () => {
           </div>
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
-              <input
+              <Input
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="키워드/태그를 입력하여 주세요"
@@ -169,7 +169,7 @@ export const Home: NextPage = () => {
                     key={text}
                     disabled={disabled}
                     selected={selected === text}
-                    onSelect={() => onSelectTag(text)}
+                    onChange={() => onSelectTag(text)}
                   />
                 ))}
               </div>

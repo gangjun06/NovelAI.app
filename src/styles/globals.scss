@@ -2,19 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  .text-title-color {
+    @apply text-titles-light dark:text-titles-dark
+  }
+  .text-subtitle-color {
+    @apply text-subtitles-light dark:text-subtitles-dark
+  }
+  .text-description-color {
+    @apply text-descriptions-light dark:text-descriptions-dark
+  }
+  .text-base-color {
+    @apply text-bases-light dark:text-bases-dark;
+  }
+  .borer-base {
+    @apply border-base-light dark:border-base-dark
+  }
+  .bg-base {
+    @apply bg-light dark:bg-dark;
+  }
+}
+
 html,
 body,
 #__next {
   height: 100%;
   overflow-x: hidden;
   @apply bg-zinc-50;
-  @apply dark:bg-[#1f2224];
+  @apply text-base bg-base;
 }
 
 a {
   @apply text-primary-800 dark:text-primary-500;
-}
-
-.dark {
-  @apply bg-[#1f2224] text-slate-900;
 }
