@@ -5,6 +5,9 @@ module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      maxWidth: {
+        nav: "80%",
+      },
       colors: {
         primary: colors.sky,
       },

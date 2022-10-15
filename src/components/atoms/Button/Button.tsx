@@ -1,13 +1,45 @@
 import classNames from "classnames";
 import { forwardRef, ReactNode } from "react";
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["button"]> {
-  children: string | ReactNode;
-  variant?: "primary" | "default";
+interface StyleProps {
+  variant?: "primary" | "default" | "subtle" | "light";
   compact?: boolean;
 }
 
-export const Button = forwardRef<HTMLButtonElement, Props>(
+interface DefaultProps extends StyleProps {
+  children: string | ReactNode;
+}
+
+const btnClassNames = (
+  { compact, variant }: StyleProps,
+  { disabled, active }: { disabled?: boolean; active?: boolean },
+  otherClasses?: string
+) =>
+  classNames(
+    "transition text-black rounded flex-none",
+    {
+      "px-4 py-1.5": !compact,
+      "px-2 py-1": compact,
+      "bg-gray-100 text-gray-400 dark:bg-zinc-700": disabled,
+      "shadow-sm": variant !== "subtle",
+      "bg-white hover:bg-gray-100 border border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
+        !disabled && variant === "default",
+      "bg-primary-600 hover:bg-primary-700 text-white":
+        !disabled && variant === "primary",
+      "bg-primary-300/50 text-primary-600 hover:bg-primary-400/50 dark:bg-primary-700/50 dark:text-primary-300 dark:hover:bg-primary-600/50":
+        !disabled && variant === "light",
+      "hover:bg-primary-300/50 text-primary-600 hover:dark:bg-primary-700/50 dark:text-primary-300":
+        !disabled && variant === "subtle",
+      "bg-primary-300/50": !disabled && variant === "subtle" && active,
+      // : "hover:bg-primary-300/40 hover:text-primary-500"
+    },
+    otherClasses
+  );
+
+type ButtonProps = React.PropsWithoutRef<JSX.IntrinsicElements["button"]> &
+  DefaultProps;
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { children, variant = "default", compact = false, className, ...props },
     ref
@@ -16,17 +48,9 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <button
         ref={ref}
         {...props}
-        className={classNames(
-          "transition text-black rounded shadow-sm flex-none",
-          {
-            "px-4 py-1.5": !compact,
-            "px-2 py-1": compact,
-            "bg-gray-100 text-gray-400 dark:bg-zinc-700": props.disabled,
-            "bg-white hover:bg-gray-100 border border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
-              !props.disabled && variant === "default",
-            "bg-primary-600 hover:bg-primary-700 text-white":
-              !props.disabled && variant === "primary",
-          },
+        className={btnClassNames(
+          { compact, variant },
+          { disabled: props.disabled },
           className
         )}
       >
@@ -37,3 +61,32 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 );
 
 Button.displayName = "Button";
+
+type ButtonLinkProps = React.PropsWithoutRef<JSX.IntrinsicElements["a"]> &
+  DefaultProps & { active?: boolean };
+
+export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+  (
+    {
+      children,
+      variant = "default",
+      compact = false,
+      className,
+      active,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <a
+        ref={ref}
+        {...props}
+        className={btnClassNames({ compact, variant }, { active }, className)}
+      >
+        {children}
+      </a>
+    );
+  }
+);
+
+ButtonLink.displayName = "ButtonLInk";
