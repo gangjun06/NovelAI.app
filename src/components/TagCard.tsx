@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import toast from "react-hot-toast";
 import { copyText, replaceText } from "~/utils";
 import { copyAtom } from "./CopyToggle";
