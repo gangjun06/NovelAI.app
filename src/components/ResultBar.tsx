@@ -1,3 +1,4 @@
+import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
@@ -79,21 +80,24 @@ export const ResultBar = () => {
                     <Tag
                       key={key}
                       selected={item.pinned}
-                      left={() =>
-                        item.pinned ? (
-                          <></>
-                        ) : (
-                          <TrashIcon
-                            className="dark:text-white"
-                            width={18}
-                            height={18}
-                            onClick={() => {
-                              setPromptList((prev) =>
-                                prev.filter((_, index) => index !== key)
-                              );
-                            }}
-                          />
-                        )
+                      unselectedLeft={
+                        <TrashIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                          onClick={() => {
+                            setPromptList((prev) =>
+                              prev.filter((_, index) => index !== key)
+                            );
+                          }}
+                        />
+                      }
+                      selectedLeft={
+                        <LockClosedIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                        />
                       }
                       onSelect={() => {
                         if (copyEach) {
