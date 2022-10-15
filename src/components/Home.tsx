@@ -1,23 +1,24 @@
+import { RectangleGroupIcon } from "@heroicons/react/24/outline";
+import classNames from "classnames";
+import { useAtomValue, useSetAtom } from "jotai";
 import type { NextPage } from "next";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { NextSeo } from "next-seo";
+import { useCallback, useMemo, useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
+import { useDebounce } from "use-debounce";
 import tags from "~/assets/tags.json";
 import {
+  NSFWToggle,
+  ResultBar,
+  showNSFWAtom,
   Tag,
   TagCard,
-  ResultBar,
   updatePromptListAtom,
-  NSFWToggle,
-  showNSFWAtom,
   WithUnderbarToggle,
 } from "~/components";
-import { useDebounce } from "use-debounce";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { DragDropContext } from "react-beautiful-dnd";
-import { darkModeAtom, DarkModeToggle } from "./DarkModeToggle";
-import classNames from "classnames";
-import { CopyToggle } from "./CopyToggle";
 import { Tag as TagType, TagsData } from "~/types";
+import { CopyToggle } from "./CopyToggle";
+import { DarkModeToggle } from "./DarkModeToggle";
 
 export const Home: NextPage = () => {
   const [selectedGroup, setSelectedGroup] = useState<string>("");
@@ -163,6 +164,13 @@ export const Home: NextPage = () => {
                     key={text}
                     disabled={disabled}
                     selected={selectedGroup === text}
+                    unselectedLeft={
+                      <RectangleGroupIcon
+                        className="dark:text-white"
+                        width={20}
+                        height={20}
+                      />
+                    }
                     onSelect={() => onSelectGroup(text)}
                   />
                 ))}

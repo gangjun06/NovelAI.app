@@ -1,16 +1,16 @@
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import { Tag } from "./Tag";
 import { useCallback } from "react";
-import classNames from "classnames";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
 import { copyText, replaceText } from "~/utils";
-import { darkModeAtom } from "./DarkModeToggle";
 import { Button } from "./Button";
 import { copyAtom } from "./CopyToggle";
 import { withUnderbarAtom } from "./PromptToggle";
+import { Tag } from "./Tag";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -80,21 +80,24 @@ export const ResultBar = () => {
                     <Tag
                       key={key}
                       selected={item.pinned}
-                      left={() =>
-                        item.pinned ? (
-                          <></>
-                        ) : (
-                          <TrashIcon
-                            className="dark:text-white"
-                            width={18}
-                            height={18}
-                            onClick={() => {
-                              setPromptList((prev) =>
-                                prev.filter((_, index) => index !== key)
-                              );
-                            }}
-                          />
-                        )
+                      unselectedLeft={
+                        <TrashIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                          onClick={() => {
+                            setPromptList((prev) =>
+                              prev.filter((_, index) => index !== key)
+                            );
+                          }}
+                        />
+                      }
+                      selectedLeft={
+                        <LockClosedIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                        />
                       }
                       onSelect={() => {
                         if (copyEach) {
