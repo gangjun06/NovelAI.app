@@ -2,32 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  .text-title-color {
+    @apply text-titles-light dark:text-titles-dark
+  }
+  .text-subtitle-color {
+    @apply text-subtitles-light dark:text-subtitles-dark
+  }
+  .text-description-color {
+    @apply text-descriptions-light dark:text-descriptions-dark
+  }
+  .text-base-color {
+    @apply text-bases-light dark:text-bases-dark;
+  }
+  .border-base-color {
+    @apply border-base-light dark:border-base-dark
+  }
+  .bg-base {
+    @apply bg-light dark:bg-dark;
+  }
+}
+
+html.dark {
+  background-color: rgb(24 24 27);
+}
+
+html:not(.dark) {
+  background-color: #ffffff;
+}
+
 html,
 body,
 #__next {
   height: 100%;
   overflow-x: hidden;
-  @apply bg-zinc-50;
-  @apply dark:bg-[#1f2224];
-}
-
-input.basic {
-  @apply block px-4 py-2 rounded-lg border-base-light border focus:outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 w-72;
-  @apply dark:bg-zinc-700 dark:border-base-dark dark:text-white;
-}
-
-input.copy-to-clipboard {
-  opacity: 0;
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  left: 0;
+  @apply text-base bg-base;
 }
 
 a {
   @apply text-primary-800 dark:text-primary-500;
 }
 
-.dark {
-  @apply bg-[#1f2224] text-white;
+
+.checkboxWrapper {
+  @apply inline-flex items-center gap-1;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input[type='checkbox'] {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  @apply inline-block shrink-0 select-none appearance-none bg-origin-border align-middle;
+  @apply h-4 w-4;
+  @apply rounded border border-gray-600 text-primary-500;
+}
+
+input[type='checkbox']:focus {
+  background-color: transparent;
+}
+
+input[type='checkbox']:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  border-color: transparent;
+  background-color: currentColor;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
 }

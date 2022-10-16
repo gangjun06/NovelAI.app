@@ -1,13 +1,15 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { promptListAtom } from "./ResultBar";
-import { Tag } from "./Tag";
+import { Tag } from "./atoms";
+import classNames from "classnames";
 
 interface Props {
   title: string;
   text: string;
+  display?: boolean;
 }
 
-export const TagCard = ({ title, text }: Props) => {
+export const TagCard = ({ title, text, display }: Props) => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
 
   const updateTag = (tag: string) => {
@@ -23,7 +25,11 @@ export const TagCard = ({ title, text }: Props) => {
   };
 
   return (
-    <div className="border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light">
+    <div
+      className={classNames(
+        "border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light"
+      )}
+    >
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
         {text.split(", ").map((text, index) => {

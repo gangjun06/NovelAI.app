@@ -3,9 +3,12 @@ function detectDarkMode() {
     return;
   }
 
+  let theme = globalThis.localStorage.theme ?? "system";
+  theme = theme.replace(/"/g, "");
+
   if (
-    globalThis.localStorage.darkmode === "true" ||
-    (!("darkmode" in globalThis.localStorage) &&
+    theme === "dark" ||
+    (theme === "system" &&
       globalThis.matchMedia("(prefers-color-scheme: dark)").matches)
   ) {
     globalThis.document.documentElement.classList.add("dark");

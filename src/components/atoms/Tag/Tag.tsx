@@ -1,44 +1,50 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { forwardRef } from "react";
+import { Switch } from "@headlessui/react";
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["div"]> {
+interface Props
+  extends Omit<
+    React.PropsWithoutRef<JSX.IntrinsicElements["button"]>,
+    "onChange"
+  > {
   label: string;
   selected?: boolean;
-  onSelect?: () => void;
-  disabled?: boolean;
-  ignoreDisabled?: boolean;
-  left?: () => JSX.Element;
+  onChange?: (state: boolean) => void;
 }
 
-export const Tag = forwardRef<HTMLDivElement, Props>(
+export const Tag = forwardRef<HTMLButtonElement, Props>(
   (
     {
       label,
       selected,
       disabled = false,
-      ignoreDisabled = false,
-      onSelect,
+      onChange,
       className,
-      left: Left,
+      value: _value,
       ...props
     },
     ref
   ) => {
+    const handle = () => {
+      if (typeof onChange === "function") onChange(!selected);
+    };
+
     return (
-      <div
+      <Switch
+        as="button"
+        checked={selected}
+        onChange={() => handle()}
         className={classNames(
           "border shadow-sm rounded-full pl-2 flex max-w-fit gap-x-1 items-center dark:bg-zinc-800 dark:border-gray-600 bg-white",
-          !disabled &&
-            (selected
-              ? "border-primary-300"
-              : "border-base-light dark:border-gray-600"),
-          !disabled && "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
+          {
+            "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer":
+              !disabled,
+            "border-primary-300": !disabled && selected,
+            "border-base-light dark:border-gray-600": !disabled && !selected,
+          },
+          className
         )}
-        onClick={
-          (ignoreDisabled || !disabled) && selected ? onSelect : undefined
-        }
-        ref={ref}
         {...props}
       >
         {selected && (
@@ -51,19 +57,15 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
             )}
           />
         )}
-        {Left && <Left />}
         <span
           className={classNames(
             disabled ? "text-gray-500" : "text-gray-800 dark:text-gray-200",
             "py-0.5, pr-2"
           )}
-          onClick={
-            (ignoreDisabled || !disabled) && !selected ? onSelect : undefined
-          }
         >
           {label}
         </span>
-      </div>
+      </Switch>
     );
   }
 );
