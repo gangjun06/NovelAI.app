@@ -1,7 +1,9 @@
 import { CogIcon } from "@heroicons/react/24/outline";
+import { useAtom, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Button, ButtonLink } from "~/components/atoms";
+import { SettingModal, showModalAtom } from "../SettingModal/SettingModal";
 
 interface Props {}
 
@@ -25,25 +27,35 @@ const NavItem = ({
 
 export const MainNav = ({}: Props) => {
   const { pathname } = useRouter();
+  const setShowSetting = useSetAtom(showModalAtom);
 
   return (
-    <nav className="px-4 py-4 shadow sticky bg-white dark:bg-zinc-900">
-      <div className="sm:max-w-nav mx-auto flex justify-between items-center">
-        <div className="flex gap-x-2 items-center">
-          <Link href="/" passHref>
-            <a className="font-bold text-xl text-title-color pr-4">
-              NovelAI.APP
-            </a>
-          </Link>
-          <NavItem name="태그 생성기" href="/" isActive={pathname === "/"} />
-          <NavItem name="정보" href="/info" isActive={pathname === "/info"} />
+    <>
+      <SettingModal />
+      <nav className="px-4 py-4 shadow sticky bg-white dark:bg-zinc-900">
+        <div className="sm:max-w-nav mx-auto flex justify-between items-center">
+          <div className="flex gap-x-2 items-center">
+            <Link href="/" passHref>
+              <a className="font-bold text-xl text-title-color pr-4">
+                NovelAI.APP
+              </a>
+            </Link>
+            <NavItem name="태그 생성기" href="/" isActive={pathname === "/"} />
+            <NavItem name="정보" href="/info" isActive={pathname === "/info"} />
+          </div>
+          <div>
+            <Button
+              variant="subtle"
+              forIcon
+              onClick={() => {
+                setShowSetting(true);
+              }}
+            >
+              <CogIcon width={28} height={28} />
+            </Button>
+          </div>
         </div>
-        <div>
-          <Button variant="subtle" forIcon>
-            <CogIcon width={28} height={28} />
-          </Button>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };

@@ -4,3 +4,4 @@ export * from "./Tag/Tag";
 export * from "./Transition/Transition";
 export * from "./Checkbox/Checkbox";
 export * from "./Switch/Switch";
+export * from "./Select/Select";

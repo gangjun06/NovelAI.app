@@ -7,6 +7,7 @@ interface ModalProps {
   children: ReactNode;
   show: boolean;
   onClose?: () => void;
+  onCancel?: () => void;
   closeBtn?: boolean;
   title?: string;
   buttons?: ReactNode;
@@ -16,6 +17,7 @@ export const Modal = ({
   children,
   show,
   onClose = () => {},
+  onCancel,
   closeBtn,
   title,
   buttons,
@@ -36,7 +38,7 @@ export const Modal = ({
         </Transition.Child>
 
         <div className="fixed inset-0 flex items-center justify-center overflow-y-scroll p-5">
-          <div className="flex min-h-full items-center justify-center text-center">
+          <div className="flex min-h-full items-center justify-center text-center w-full">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -62,6 +64,11 @@ export const Modal = ({
                 <div className="px-6 py-5 text-base-color">{children}</div>
                 <div className="bg-gray-200 dark:bg-zinc-800 flex justify-end gap-2 py-3 px-6">
                   {buttons}
+                  {typeof onCancel === "function" && (
+                    <Button variant="default" onClick={onCancel}>
+                      취소
+                    </Button>
+                  )}
                   {closeBtn && (
                     <Button variant="primary" onClick={onClose}>
                       확인
