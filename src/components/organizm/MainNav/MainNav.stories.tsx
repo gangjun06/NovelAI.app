@@ -4,7 +4,7 @@ import type { ComponentMeta, ComponentStory } from "@storybook/react";
 import { MainNav } from "./MainNav";
 
 export default {
-  title: "Organizm/MainNav",
+  title: "Organizm/Main/Nav",
   component: MainNav,
   argTypes: {},
 } as ComponentMeta<typeof MainNav>;
@@ -12,9 +12,9 @@ export default {
 const Template: ComponentStory<typeof MainNav> = (args) => (
   <MainNav {...args} />
 );
-export const Default = Template.bind({});
-Default.args = {};
-Default.parameters = {
+export const Nav = Template.bind({});
+Nav.args = {};
+Nav.parameters = {
   nextRouter: {
     path: "/",
   },
