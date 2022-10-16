@@ -4,6 +4,7 @@ import { forwardRef, ReactNode } from "react";
 interface StyleProps {
   variant?: "primary" | "default" | "subtle" | "light";
   compact?: boolean;
+  forIcon?: boolean;
 }
 
 interface DefaultProps extends StyleProps {
@@ -11,15 +12,16 @@ interface DefaultProps extends StyleProps {
 }
 
 const btnClassNames = (
-  { compact, variant }: StyleProps,
+  { compact, variant, forIcon }: StyleProps,
   { disabled, active }: { disabled?: boolean; active?: boolean },
   otherClasses?: string
 ) =>
   classNames(
     "transition text-black rounded flex-none",
     {
-      "px-4 py-1.5": !compact,
-      "px-2 py-1": compact,
+      "px-4 py-1.5": !compact && !forIcon,
+      "px-2 py-1": compact && !forIcon,
+      "px-1 py-1": forIcon,
       "bg-gray-100 text-gray-400 dark:bg-zinc-700": disabled,
       "shadow-sm": variant !== "subtle",
       "bg-white hover:bg-gray-100 border border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
@@ -42,7 +44,14 @@ type ButtonProps = React.PropsWithoutRef<JSX.IntrinsicElements["button"]> &
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { children, variant = "default", compact = false, className, ...props },
+    {
+      children,
+      variant = "default",
+      forIcon,
+      compact = false,
+      className,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -50,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
         className={btnClassNames(
-          { compact, variant },
+          { compact, variant, forIcon },
           { disabled: props.disabled },
           className
         )}
@@ -73,6 +82,7 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       variant = "default",
       compact = false,
       className,
+      forIcon,
       active,
       ...props
     },
@@ -82,7 +92,11 @@ export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
       <a
         ref={ref}
         {...props}
-        className={btnClassNames({ compact, variant }, { active }, className)}
+        className={btnClassNames(
+          { compact, variant, forIcon },
+          { active },
+          className
+        )}
       >
         {children}
       </a>

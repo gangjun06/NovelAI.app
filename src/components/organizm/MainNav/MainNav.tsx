@@ -1,6 +1,7 @@
+import { CogIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ButtonLink } from "~/components/atoms";
+import { Button, ButtonLink } from "~/components/atoms";
 
 interface Props {}
 
@@ -38,7 +39,9 @@ export const MainNav = ({}: Props) => {
           <NavItem name="정보" href="/info" isActive={pathname === "/info"} />
         </div>
         <div>
-          <div>A</div>
+          <Button variant="subtle" forIcon>
+            <CogIcon width={28} height={28} />
+          </Button>
         </div>
       </div>
     </nav>
