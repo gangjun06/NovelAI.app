@@ -1,18 +1,30 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
+import toast from "react-hot-toast";
+import { copyText, replaceText } from "~/utils";
 import { promptListAtom } from "./ResultBar";
 import { Tag } from "./atoms";
 import classNames from "classnames";
+import { settingAtom } from "~/hooks/useSetting";
 
 interface Props {
   title: string;
-  text: string;
-  display?: boolean;
+  tags: string[];
 }
 
-export const TagCard = ({ title, text, display }: Props) => {
+const copyAtom = atom((get) => get(settingAtom).useCopyEach);
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
+
+export const TagCard = ({ title, tags }: Props) => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
+  const copyEach = useAtomValue(copyAtom);
+  const withUnderbar = useAtomValue(replaceAtom);
 
   const updateTag = (tag: string) => {
+    if (copyEach) {
+      copyText(replaceText(tag, withUnderbar));
+      toast.success("태그를 복사하였습니다!");
+      return;
+    }
     setPromptList((prev) => {
       const index = prev.findIndex(({ tag: t }) => t === tag);
       if (index < 0) {
@@ -32,7 +44,7 @@ export const TagCard = ({ title, text, display }: Props) => {
     >
       <div className="font-bold">{title}</div>
       <div className="flex flex-wrap gap-1 mt-1 select-none">
-        {text.split(", ").map((text, index) => {
+        {tags.map((text, index) => {
           const selected = !!promptList.find((d) => d.tag === text);
           return (
             <Tag

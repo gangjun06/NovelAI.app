@@ -1,108 +1,92 @@
-import type { NextPage } from "next";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import tags from "~/assets/tags.json";
-import {
-  TagCard,
-  ResultBar,
-  updatePromptListAtom,
-  NSFWToggle,
-  showNSFWAtom,
-} from "~/components";
-import { Input, Tag } from "~/components/atoms";
-
-import { useDebounce } from "use-debounce";
-import { useAtomValue, useSetAtom } from "jotai";
-import { DragDropContext } from "react-beautiful-dnd";
-import { DarkModeToggle } from "~/components/DarkModeToggle";
 import classNames from "classnames";
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import type { NextPage } from "next";
+import { useCallback, useMemo, useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
+import { useDebounce } from "use-debounce";
+import tags from "~/assets/tags.json";
+import { ResultBar, TagCard, updatePromptListAtom } from "~/components";
+import { settingAtom } from "~/hooks/useSetting";
+import { Tag as TagType, TagsData } from "~/types";
+import { Input, Tag } from "../atoms";
 import { MainTemplate } from "../template";
 
-const searchRegex = /([가-힇a-zA-Z_/]+|"[가-힇a-zA-Z_/ ]+")/g;
+const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
 export const Home: NextPage = () => {
-  const [selected, setSelected] = useState<string>("");
+  const [selectedGroup, setSelectedGroup] = useState<string>("");
+  const [selected, setSelected] = useState<string | null>(null);
   const [text, setText] = useState("");
-  const [debouncedText] = useDebounce(text, 300);
+  const [debouncedText] = useDebounce(text, 500);
   const updatePromptList = useSetAtom(updatePromptListAtom);
-  const showNSFW = useAtomValue(showNSFWAtom);
+  const useNSFW = useAtomValue(nsfwAtom);
 
   const disabled = useMemo(() => text.length > 0, [text]);
+  const onSelectGroup = useCallback((label: string) => {
+    setSelected(null);
+    setSelectedGroup((prev) => (prev === label ? "" : label));
+  }, []);
   const onSelectTag = useCallback((label: string) => {
     setSelected((prev) => (prev === label ? "" : label));
   }, []);
 
-  const filteredTag = useMemo(
-    () => [
-      ...new Set(
-        tags
-          .filter(({ nsfw }) => !nsfw || (nsfw && showNSFW))
-          .reduce<string[]>((a, b) => [...a, b.category], [])
+  const groupList = useMemo(
+    () =>
+      Object.keys(tags as unknown as TagsData).filter(
+        (str) => !str.startsWith("!") || useNSFW
       ),
-    ],
-    [showNSFW]
+    [useNSFW]
   );
 
-  const filtered = useMemo(() => {
-    if (!disabled) {
-      return selected === ""
-        ? tags
-        : tags.filter(
-            ({ category, nsfw }) =>
-              category === selected && (!nsfw || (nsfw && showNSFW))
-          );
+  const categoryList = useMemo(() => {
+    const current = (tags as unknown as TagsData)[selectedGroup];
+    if (!current) return null;
+    const result: { [key: string]: boolean } = {};
+    for (const item of current) {
+      if (item.nsfw && !useNSFW) continue;
+      result[item.category] = true;
     }
-    const matched =
-      debouncedText.match(searchRegex)?.map((text) => {
-        text = text.toLowerCase();
-        if (text.startsWith('"')) {
-          return {
-            keyword: text.substring(1).slice(0, -1),
-            isFull: true,
-            isEnglish: !!text.match(/^[a-zA-Z_]+$/),
-            hasSpace: text.includes(" "),
-          };
-        }
-        return {
-          keyword: text,
-          isCategory: text.includes("/"),
-          isEnglish: !!text.match(/^[a-zA-Z_]+$/),
-        };
-      }) ?? null;
-    if (!matched) return [];
+    return Object.keys(result).reduce((a: string[], b) => [...a, b], []);
+  }, [selectedGroup, useNSFW]);
 
-    const result = tags.filter((tag) => {
-      if (tag.nsfw && !showNSFW) return false;
-      for (const data of matched) {
-        if (data.isFull) {
-          if (data.isEnglish)
-            return tag.tags.toLowerCase().includes(data.keyword);
-          if (data.hasSpace) {
-            if (tag.name.includes(data.keyword)) return true;
-          } else {
-            if (tag.category.includes(data.keyword)) return true;
-            if (tag.subCategory.includes(data.keyword)) return true;
-            if (`${tag.category}/${tag.subCategory}`.includes(data.keyword))
-              return true;
-          }
-          return false;
-        }
+  const filtered = useMemo(() => {
+    const result: TagType[] = [];
 
-        if (data.isCategory) {
-          return `${tag.category}/${tag.subCategory}`.includes(data.keyword);
-        }
-
-        if (data.isEnglish) {
-          return tag.tags.toLowerCase().includes(data.keyword);
-        }
-
-        if (tag.name.includes(data.keyword)) return true;
-        if (tag.category.includes(data.keyword)) return true;
-        if (tag.subCategory.includes(data.keyword)) return true;
+    if (!disabled) {
+      const current = (tags as unknown as TagsData)[selectedGroup];
+      if (!current) {
+        Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
+          if (!useNSFW && key.startsWith("!")) return;
+          list.forEach((item) => {
+            if (!useNSFW && item.nsfw) return;
+            result.push(item);
+          });
+        });
+        return result;
       }
-      return false;
+      return current.filter(
+        ({ category, nsfw }) =>
+          (selected ? category === selected : true) &&
+          (!nsfw || (nsfw && useNSFW))
+      );
+    }
+
+    Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
+      if (!useNSFW && key.startsWith("!")) return;
+      list.forEach((item) => {
+        if (!useNSFW && item.nsfw) return;
+        if (
+          !item.category.includes(debouncedText) &&
+          !item.subCategory.includes(debouncedText) &&
+          !item.name.includes(debouncedText) &&
+          !item.tags.includes(debouncedText)
+        )
+          return;
+        result.push(item);
+      });
     });
     return result;
-  }, [debouncedText, disabled, selected, showNSFW]);
+  }, [debouncedText, disabled, selected, selectedGroup, useNSFW]);
 
   return (
     <MainTemplate title="태그생성기" description="NovelAI 태그 생성기">
@@ -115,44 +99,6 @@ export const Home: NextPage = () => {
           <h1 className="text-center text-4xl font-bold mt-8 text-title-color">
             NovelAI 태그 생성기
           </h1>
-          {/*<header className="pt-32 px-4">
-             <div className="text-center mt-1 text-gray-800 dark:text-zinc-400">
-              <b>
-                본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.
-              </b>
-              <br />
-              NovelAI 사용시 유용한 태그를 찾는 사이트입니다.{" "}
-              <a href="https://arca.live/b/aiart/60305526">태그출처</a>
-              <br />
-              아직 개발 중이며 로드맵은{" "}
-              <a href="https://github.com/gangjun06/NovelAI-helper/issues/1">
-                이곳
-              </a>{" "}
-              에서 보실 수 있습니다.
-              <br />
-              <div className="flex gap-3 justify-center mt-1">
-                <a href="mailto:me@gangjun.dev">문의</a>
-                <a
-                  href="https://github.com/gangjun06/novelai-helper"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  소스코드(깃허브)
-                </a>
-                <a
-                  href="https://toss.me/gangjun"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  개발자에게 커피 선물하기
-                </a>
-              </div>
-            </div>
-          </header> */}
-          {/* <div className="flex w-full justify-center gap-4 my-4">
-            <NSFWToggle />
-            <DarkModeToggle />
-          </div> */}
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
               <Input
@@ -161,24 +107,39 @@ export const Home: NextPage = () => {
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
-              <div className="flex flex-wrap gap-2 mt-4 select-none">
-                {filteredTag.map((text) => (
+              <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                {groupList.map((text) => (
                   <Tag
-                    label={text}
+                    label={text.replace("!", "")}
                     key={text}
                     disabled={disabled}
                     selected={selected === text}
-                    onChange={() => onSelectTag(text)}
+                    onSelect={() => onSelectGroup(text)}
                   />
                 ))}
               </div>
+              {categoryList && (
+                <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                  {categoryList.map((text) => (
+                    <Tag
+                      label={text}
+                      key={text}
+                      disabled={disabled}
+                      selected={selected === text}
+                      onSelect={() => onSelectTag(text)}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
             <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
-              {filtered.map(({ id, category, subCategory, name, tags }) => (
+              {filtered.map(({ category, subCategory, name, tags }) => (
                 <TagCard
-                  key={id}
-                  title={`${category}/${subCategory} - ${name}`}
-                  text={tags}
+                  key={`${category}/${subCategory}/${name}/${tags}`}
+                  title={`${category}${
+                    subCategory ? `/${subCategory}` : ""
+                  } - ${name}`}
+                  tags={tags}
                 />
               ))}
             </section>

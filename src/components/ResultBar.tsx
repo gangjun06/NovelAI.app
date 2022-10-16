@@ -1,14 +1,13 @@
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { LockClosedIcon, TrashIcon } from "@heroicons/react/24/outline";
+import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import { Tag } from "~/components/atoms";
 import { useCallback } from "react";
-import classNames from "classnames";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
-import { copyText } from "~/utils";
-import { darkModeAtom } from "./DarkModeToggle";
-import { Button } from "./atoms";
+import { copyText, replaceText } from "~/utils";
+import { Tag, Button } from "./atoms";
+import { settingAtom } from "~/hooks/useSetting";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -25,14 +24,30 @@ export const updatePromptListAtom = atom(
   }
 );
 
+const copyAtom = atom((get) => get(settingAtom).useCopyEach);
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
+
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
-  const darkMode = useAtomValue(darkModeAtom);
+  const copyEach = useAtomValue(copyAtom);
+  const withUnderbar = useAtomValue(replaceAtom);
+
+  const copyTag = useCallback(
+    (text: string) => {
+      copyText(replaceText(text, withUnderbar));
+      toast.success("프롬프트를 복사하였습니다!");
+    },
+    [withUnderbar]
+  );
 
   const copyPrompt = useCallback(() => {
-    copyText(promptList.reduce((a, b) => `${a}${b.tag}, `, "").slice(0, -2));
+    copyText(
+      promptList
+        .reduce((a, b) => `${a}${replaceText(b.tag, withUnderbar)}, `, "")
+        .slice(0, -2)
+    );
     toast.success("프롬프트를 복사하였습니다!");
-  }, [promptList]);
+  }, [promptList, withUnderbar]);
 
   const resetPrompt = useCallback(() => {
     setPromptList((prev) => prev.filter(({ pinned }) => pinned));
@@ -52,9 +67,12 @@ export const ResultBar = () => {
         <Droppable droppableId="result-bar" direction="horizontal">
           {(provided, snapshot) => (
             <div
-              className="w-full flex items-center px-6 flex-1 gap-y-2 overflow-x-scroll"
+              className="w-full flex items-center px-6 flex-grow gap-y-2 overflow-x-scroll hide-scroll"
               {...provided.droppableProps}
               ref={provided.innerRef}
+              onWheel={(event) => {
+                event.currentTarget.scrollLeft += event.deltaY;
+              }}
             >
               {promptList.map((item, key) => (
                 <Draggable key={item.tag} index={key} draggableId={item.tag}>
@@ -62,23 +80,30 @@ export const ResultBar = () => {
                     <Tag
                       key={key}
                       selected={item.pinned}
-                      // left={() =>
-                      //   item.pinned ? (
-                      //     <></>
-                      //   ) : (
-                      //     <TrashIcon
-                      //       className="dark:text-white"
-                      //       width={18}
-                      //       height={18}
-                      //       onClick={() => {
-                      //         setPromptList((prev) =>
-                      //           prev.filter((_, index) => index !== key)
-                      //         );
-                      //       }}
-                      //     />
-                      //   )
-                      // }
+                      unselectedLeft={
+                        <TrashIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                          onClick={() => {
+                            setPromptList((prev) =>
+                              prev.filter((_, index) => index !== key)
+                            );
+                          }}
+                        />
+                      }
+                      selectedLeft={
+                        <LockClosedIcon
+                          className="dark:text-white"
+                          width={18}
+                          height={18}
+                        />
+                      }
                       onSelect={() => {
+                        if (copyEach) {
+                          copyTag(item.tag);
+                          return;
+                        }
                         setPromptList((prev) => {
                           const cloned = [...prev];
                           if (!cloned[key]) return cloned;
