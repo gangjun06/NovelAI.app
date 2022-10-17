@@ -12,7 +12,7 @@ interface Props {
 export const MainTemplate = ({ title, description, children }: Props) => {
   return (
     <>
-      <NextSeo title={title} description={description} />
+      <NextSeo title={`${title} | NovelAI.APP`} description={description} />
       <MainNav />
       {children}
       {/* <MainFooter /> */}
