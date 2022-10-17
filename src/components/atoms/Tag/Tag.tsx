@@ -2,7 +2,11 @@ import { CheckIcon, TagIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import React, { forwardRef } from "react";
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["div"]> {
+interface Props
+  extends Omit<
+    React.PropsWithoutRef<JSX.IntrinsicElements["div"]>,
+    "onChange"
+  > {
   label: string;
   selected?: boolean;
   onSelect?: () => void;
@@ -52,7 +56,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
           "border shadow-sm rounded-full flex max-w-fit gap-x-1 items-center dark:bg-zinc-800 dark:border-gray-600 bg-white pl-2",
           !disabled &&
             (selected
-              ? "border-primary-300"
+              ? "border-primary-300 dark:border-primary-600"
               : "border-base-light dark:border-gray-600"),
           !disabled &&
             "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer",

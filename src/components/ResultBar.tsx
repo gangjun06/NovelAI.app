@@ -1,5 +1,4 @@
-import { LockClosedIcon } from "@heroicons/react/24/outline";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { LockClosedIcon, TrashIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { atomWithStorage } from "jotai/utils";
@@ -7,10 +6,8 @@ import { useCallback } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { toast } from "react-hot-toast";
 import { copyText, replaceText } from "~/utils";
-import { Button } from "./Button";
-import { copyAtom } from "./CopyToggle";
-import { withUnderbarAtom } from "./PromptToggle";
-import { Tag } from "./Tag";
+import { Tag, Button } from "./atoms";
+import { settingAtom } from "~/hooks/useSetting";
 
 export const promptListAtom = atomWithStorage<
   { tag: string; pinned: boolean }[]
@@ -27,10 +24,13 @@ export const updatePromptListAtom = atom(
   }
 );
 
+const copyAtom = atom((get) => get(settingAtom).useCopyEach);
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
+
 export const ResultBar = () => {
   const [promptList, setPromptList] = useAtom(promptListAtom);
   const copyEach = useAtomValue(copyAtom);
-  const withUnderbar = useAtomValue(withUnderbarAtom);
+  const withUnderbar = useAtomValue(replaceAtom);
 
   const copyTag = useCallback(
     (text: string) => {
