@@ -6,5 +6,3 @@ labels: "Status: Unconfirmed"
 ---
 
 ## Description (설명)
-
-## Steps To Reproduce (재현방법)
