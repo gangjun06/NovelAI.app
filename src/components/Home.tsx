@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useCallback, useMemo, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { useDebounce } from "use-debounce";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 import tags from "~/assets/tags.json";
 import {
   NSFWToggle,
@@ -24,11 +24,11 @@ export const Home: NextPage = () => {
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [selected, setSelected] = useState<string | null>(null);
   const [text, setText] = useState("");
-  const [debouncedText] = useDebounce(text, 500);
+  const debouncedText = useDebouncedCallback((value) => setText(value), 1000);
   const updatePromptList = useSetAtom(updatePromptListAtom);
   const showNSFW = useAtomValue(showNSFWAtom);
 
-  const disabled = useMemo(() => text.length > 0, [text]);
+  const disabled = useMemo(() => text !== "", [text]);
   const onSelectGroup = useCallback((label: string) => {
     setSelected(null);
     setSelectedGroup((prev) => (prev === label ? "" : label));
@@ -78,22 +78,44 @@ export const Home: NextPage = () => {
       );
     }
 
+    let searchText = text.trim();
+    let isFullEng = false;
+    const isEng = searchText.match(/[a-zA-Z ]+/);
+    if (isEng) {
+      searchText = searchText.toLowerCase();
+      isFullEng = isEng[0].toLowerCase() === searchText;
+    }
+
     Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
       if (!showNSFW && key.startsWith("!")) return;
       list.forEach((item) => {
         if (!showNSFW && item.nsfw) return;
-        if (
-          !item.category.includes(debouncedText) &&
-          !item.subCategory.includes(debouncedText) &&
-          !item.name.includes(debouncedText) &&
-          !item.tags.includes(debouncedText)
-        )
-          return;
-        result.push(item);
+
+        const isOK = (() => {
+          if (isEng) {
+            if (isFullEng) {
+              for (const tag of item.tags) {
+                if (tag.toLowerCase().includes(searchText)) return true;
+              }
+            } else {
+              if (item.name.toLowerCase().includes(searchText)) return true;
+            }
+            return false;
+          }
+
+          if (item.category.includes(searchText)) return true;
+          if (item.subCategory.includes(searchText)) return true;
+          if (item.name.includes(searchText)) return true;
+          return false;
+        })();
+
+        if (isOK) {
+          result.push(item);
+        }
       });
     });
     return result;
-  }, [debouncedText, disabled, selected, selectedGroup, showNSFW]);
+  }, [text, disabled, selected, selectedGroup, showNSFW]);
 
   return (
     <>
@@ -152,8 +174,8 @@ export const Home: NextPage = () => {
           <main className="container mx-auto px-4 mt-4">
             <section className="flex w-full items-center flex-col">
               <input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
+                defaultValue=""
+                onChange={(e) => debouncedText(e.target.value)}
                 placeholder="키워드/태그를 입력하여 주세요"
                 className="basic"
               />
