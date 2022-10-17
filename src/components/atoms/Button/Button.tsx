@@ -17,7 +17,7 @@ const btnClassNames = (
   otherClasses?: string
 ) =>
   classNames(
-    "transition text-black rounded flex-none",
+    "transition text-black rounded flex-none text-center",
     {
       "px-4 py-1.5": !compact && !forIcon,
       "px-2 py-1": compact && !forIcon,
