@@ -38,6 +38,12 @@ body,
   overflow-x: hidden;
   @apply text-base bg-base;
 }
+ #__next{
+  position: relative;
+  top: 0;
+  left: 0;
+  min-height: 100%;
+}
 
 a {
   @apply text-primary-800 dark:text-primary-500;

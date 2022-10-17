@@ -95,56 +95,54 @@ export const Home: NextPage = () => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
-        <div className={classNames("min-h-full")}>
-          <h1 className="text-center text-4xl font-bold mt-8 text-title-color">
-            NovelAI 태그 생성기
-          </h1>
-          <main className="container mx-auto px-4 mt-4">
-            <section className="flex w-full items-center flex-col">
-              <Input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="키워드/태그를 입력하여 주세요"
-                className="basic"
-              />
+        <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
+          NovelAI 태그 생성기
+        </h1>
+        <main className="container mx-auto px-4 mt-4">
+          <section className="flex w-full items-center flex-col">
+            <Input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="키워드/태그를 입력하여 주세요"
+              className="basic"
+            />
+            <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+              {groupList.map((text) => (
+                <Tag
+                  label={text.replace("!", "")}
+                  key={text}
+                  disabled={disabled}
+                  selected={selected === text}
+                  onSelect={() => onSelectGroup(text)}
+                />
+              ))}
+            </div>
+            {categoryList && (
               <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
-                {groupList.map((text) => (
+                {categoryList.map((text) => (
                   <Tag
-                    label={text.replace("!", "")}
+                    label={text}
                     key={text}
                     disabled={disabled}
                     selected={selected === text}
-                    onSelect={() => onSelectGroup(text)}
+                    onSelect={() => onSelectTag(text)}
                   />
                 ))}
               </div>
-              {categoryList && (
-                <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
-                  {categoryList.map((text) => (
-                    <Tag
-                      label={text}
-                      key={text}
-                      disabled={disabled}
-                      selected={selected === text}
-                      onSelect={() => onSelectTag(text)}
-                    />
-                  ))}
-                </div>
-              )}
-            </section>
-            <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
-              {filtered.map(({ category, subCategory, name, tags }) => (
-                <TagCard
-                  key={`${category}/${subCategory}/${name}/${tags}`}
-                  title={`${category}${
-                    subCategory ? `/${subCategory}` : ""
-                  } - ${name}`}
-                  tags={tags}
-                />
-              ))}
-            </section>
-          </main>
-        </div>
+            )}
+          </section>
+          <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
+            {filtered.map(({ category, subCategory, name, tags }) => (
+              <TagCard
+                key={`${category}/${subCategory}/${name}/${tags}`}
+                title={`${category}${
+                  subCategory ? `/${subCategory}` : ""
+                } - ${name}`}
+                tags={tags}
+              />
+            ))}
+          </section>
+        </main>
         <ResultBar />
       </DragDropContext>
     </MainTemplate>

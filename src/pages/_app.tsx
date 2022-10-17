@@ -12,7 +12,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const handleRouteChange = (url: any) => {
       //@ts-ignore
-      gtag.pageview(url);
+      if (typeof gtag !== "undefined" && typeof gtag.pageview === "function") {
+        //@ts-ignore
+        gtag.pageview(url);
+      }
     };
     router.events.on("routeChangeComplete", handleRouteChange);
     router.events.on("hashChangeComplete", handleRouteChange);

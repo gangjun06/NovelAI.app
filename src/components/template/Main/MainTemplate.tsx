@@ -1,7 +1,7 @@
 import { NextSeo } from "next-seo";
 import { ReactNode } from "react";
 import { MainNav } from "~/components/organizm";
-import { Footer } from "~/components/organizm/MainFooter/MainFooter.stories";
+import { MainFooter } from "~/components/organizm";
 
 interface Props {
   title: string;
@@ -14,8 +14,8 @@ export const MainTemplate = ({ title, description, children }: Props) => {
     <>
       <NextSeo title={title} description={description} />
       <MainNav />
-      <div>{children}</div>
-      <Footer />
+      {children}
+      {/* <MainFooter /> */}
     </>
   );
 };

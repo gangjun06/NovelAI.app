@@ -41,7 +41,11 @@ export const MainNav = ({}: Props) => {
               </a>
             </Link>
             <NavItem name="태그 생성기" href="/" isActive={pathname === "/"} />
-            {/* <NavItem name="정보" href="/info" isActive={pathname === "/info"} /> */}
+            <NavItem
+              name="정보"
+              href="/about"
+              isActive={pathname === "/about"}
+            />
           </div>
           <div>
             <Button
