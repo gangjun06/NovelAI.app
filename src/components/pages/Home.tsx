@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { RectangleGroupIcon } from "@heroicons/react/24/outline";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import type { NextPage } from "next";
 import { useCallback, useMemo, useState } from "react";
@@ -107,15 +107,25 @@ export const Home: NextPage = () => {
               className="basic"
             />
             <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
-              {groupList.map((text) => (
-                <Tag
-                  label={text.replace("!", "")}
-                  key={text}
-                  disabled={disabled}
-                  selected={selected === text}
-                  onSelect={() => onSelectGroup(text)}
-                />
-              ))}
+              {groupList.map((text) => {
+                const replacedText = text.replace("!", "");
+                return (
+                  <Tag
+                    label={replacedText}
+                    key={text}
+                    disabled={disabled}
+                    selected={selectedGroup === text}
+                    onSelect={() => onSelectGroup(text)}
+                    unselectedLeft={
+                      <RectangleGroupIcon
+                        className="dark:text-white"
+                        width={20}
+                        height={20}
+                      />
+                    }
+                  />
+                );
+              })}
             </div>
             {categoryList && (
               <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
