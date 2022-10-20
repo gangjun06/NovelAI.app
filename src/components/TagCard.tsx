@@ -39,7 +39,7 @@ export const TagCard = ({ title, tags }: Props) => {
   return (
     <div
       className={classNames(
-        "border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light"
+        "border shadow-sm rounded-sm px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light basic-full"
       )}
     >
       <div className="font-bold">{title}</div>

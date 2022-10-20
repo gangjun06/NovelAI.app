@@ -70,7 +70,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
         <span
           className={classNames(
             disabled ? "text-gray-500" : "text-gray-800 dark:text-gray-200",
-            "py-0.5 pr-2"
+            "py-0.5 pr-2 text-ellipsis"
           )}
         >
           {label}

@@ -78,3 +78,7 @@ input[type='checkbox']:checked {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.gutter.gutter-horizontal {
+  cursor: col-resize;
+}

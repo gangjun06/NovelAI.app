@@ -10,6 +10,8 @@ import { settingAtom } from "~/hooks/useSetting";
 import { Tag as TagType, TagsData } from "~/types";
 import { Input, Tag } from "../atoms";
 import { MainTemplate } from "../template";
+import Split from "react-split";
+import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
@@ -20,6 +22,9 @@ export const Home: NextPage = () => {
   const [debouncedText] = useDebounce(text, 500);
   const updatePromptList = useSetAtom(updatePromptListAtom);
   const useNSFW = useAtomValue(nsfwAtom);
+  const { ref, width, height, gridStyle } = useResponsiveGrid([
+    1, 2, 3, 4, 5, 6, 7,
+  ]);
 
   const disabled = useMemo(() => text.length > 0, [text]);
   const onSelectGroup = useCallback((label: string) => {
@@ -95,55 +100,74 @@ export const Home: NextPage = () => {
           updatePromptList({ from: source.index, to: destination?.index || 0 });
         }}
       >
-        <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
-          NovelAI 태그 생성기
-        </h1>
-        <main className="container mx-auto px-4 mt-4">
-          <section className="flex w-full items-center flex-col">
-            <Input
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="키워드/태그를 입력하여 주세요"
-              className="basic"
-            />
-            <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
-              {groupList.map((text) => (
-                <Tag
-                  label={text.replace("!", "")}
-                  key={text}
-                  disabled={disabled}
-                  selected={selected === text}
-                  onSelect={() => onSelectGroup(text)}
+        <Split
+          className="flex h-full"
+          sizes={[50, 50]}
+          minSize={100}
+          expandToMin={false}
+          gutterSize={10}
+          gutterAlign="center"
+          snapOffset={30}
+          dragInterval={1}
+          direction="horizontal"
+          cursor="col-resize"
+        >
+          <div className="overflow-y-auto" ref={ref}>
+            <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
+              NovelAI 태그 생성기
+            </h1>
+            <main className="px-4 mt-4 tag-container">
+              <section className="flex w-full items-center flex-col">
+                <Input
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="키워드/태그를 입력하여 주세요"
+                  className="basic"
                 />
-              ))}
-            </div>
-            {categoryList && (
-              <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
-                {categoryList.map((text) => (
-                  <Tag
-                    label={text}
-                    key={text}
-                    disabled={disabled}
-                    selected={selected === text}
-                    onSelect={() => onSelectTag(text)}
+                <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                  {groupList.map((text) => (
+                    <Tag
+                      label={text.replace("!", "")}
+                      key={text}
+                      disabled={disabled}
+                      selected={selected === text}
+                      onSelect={() => onSelectGroup(text)}
+                    />
+                  ))}
+                </div>
+                {categoryList && (
+                  <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+                    {categoryList.map((text) => (
+                      <Tag
+                        label={text}
+                        key={text}
+                        disabled={disabled}
+                        selected={selected === text}
+                        onSelect={() => onSelectTag(text)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+              <section
+                id="tag-list"
+                className="mt-4 grid gap-4 pb-16"
+                style={gridStyle}
+              >
+                {filtered.map(({ category, subCategory, name, tags }) => (
+                  <TagCard
+                    key={`${category}/${subCategory}/${name}/${tags}`}
+                    title={`${category}${
+                      subCategory ? `/${subCategory}` : ""
+                    } - ${name}`}
+                    tags={tags}
                   />
                 ))}
-              </div>
-            )}
-          </section>
-          <section className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 pb-16">
-            {filtered.map(({ category, subCategory, name, tags }) => (
-              <TagCard
-                key={`${category}/${subCategory}/${name}/${tags}`}
-                title={`${category}${
-                  subCategory ? `/${subCategory}` : ""
-                } - ${name}`}
-                tags={tags}
-              />
-            ))}
-          </section>
-        </main>
-        <ResultBar />
+              </section>
+            </main>
+          </div>
+          <div className="shadow-inner border-l border-base-color bg-white dark:bg-zinc-800"></div>
+        </Split>
       </DragDropContext>
     </MainTemplate>
   );
