@@ -1,19 +1,35 @@
 import { atom, PrimitiveAtom } from "jotai";
 import { atomWithStorage, splitAtom } from "jotai/utils";
 
-type Archived = {
+export type Archived = {
   category: string;
   name: string;
   tag: string;
+  pinned: boolean;
+  priority: number;
 };
-type ArchivedAtom = PrimitiveAtom<Archived>;
+export type ArchivedAtom = PrimitiveAtom<Archived>;
 
-type Category = {
+export type Category = {
   name: string;
   tags: ArchivedAtom[];
 };
 
-type CategoryAtom = PrimitiveAtom<Category>;
+export type CategoryAtom = PrimitiveAtom<Category>;
 
-const archivedCategoryAtom = atomWithStorage<Category[]>("archived-data", []);
-const archivedCategoryAtomsAtom = splitAtom(archivedCategoryAtom);
+export const archivedCategoryAtom = atomWithStorage<Category[]>(
+  "archived-data",
+  [
+    {
+      name: "Hello",
+      tags: [],
+    },
+  ]
+);
+export const archivedCategoryAtomsAtom = splitAtom(archivedCategoryAtom);
+
+export const focusCategoryDataAtom = atom<CategoryAtom | null>(null);
+export const focusCategoryAtom = atom<CategoryAtom, CategoryAtom>(
+  (get) => get(focusCategoryDataAtom) ?? get(archivedCategoryAtomsAtom)[0],
+  (_, set, update) => set(focusCategoryDataAtom, update)
+);

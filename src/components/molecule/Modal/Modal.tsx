@@ -8,7 +8,9 @@ interface ModalProps {
   show: boolean;
   onClose?: () => void;
   onCancel?: () => void;
+  onSubmit?: () => boolean;
   closeBtn?: boolean;
+  submitBtn?: string;
   title?: string;
   buttons?: ReactNode;
 }
@@ -17,7 +19,11 @@ export const Modal = ({
   children,
   show,
   onClose = () => {},
+  submitBtn,
   onCancel,
+  onSubmit = () => {
+    return true;
+  },
   closeBtn,
   title,
   buttons,
@@ -71,7 +77,15 @@ export const Modal = ({
                   )}
                   {closeBtn && (
                     <Button variant="primary" onClick={onClose}>
-                      확인
+                      {typeof closeBtn === "string" ? closeBtn : "확인"}
+                    </Button>
+                  )}
+                  {submitBtn && (
+                    <Button
+                      variant="primary"
+                      onClick={() => (onSubmit() ? onClose() : undefined)}
+                    >
+                      {submitBtn}
                     </Button>
                   )}
                 </div>
