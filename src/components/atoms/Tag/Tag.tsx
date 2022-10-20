@@ -29,6 +29,8 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
     },
     ref
   ) => {
+    const selectHandle = onSelect ?? props.onClick;
+
     const leftElement = selected
       ? selectedLeft || (
           <CheckIcon
@@ -62,7 +64,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
             "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer",
           className
         )}
-        onClick={disabled ? undefined : onSelect}
+        onClick={disabled ? undefined : selectHandle}
         ref={ref}
         {...props}
       >
