@@ -39,7 +39,6 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
   ]
 );
 archivedCategoryAtom.onMount = (setAtom) => {
-  console.log(setAtom);
   setAtom((prev) =>
     prev.map((data) => ({
       ...data,
@@ -58,20 +57,23 @@ export const appendTagCurrentAtom = atom(
     set,
     { category, name, tag }: { category: string; name: string; tag: string }
   ) => {
-    const newTag = atom<Archived>({
+    const newTag: Archived = {
       category,
       name,
       tag,
       pinned: false,
       priority: 0,
-    });
+    };
 
     const categories = get(archivedCategoryAtomsAtom);
     let works = false;
     categories.forEach((categoryAtom) => {
       const category = get(categoryAtom);
       if (!category.isFocus) return;
-      set(categoryAtom, { ...category, tags: [...category.tags, newTag] });
+      set(categoryAtom, {
+        ...category,
+        tags: [...category.tags, atom(newTag)],
+      });
       const elem = document.getElementById(`category-${categoryAtom}`);
       elem?.classList.add("adding-animation");
       setTimeout(() => {
@@ -88,7 +90,6 @@ export const appendTagCurrentAtom = atom(
 export const moveTagAtom = atom(
   null,
   (get, set, { destination, source }: DropResult) => {
-    console.log(destination, source);
     if (!destination) return;
 
     const atoms = get(archivedCategoryAtomsAtom);

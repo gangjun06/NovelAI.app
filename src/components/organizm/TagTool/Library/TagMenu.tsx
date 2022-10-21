@@ -72,7 +72,7 @@ export const MenuTag = ({
             </Menu.Button>
 
             <Menu.Dropdown>
-              <Menu.Item icon={ChevronDoubleUpIcon} disabled>
+              <Menu.ItemNoButton icon={ChevronDoubleUpIcon} disabled>
                 우선순위
                 <Button
                   forIcon
@@ -114,7 +114,7 @@ export const MenuTag = ({
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </Button>
-              </Menu.Item>
+              </Menu.ItemNoButton>
               <Menu.Item icon={LockClosedIcon} onClick={handlePin}>
                 고정
               </Menu.Item>

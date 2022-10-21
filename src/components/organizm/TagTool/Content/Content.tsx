@@ -1,19 +1,13 @@
-import classNames from "classnames";
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import type { NextPage } from "next";
 import { useCallback, useMemo, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDebounce } from "use-debounce";
 import tags from "~/assets/tags.json";
-// import { ResultBar, TagCard, updatePromptListAtom } from "~/components";
 import { settingAtom } from "~/hooks/useSetting";
 import { Tag as TagType, TagsData } from "~/types";
-import Split from "react-split";
 import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
-import { Disclosure, Transition } from "@headlessui/react";
-import { ArchiveBoxIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Input, Tag } from "~/components/atoms";
-import { TagCard } from "./Card/Card";
+import { TagCard } from "./Card";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 

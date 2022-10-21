@@ -30,8 +30,8 @@ export const Sidebar = () => {
         }}
         editTargetAtom={targetAtom}
       />
-      <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 px-4 py-4">
-        <div className="flex justify-between items-center mb-4">
+      <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 py-4 h-full flex flex-col">
+        <div className="flex justify-between items-center mb-4 px-4">
           <h2 className="text-2xl text-title-color font-bold inline-flex gap-x items-center gap-x-2">
             <ArchiveBoxIcon className="h-6 w-6" />
             보관함
@@ -46,7 +46,7 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 overflow-y-scroll px-4">
           {categoryAtoms.map((categoryAtom) => (
             <CategoryView
               key={`${categoryAtom}`}

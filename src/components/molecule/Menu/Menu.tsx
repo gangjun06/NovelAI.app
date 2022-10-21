@@ -1,7 +1,6 @@
 import { Provider, useAtom } from "jotai";
 import React, { Fragment, ReactElement, ReactNode, useEffect } from "react";
 import { Menu as MenuUI, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 
 interface Props {
@@ -87,6 +86,27 @@ const Item = ({
   );
 };
 
+const ItemNoButton = ({
+  icon: Icon,
+  onClick: _onClick,
+  children,
+  disabled = false,
+}: ItemProps) => {
+  return (
+    <div
+      className={`${
+        !disabled
+          ? "hover:bg-primary-500 hover:text-white"
+          : "text-subtitle-color"
+      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+    >
+      <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" />
+      {children}
+    </div>
+  );
+};
+
 Menu.Button = Button;
 Menu.Dropdown = Dropdown;
 Menu.Item = Item;
+Menu.ItemNoButton = ItemNoButton;

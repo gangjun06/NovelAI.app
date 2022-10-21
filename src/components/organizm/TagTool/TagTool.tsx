@@ -2,8 +2,8 @@ import { useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
 import Split from "react-split";
 import { moveTagAtom } from "~/hooks/tagTool";
-import { Content } from "./Content";
-import { Sidebar } from "./Sidebar";
+import { Content } from "./Content/Content";
+import { Sidebar } from "./Library/Sidebar";
 
 export const TagTool = () => {
   const movetag = useSetAtom(moveTagAtom);
@@ -12,7 +12,7 @@ export const TagTool = () => {
       <Split
         className="flex h-full"
         sizes={[50, 50]}
-        minSize={100}
+        minSize={300}
         expandToMin={false}
         gutterSize={10}
         gutterAlign="center"
