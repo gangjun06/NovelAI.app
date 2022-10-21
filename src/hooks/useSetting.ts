@@ -48,7 +48,5 @@ export const themeAtom = atom<Theme, Theme>(
 
 export const priorityAtom = atom((get) => {
   const data = priorityCharMap[get(settingAtom).priorityChar];
-  console.log(get(settingAtom).priorityChar);
-  console.log(data);
   return data;
 });

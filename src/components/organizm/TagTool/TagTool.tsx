@@ -1,15 +1,14 @@
+import { useSetAtom } from "jotai";
 import { DragDropContext } from "react-beautiful-dnd";
 import Split from "react-split";
+import { moveTagAtom } from "~/hooks/tagTool";
 import { Content } from "./Content";
 import { Sidebar } from "./Sidebar";
 
 export const TagTool = () => {
+  const movetag = useSetAtom(moveTagAtom);
   return (
-    <DragDropContext
-      onDragEnd={({ destination, source }) => {
-        // updatePromptList({ from: source.index, to: destination?.index || 0 });
-      }}
-    >
+    <DragDropContext onDragEnd={(result) => movetag(result)}>
       <Split
         className="flex h-full"
         sizes={[50, 50]}

@@ -1,5 +1,6 @@
 import { atom, PrimitiveAtom } from "jotai";
 import { atomWithStorage, splitAtom } from "jotai/utils";
+import { DropResult } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
 
 export type Archived = {
@@ -80,5 +81,59 @@ export const appendTagCurrentAtom = atom(
     if (!works) {
       toast.error("한개 이상의 카테고리를 선택하여 주세요.");
     }
+  }
+);
+
+export const moveTagAtom = atom(
+  null,
+  (get, set, { destination, source }: DropResult) => {
+    console.log(destination, source);
+    if (!destination) return;
+
+    const atoms = get(archivedCategoryAtomsAtom);
+
+    const sourceAtomStr = source.droppableId.replace("category-", "");
+    const destAtomStr = destination.droppableId.replace("category-", "");
+
+    if (sourceAtomStr === destAtomStr) {
+      // Same Category => Swap
+      const targetAtom = atoms.find(
+        (atomData) => `${atomData}` === sourceAtomStr
+      );
+      if (!targetAtom) return;
+      const target = get(targetAtom);
+
+      const cloned = [...target.tags];
+      const item = target.tags[source.index];
+
+      cloned.splice(source.index, 1);
+      cloned.splice(destination.index, 0, item);
+      set(targetAtom, (prev) => ({ ...prev, tags: cloned }));
+      return;
+    }
+
+    // Not Same Category => Remove and insert
+    const sourceAtom = atoms.find(
+      (atomData) => `${atomData}` === sourceAtomStr
+    );
+    const destAtom = atoms.find((atomData) => `${atomData}` === destAtomStr);
+    if (!sourceAtom || !destAtom) return;
+
+    const sourceTags = [...get(sourceAtom).tags];
+    const destItem = get(sourceAtom).tags[source.index];
+    sourceTags.splice(source.index, 1);
+
+    set(sourceAtom, (prev) => ({
+      ...prev,
+      tags: sourceTags,
+    }));
+    set(destAtom, ({ tags, ...prev }) => ({
+      ...prev,
+      tags: [
+        ...tags.slice(0, destination.index),
+        destItem,
+        ...tags.slice(destination.index),
+      ],
+    }));
   }
 );

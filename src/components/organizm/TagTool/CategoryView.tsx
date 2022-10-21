@@ -12,7 +12,8 @@ import {
 import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
+import { Droppable } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
 import { Button } from "~/components/atoms";
 import { Menu } from "~/components/molecule";
@@ -105,21 +106,36 @@ export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
               </Menu.Dropdown>
             </Menu>
           </div>
-          <Disclosure.Panel className="px-4 pt-4 pb-2 flex flex-wrap w-full gap-1 select-none">
-            {category.tags.map((tagAtom) => (
-              <MenuTag
-                key={`${tagAtom}`}
-                tagAtom={tagAtom}
-                remove={() => {
-                  setCategory((prev) => ({
-                    ...prev,
-                    tags: prev.tags.filter(
-                      (data) => `${data}` !== `${tagAtom}`
-                    ),
-                  }));
-                }}
-              />
-            ))}
+          <Disclosure.Panel as={React.Fragment}>
+            <Droppable
+              droppableId={`category-${categoryAtom}`}
+              direction="horizontal"
+            >
+              {(provider) => (
+                <div
+                  className="pl-4 pr-3 flex flex-wrap w-full  select-none"
+                  {...provider.droppableProps}
+                  ref={provider.innerRef}
+                >
+                  {category.tags.map((tagAtom, index) => (
+                    <MenuTag
+                      key={`${tagAtom}`}
+                      index={index}
+                      tagAtom={tagAtom}
+                      remove={() => {
+                        setCategory((prev) => ({
+                          ...prev,
+                          tags: prev.tags.filter(
+                            (data) => `${data}` !== `${tagAtom}`
+                          ),
+                        }));
+                      }}
+                    />
+                  ))}
+                  {provider.placeholder}
+                </div>
+              )}
+            </Droppable>
           </Disclosure.Panel>
         </>
       )}
