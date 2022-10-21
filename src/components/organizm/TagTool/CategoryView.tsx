@@ -1,4 +1,3 @@
-import { Disclosure } from "@headlessui/react";
 import {
   ChevronUpIcon,
   RectangleStackIcon,
@@ -18,6 +17,7 @@ import toast from "react-hot-toast";
 import { Button } from "~/components/atoms";
 import { Menu } from "~/components/molecule";
 import { Category, CategoryAtom } from "~/hooks/tagTool";
+import { useDisclosure } from "~/hooks/useDisclosure";
 import { priorityAtom } from "~/hooks/useSetting";
 import { copyText, formatPriority } from "~/utils";
 import { MenuTag } from "./TagMenu";
@@ -31,6 +31,7 @@ interface Props {
 export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
   const [category, setCategory] = useAtom(categoryAtom);
   const priorityChar = useAtomValue(priorityAtom);
+  const [open, handleOpen] = useDisclosure();
 
   const copyTag = useAtomCallback(
     useCallback(
@@ -54,91 +55,94 @@ export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
   );
 
   return (
-    <Disclosure
-      as="div"
-      className="border border-base-color bg-white dark:bg-zinc-800/50 px-2 py-2 rounded-lg"
+    <div
+      className="border border-base-color bg-white dark:bg-zinc-800/50 px-2 py-2 rounded-lg cursor-pointer"
       id={`category-${categoryAtom}`}
     >
-      {({ open }) => (
-        <>
-          <div className="flex gap-x-2">
-            <Disclosure.Button className="flex items-center gap-x-2 w-full">
-              <ChevronUpIcon
-                className={classNames(
-                  `h-5 w-5`,
-                  open ? "rotate-180 transform" : ""
-                )}
-              />
-              <span>{category.name}</span>
-            </Disclosure.Button>
-            <Button
-              forIcon
-              variant={category.isFocus ? "primary" : "default"}
-              onClick={() => {
-                setCategory((prev) => ({ ...prev, isFocus: !prev.isFocus }));
-              }}
-            >
-              <CheckIcon className="w-5 h-5" />
+      <div className="flex gap-x-2">
+        <button
+          className="flex items-center gap-x-2 w-full"
+          onClick={handleOpen.toggle}
+        >
+          <ChevronUpIcon
+            className={classNames(
+              `h-5 w-5 text-title-color`,
+              open ? "rotate-180 transform" : ""
+            )}
+          />
+          <span className="text-title-color">{category.name}</span>
+        </button>
+        <Button
+          forIcon
+          variant={category.isFocus ? "primary" : "default"}
+          onClick={() => {
+            setCategory((prev) => ({ ...prev, isFocus: !prev.isFocus }));
+          }}
+        >
+          <CheckIcon className="w-5 h-5" />
+        </Button>
+        <Button forIcon onClick={copyTag}>
+          <ClipboardIcon className="w-5 h-5" />
+        </Button>
+        <Menu>
+          <Menu.Button>
+            <Button forIcon>
+              <EllipsisVerticalIcon className="w-5 h-5" />
             </Button>
-            <Button forIcon onClick={copyTag}>
-              <ClipboardIcon className="w-5 h-5" />
-            </Button>
-            <Menu>
-              <Menu.Button>
-                <Button forIcon>
-                  <EllipsisVerticalIcon className="w-5 h-5" />
-                </Button>
-              </Menu.Button>
-              <Menu.Dropdown direction="bottom-end">
-                <Menu.Item icon={RectangleStackIcon}>
-                  태그 전체 지우기
-                </Menu.Item>
-                <Menu.Item icon={PencilIcon}>이름변경</Menu.Item>
-                <Menu.Item
-                  icon={Square2StackIcon}
-                  onClick={() => duplicate(category)}
-                >
-                  카테고리 복제
-                </Menu.Item>
-                <Menu.Item icon={TrashIcon} onClick={remove}>
-                  카테고리 삭제
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
-          <Disclosure.Panel as={React.Fragment}>
-            <Droppable
-              droppableId={`category-${categoryAtom}`}
-              direction="horizontal"
+          </Menu.Button>
+          <Menu.Dropdown direction="bottom-end">
+            <Menu.Item icon={RectangleStackIcon}>태그 전체 지우기</Menu.Item>
+            <Menu.Item icon={PencilIcon}>이름변경</Menu.Item>
+            <Menu.Item
+              icon={Square2StackIcon}
+              onClick={() => duplicate(category)}
             >
-              {(provider) => (
-                <div
-                  className="pl-4 pr-3 flex flex-wrap w-full  select-none"
-                  {...provider.droppableProps}
-                  ref={provider.innerRef}
-                >
-                  {category.tags.map((tagAtom, index) => (
-                    <MenuTag
-                      key={`${tagAtom}`}
-                      index={index}
-                      tagAtom={tagAtom}
-                      remove={() => {
-                        setCategory((prev) => ({
-                          ...prev,
-                          tags: prev.tags.filter(
-                            (data) => `${data}` !== `${tagAtom}`
-                          ),
-                        }));
-                      }}
-                    />
-                  ))}
-                  {provider.placeholder}
+              카테고리 복제
+            </Menu.Item>
+            <Menu.Item icon={TrashIcon} onClick={remove}>
+              카테고리 삭제
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+
+      {open && (
+        <Droppable
+          droppableId={`category-${categoryAtom}`}
+          direction="horizontal"
+        >
+          {(provider) => (
+            <div
+              className="pl-4 pr-3 flex flex-wrap w-full mt-1 select-none"
+              {...provider.droppableProps}
+              ref={provider.innerRef}
+            >
+              {!category.tags.length && (
+                <div className="text-description-color flex gap-x-1">
+                  <CheckIcon className="w-5 h-5" /> 활성화후 클릭하여
+                  추가하세요!
                 </div>
               )}
-            </Droppable>
-          </Disclosure.Panel>
-        </>
+              {category.tags.map((tagAtom, index) => (
+                <MenuTag
+                  key={`${tagAtom}`}
+                  index={index}
+                  tagAtom={tagAtom}
+                  remove={() => {
+                    setCategory((prev) => ({
+                      ...prev,
+                      tags: prev.tags.filter(
+                        (data) => `${data}` !== `${tagAtom}`
+                      ),
+                    }));
+                  }}
+                />
+              ))}
+              {provider.placeholder}
+            </div>
+          )}
+        </Droppable>
       )}
-    </Disclosure>
+    </div>
   );
 };

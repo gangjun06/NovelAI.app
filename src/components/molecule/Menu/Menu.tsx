@@ -39,7 +39,7 @@ const Dropdown = ({
     >
       <MenuUI.Items
         className={classNames(
-          "absolute mt-2 w-56 divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[1]",
+          "absolute mt-2 w-56 divide-y divide-gray-100 rounded-md bg-white dark:bg-zinc-700/90 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[1]",
           {
             "left-0 origin-top-right": direction === "bottom-start",
             "right-0 origin-top-left": direction === "bottom-end",
@@ -74,7 +74,9 @@ const Item = ({
           disabled={disabled}
           onClick={onClick}
           className={`${
-            active && !disabled ? "bg-primary-500 text-white" : "text-gray-900"
+            active && !disabled
+              ? "bg-primary-500 text-white"
+              : "text-subtitle-color"
           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
         >
           <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" />

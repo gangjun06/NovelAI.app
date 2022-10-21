@@ -1,4 +1,3 @@
-import { Disclosure } from "@headlessui/react";
 import {
   ChevronDoubleUpIcon,
   ChevronLeftIcon,
@@ -82,7 +81,7 @@ export const MenuTag = ({
                   <ChevronLeftIcon className="w-5 h-5" />
                 </Button>
                 <input
-                  className="mx-2 w-6 h-6 px-1 py-1 rounded text-sm text-center"
+                  className="mx-2 w-6 h-6 px-1 py-1 rounded text-sm text-center dark:bg-zinc-800/90"
                   value={tag.priority}
                   onClick={(e) => e.currentTarget.select()}
                   onChange={(e) => {

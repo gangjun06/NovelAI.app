@@ -26,6 +26,21 @@ export const SettingModal = () => {
               ]}
             />
           </FormBlock>
+          <FormBlock label="우선순위 문자">
+            <Select
+              defaultValue={setting.priorityChar}
+              onChange={(value) =>
+                setSetting((prev) => ({
+                  ...prev,
+                  priorityChar: value as any,
+                }))
+              }
+              options={[
+                { label: "{ 태그 } [NovelAI.net]", value: "{" },
+                { label: "( 태그 ) [WEB UI]", value: "(" },
+              ]}
+            />
+          </FormBlock>
           <FormBlock label="태그 생성기">
             <Switch
               label="NSFW"
@@ -53,21 +68,6 @@ export const SettingModal = () => {
                   useCopyReplace,
                 }));
               }}
-            />
-          </FormBlock>
-          <FormBlock label="우선순위 문자">
-            <Select
-              defaultValue={setting.priorityChar}
-              onChange={(value) =>
-                setSetting((prev) => ({
-                  ...prev,
-                  priorityChar: value as string,
-                }))
-              }
-              options={[
-                { label: "{ 태그 } [NovelAI.net]", value: "{" },
-                { label: "( 태그 ) [WEB UI]", value: "(" },
-              ]}
             />
           </FormBlock>
         </div>

@@ -39,6 +39,7 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
   ]
 );
 archivedCategoryAtom.onMount = (setAtom) => {
+  console.log(setAtom);
   setAtom((prev) =>
     prev.map((data) => ({
       ...data,
@@ -120,7 +121,7 @@ export const moveTagAtom = atom(
     if (!sourceAtom || !destAtom) return;
 
     const sourceTags = [...get(sourceAtom).tags];
-    const destItem = get(sourceAtom).tags[source.index];
+    const destItem = get(get(sourceAtom).tags[source.index]);
     sourceTags.splice(source.index, 1);
 
     set(sourceAtom, (prev) => ({
@@ -131,7 +132,7 @@ export const moveTagAtom = atom(
       ...prev,
       tags: [
         ...tags.slice(0, destination.index),
-        destItem,
+        atom(destItem),
         ...tags.slice(destination.index),
       ],
     }));
