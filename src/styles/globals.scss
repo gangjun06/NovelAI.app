@@ -82,3 +82,23 @@ input[type='checkbox']:checked {
 .gutter.gutter-horizontal {
   cursor: col-resize;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.adding-animation{
+  animation: addingAnimation 1s;
+}
+@keyframes addingAnimation{
+  0%{     background-color: transparent;    }
+  50%{    @apply bg-primary-100; }
+  100%{   background-color: transparent;    }
+}

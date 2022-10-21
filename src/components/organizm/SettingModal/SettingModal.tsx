@@ -55,6 +55,21 @@ export const SettingModal = () => {
               }}
             />
           </FormBlock>
+          <FormBlock label="우선순위 문자">
+            <Select
+              defaultValue={setting.priorityChar}
+              onChange={(value) =>
+                setSetting((prev) => ({
+                  ...prev,
+                  priorityChar: value as string,
+                }))
+              }
+              options={[
+                { label: "{ 태그 } [NovelAI.net]", value: "{" },
+                { label: "( 태그 ) [WEB UI]", value: "(" },
+              ]}
+            />
+          </FormBlock>
         </div>
       </Modal>
     </>

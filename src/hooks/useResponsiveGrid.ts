@@ -9,10 +9,6 @@ export const useResponsiveGrid = (gridSize: number[]) => {
   const size = useElementSize();
 
   const gridStyle: CSSProperties = useMemo(() => {
-    console.log(
-      "index",
-      sizeList.findIndex((data) => data > size.width)
-    );
     const result = sizeList.findIndex((data) => data > size.width);
 
     return {

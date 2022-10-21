@@ -25,7 +25,7 @@ export const AddCategoryModal = ({
     }
     handleArchivedCategoryAtoms({
       type: "insert",
-      value: { name: value, tags: [] },
+      value: { name: value, tags: [], isFocus: true },
     });
     toast.success("카테로리를 생성하였습니다");
     return true;

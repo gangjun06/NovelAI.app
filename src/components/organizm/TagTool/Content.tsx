@@ -13,6 +13,7 @@ import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ArchiveBoxIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Input, Tag } from "~/components/atoms";
+import { TagCard } from "./Card/Card";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
@@ -137,15 +138,14 @@ export const Content = () => {
           className="mt-4 grid gap-4 pb-16"
           style={gridStyle}
         >
-          {/* {filtered.map(({ category, subCategory, name, tags }) => (
+          {filtered.map(({ category, subCategory, name, tags }) => (
             <TagCard
               key={`${category}/${subCategory}/${name}/${tags}`}
-              title={`${category}${
-                subCategory ? `/${subCategory}` : ""
-              } - ${name}`}
+              category={`${category}${subCategory ? `/${subCategory}` : ""}`}
+              name={name}
               tags={tags}
             />
-          ))} */}
+          ))}
         </section>
       </main>
     </div>

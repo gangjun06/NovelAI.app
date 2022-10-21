@@ -1,16 +1,23 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+export const priorityCharMap = {
+  "(": ["(", ")"],
+  "{": ["{", "}"],
+};
+
 type Setting = {
   useNSFW: boolean;
   useCopyEach: boolean;
   useCopyReplace: boolean;
+  priorityChar: "(" | "{";
 };
 
 export const defaultSetting: Setting = {
   useNSFW: false,
   useCopyEach: false,
   useCopyReplace: true,
+  priorityChar: "{",
 };
 
 export const settingAtom = atomWithStorage<Setting>("setting", defaultSetting);
@@ -38,3 +45,10 @@ export const themeAtom = atom<Theme, Theme>(
     set(themeDataAtom, update);
   }
 );
+
+export const priorityAtom = atom((get) => {
+  const data = priorityCharMap[get(settingAtom).priorityChar];
+  console.log(get(settingAtom).priorityChar);
+  console.log(data);
+  return data;
+});
