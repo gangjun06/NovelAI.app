@@ -6,24 +6,21 @@ import { Content } from "./Content/Content";
 import { Sidebar } from "./Library/Sidebar";
 
 export const TagTool = () => {
-  const movetag = useSetAtom(moveTagAtom);
   return (
-    <DragDropContext onDragEnd={(result) => movetag(result)}>
-      <Split
-        className="flex h-full"
-        sizes={[50, 50]}
-        minSize={300}
-        expandToMin={false}
-        gutterSize={10}
-        gutterAlign="center"
-        snapOffset={30}
-        dragInterval={1}
-        direction="horizontal"
-        cursor="col-resize"
-      >
-        <Content />
-        <Sidebar />
-      </Split>
-    </DragDropContext>
+    <Split
+      className="flex h-full"
+      sizes={[50, 50]}
+      minSize={300}
+      expandToMin={false}
+      gutterSize={10}
+      gutterAlign="center"
+      snapOffset={30}
+      dragInterval={1}
+      direction="horizontal"
+      cursor="col-resize"
+    >
+      <Content />
+      <Sidebar />
+    </Split>
   );
 };

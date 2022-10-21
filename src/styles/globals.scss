@@ -95,10 +95,19 @@ input[type=number] {
 }
 
 .adding-animation{
-  animation: addingAnimation 1s;
+  animation: addingAnimation 1s infinite;
+}
+
+.dark .adding-animation{
+  animation: addingAnimationDark 1s infinite !important;
 }
 @keyframes addingAnimation{
-  0%{     background-color: transparent;    }
-  50%{    @apply bg-primary-100; }
-  100%{   background-color: transparent;    }
+  0%{     @apply bg-transparent;    }
+  50%{    @apply bg-primary-300/25 }
+  100%{   @apply bg-transparent;    }
+}
+@keyframes addingAnimationDark{
+  0%{     @apply bg-transparent;    }
+  50%{    @apply bg-primary-700/25 }
+  100%{   @apply bg-transparent;    }
 }
