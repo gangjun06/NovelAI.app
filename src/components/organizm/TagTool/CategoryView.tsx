@@ -25,10 +25,16 @@ import { MenuTag } from "./TagMenu";
 interface Props {
   categoryAtom: CategoryAtom;
   remove: () => void;
+  rename: () => void;
   duplicate: (value: Category) => void;
 }
 
-export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
+export const CategoryView = ({
+  categoryAtom,
+  remove,
+  duplicate,
+  rename,
+}: Props) => {
   const [category, setCategory] = useAtom(categoryAtom);
   const priorityChar = useAtomValue(priorityAtom);
   const [open, handleOpen] = useDisclosure();
@@ -51,6 +57,36 @@ export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
         toast.success("성공적으로 태그를 복사하였습니다.");
       },
       [category.tags, priorityChar]
+    )
+  );
+
+  const cleanTag = useAtomCallback(
+    useCallback(
+      (get, set) => {
+        handleOpen.open();
+        const filtered = category.tags.filter((tagAtom) => {
+          const tag = get(tagAtom);
+          return tag.pinned;
+        });
+        set(categoryAtom, (prev) => ({ ...prev, tags: filtered }));
+      },
+      [category.tags, categoryAtom, handleOpen]
+    )
+  );
+
+  const duplicateTag = useAtomCallback(
+    useCallback(
+      (get, set, index: number) => {
+        set(categoryAtom, ({ tags, ...prev }) => ({
+          ...prev,
+          tags: [
+            ...tags.slice(0, index + 1),
+            atom(get(tags[index])),
+            ...tags.slice(index + 1),
+          ],
+        }));
+      },
+      [categoryAtom]
     )
   );
 
@@ -91,8 +127,12 @@ export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
             </Button>
           </Menu.Button>
           <Menu.Dropdown direction="bottom-end">
-            <Menu.Item icon={RectangleStackIcon}>태그 전체 지우기</Menu.Item>
-            <Menu.Item icon={PencilIcon}>이름변경</Menu.Item>
+            <Menu.Item icon={RectangleStackIcon} onClick={cleanTag}>
+              태그 전체 지우기
+            </Menu.Item>
+            <Menu.Item icon={PencilIcon} onClick={rename}>
+              이름변경
+            </Menu.Item>
             <Menu.Item
               icon={Square2StackIcon}
               onClick={() => duplicate(category)}
@@ -128,6 +168,7 @@ export const CategoryView = ({ categoryAtom, remove, duplicate }: Props) => {
                   key={`${tagAtom}`}
                   index={index}
                   tagAtom={tagAtom}
+                  duplicate={() => duplicateTag(index)}
                   remove={() => {
                     setCategory((prev) => ({
                       ...prev,

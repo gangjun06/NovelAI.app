@@ -4,6 +4,7 @@ import {
   ChevronRightIcon,
   ClipboardIcon,
   LockClosedIcon,
+  Square2StackIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useAtom, useAtomValue } from "jotai";
@@ -19,9 +20,11 @@ export const MenuTag = ({
   tagAtom,
   remove,
   index,
+  duplicate,
 }: {
   tagAtom: ArchivedAtom;
   remove: () => void;
+  duplicate: () => void;
   index: number;
 }) => {
   const [tag, setTag] = useAtom(tagAtom);
@@ -58,7 +61,11 @@ export const MenuTag = ({
                 selected={tag.pinned}
                 selectedLeft={
                   tag.pinned ? (
-                    <LockClosedIcon width={18} height={18} />
+                    <LockClosedIcon
+                      width={18}
+                      height={18}
+                      className="dark:text-white"
+                    />
                   ) : undefined
                 }
               />
@@ -111,8 +118,11 @@ export const MenuTag = ({
               <Menu.Item icon={LockClosedIcon} onClick={handlePin}>
                 고정
               </Menu.Item>
+              <Menu.Item icon={Square2StackIcon} onClick={duplicate}>
+                복제
+              </Menu.Item>
               <Menu.Item icon={ClipboardIcon} onClick={copyTag}>
-                복사
+                클립보드 복사
               </Menu.Item>
               <Menu.Item icon={TrashIcon} onClick={remove}>
                 삭제

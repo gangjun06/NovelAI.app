@@ -1,11 +1,14 @@
-import { Disclosure } from "@headlessui/react";
-import { ArchiveBoxIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
+import {
+  ArchiveBoxIcon,
+  ChevronUpIcon,
+  PencilIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useAtom } from "jotai";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { Button, Tag } from "~/components/atoms";
-import { Menu } from "~/components/molecule";
-import { archivedCategoryAtomsAtom } from "~/hooks/tagTool";
+import { Button } from "~/components/atoms";
+import { archivedCategoryAtomsAtom, CategoryAtom } from "~/hooks/tagTool";
 import { useDisclosure } from "~/hooks/useDisclosure";
 import { AddCategoryModal } from "./AddCategoryModal";
 import { CategoryView } from "./CategoryView";
@@ -15,12 +18,17 @@ export const Sidebar = () => {
     archivedCategoryAtomsAtom
   );
   const [showAddModal, handleShowAddModal] = useDisclosure();
+  const [targetAtom, setTargetAtom] = useState<CategoryAtom | null>(null);
 
   return (
     <>
       <AddCategoryModal
         show={showAddModal}
-        onClose={handleShowAddModal.close}
+        onClose={() => {
+          handleShowAddModal.close();
+          setTargetAtom(null);
+        }}
+        editTargetAtom={targetAtom}
       />
       <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 px-4 py-4">
         <div className="flex justify-between items-center mb-4">
@@ -28,7 +36,14 @@ export const Sidebar = () => {
             <ArchiveBoxIcon className="h-6 w-6" />
             보관함
           </h2>
-          <Button onClick={handleShowAddModal.open}>카테고리 추가</Button>
+          <div className="flex gap-x-2">
+            <Button onClick={handleShowAddModal.open} forIcon>
+              <PlusIcon className="w-5 h-5" />
+            </Button>
+            <Button onClick={handleShowAddModal.open} forIcon>
+              <PencilIcon className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -36,6 +51,10 @@ export const Sidebar = () => {
             <CategoryView
               key={`${categoryAtom}`}
               categoryAtom={categoryAtom}
+              rename={() => {
+                setTargetAtom(categoryAtom);
+                handleShowAddModal.open();
+              }}
               duplicate={(value) => {
                 handleCategoryAtoms({
                   type: "insert",
