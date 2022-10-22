@@ -16,7 +16,7 @@ interface Props {
 const copyAtom = atom((get) => get(settingAtom).useCopyEach);
 const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
 
-export const TagCard = ({ category, name, tags }: Props) => {
+export const TagToolCard = ({ category, name, tags }: Props) => {
   const appendTag = useSetAtom(appendTagCurrentAtom);
   const copyEach = useAtomValue(copyAtom);
   const withUnderbar = useAtomValue(replaceAtom);

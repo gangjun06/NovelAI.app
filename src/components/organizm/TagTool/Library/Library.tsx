@@ -14,11 +14,11 @@ import {
   moveTagAtom,
 } from "~/hooks/tagTool";
 import { useDisclosure } from "~/hooks/useDisclosure";
-import { AddCategoryModal } from "./AddCategoryModal";
+import { AddCategoryModal } from "./Modals/AddCategoryModal";
 import { CategoryView } from "./CategoryView";
-import { OrderCategoryModal } from "./OrderCategoryModal";
+import { OrderCategoryModal } from "./Modals/OrderCategoryModal";
 
-export const Sidebar = () => {
+export const TagToolLibrary = () => {
   const [categoryAtoms, handleCategoryAtoms] = useAtom(
     archivedCategoryAtomsAtom
   );

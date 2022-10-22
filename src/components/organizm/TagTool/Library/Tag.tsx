@@ -16,7 +16,7 @@ import { ArchivedAtom } from "~/hooks/tagTool";
 import { priorityAtom } from "~/hooks/useSetting";
 import { copyText, formatPriority } from "~/utils";
 
-export const MenuTag = ({
+export const TagToolTag = ({
   tagAtom,
   remove,
   index,

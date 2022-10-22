@@ -20,7 +20,7 @@ import { Category, CategoryAtom } from "~/hooks/tagTool";
 import { useDisclosure } from "~/hooks/useDisclosure";
 import { priorityAtom } from "~/hooks/useSetting";
 import { copyText, formatPriority } from "~/utils";
-import { MenuTag } from "./TagMenu";
+import { TagToolTag } from "./Tag";
 
 interface Props {
   categoryAtom: CategoryAtom;
@@ -164,7 +164,7 @@ export const CategoryView = ({
                 </div>
               )}
               {category.tags.map((tagAtom, index) => (
-                <MenuTag
+                <TagToolTag
                   key={`${tagAtom}`}
                   index={index}
                   tagAtom={tagAtom}

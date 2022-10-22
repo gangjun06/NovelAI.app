@@ -7,11 +7,11 @@ import { settingAtom } from "~/hooks/useSetting";
 import { Tag as TagType, TagsData } from "~/types";
 import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
 import { Input, Tag } from "~/components/atoms";
-import { TagCard } from "./Card";
+import { TagToolCard } from "./Card";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
-export const Content = () => {
+export const TagToolContent = () => {
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [selected, setSelected] = useState<string | null>(null);
   const [text, setText] = useState("");
@@ -133,7 +133,7 @@ export const Content = () => {
           style={gridStyle}
         >
           {filtered.map(({ category, subCategory, name, tags }) => (
-            <TagCard
+            <TagToolCard
               key={`${category}/${subCategory}/${name}/${tags}`}
               category={`${category}${subCategory ? `/${subCategory}` : ""}`}
               name={name}

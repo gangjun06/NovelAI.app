@@ -1,9 +1,6 @@
-import { useSetAtom } from "jotai";
-import { DragDropContext } from "react-beautiful-dnd";
 import Split from "react-split";
-import { moveTagAtom } from "~/hooks/tagTool";
-import { Content } from "./Content/Content";
-import { Sidebar } from "./Library/Sidebar";
+import { TagToolContent } from "./Content/Content";
+import { TagToolLibrary } from "./Library/Library";
 
 export const TagTool = () => {
   return (
@@ -19,8 +16,8 @@ export const TagTool = () => {
       direction="horizontal"
       cursor="col-resize"
     >
-      <Content />
-      <Sidebar />
+      <TagToolContent />
+      <TagToolLibrary />
     </Split>
   );
 };

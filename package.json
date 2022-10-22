@@ -22,6 +22,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-sortable-hoc": "^2.0.0",
     "react-split": "^2.0.14",
     "use-debounce": "^8.0.4"
   },
