@@ -16,14 +16,12 @@ import {
 import { useDisclosure } from "~/hooks/useDisclosure";
 import { AddCategoryModal } from "./Modals/AddCategoryModal";
 import { CategoryView } from "./CategoryView";
-import { OrderCategoryModal } from "./Modals/OrderCategoryModal";
 
 export const TagToolLibrary = () => {
   const [categoryAtoms, handleCategoryAtoms] = useAtom(
     archivedCategoryAtomsAtom
   );
   const [showAddModal, handleShowAddModal] = useDisclosure();
-  const [showOrderModal, handleShowOrderModal] = useDisclosure();
   const [targetAtom, setTargetAtom] = useState<CategoryAtom | null>(null);
   const movetag = useSetAtom(moveTagAtom);
 
@@ -37,10 +35,6 @@ export const TagToolLibrary = () => {
         }}
         editTargetAtom={targetAtom}
       />
-      <OrderCategoryModal
-        show={showOrderModal}
-        onClose={handleShowOrderModal.close}
-      />
       <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 py-4 h-full flex flex-col">
         <div className="flex justify-between items-center mb-4 px-4">
           <h2 className="text-2xl text-title-color font-bold inline-flex gap-x items-center gap-x-2">
@@ -50,9 +44,6 @@ export const TagToolLibrary = () => {
           <div className="flex gap-x-2">
             <Button onClick={handleShowAddModal.open} forIcon>
               <PlusIcon className="w-5 h-5" />
-            </Button>
-            <Button onClick={handleShowOrderModal.open} forIcon>
-              <ListBulletIcon className="w-5 h-5" />
             </Button>
           </div>
         </div>
