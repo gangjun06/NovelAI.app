@@ -17,7 +17,9 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
     return (
       <UISwitch.Group>
         <div className={classNames("flex items-center gap-3")}>
-          <UISwitch.Label className="text-sm">{label}</UISwitch.Label>
+          <UISwitch.Label className="text-sm text-base-color">
+            {label}
+          </UISwitch.Label>
           <UISwitch
             {...props}
             name={name}

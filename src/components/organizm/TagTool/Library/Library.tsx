@@ -27,7 +27,7 @@ export const TagToolLibrary = () => {
         }}
         editTargetAtom={targetAtom}
       />
-      <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 py-4 h-full flex flex-col">
+      <div className="shadow-inner border-l border-base-color bg-[#fafafa] dark:bg-zinc-800 py-4 flex flex-col h-full">
         <div className="flex justify-between items-center mb-4 px-4">
           <h2 className="text-2xl text-title-color font-bold inline-flex gap-x items-center gap-x-2">
             <ArchiveBoxIcon className="h-6 w-6" />

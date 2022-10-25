@@ -101,6 +101,19 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
     }
   }, [active?.id, handleOpen]);
 
+  const duplicateTag = useAtomCallback(
+    useCallback(
+      (get, set) => {
+        if (typeof duplicate !== "function") return;
+        duplicate({
+          ...category,
+          tags: category.tags.map((tagAtom) => atom(get(tagAtom))),
+        });
+      },
+      [category, duplicate]
+    )
+  );
+
   return (
     <div
       className={classNames(
@@ -108,7 +121,7 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
         over &&
           over.data.current?.sortable?.containerId ===
             `category-${categoryAtom}`
-          ? "bg-gray-50"
+          ? "bg-gray-50 dark:bg-zinc-700"
           : "bg-white dark:bg-zinc-800/50 "
       )}
       style={style}
@@ -147,7 +160,7 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
         ) : (
           <button
             onClick={handleOpen.toggle}
-            className="w-full flex items-center gap-x-2 py-2"
+            className="w-full flex items-center gap-x-2 py-2 text-left"
           >
             <ChevronUpIcon
               className={classNames(
@@ -189,10 +202,7 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
               >
                 이름변경
               </Menu.Item>
-              <Menu.Item
-                icon={Square2StackIcon}
-                onClick={() => duplicate && duplicate(category)}
-              >
+              <Menu.Item icon={Square2StackIcon} onClick={duplicateTag}>
                 카테고리 복제
               </Menu.Item>
               <Menu.Item icon={TrashIcon} onClick={remove}>
@@ -248,10 +258,6 @@ const Content = ({ categoryAtom }: Pick<Props, "categoryAtom">) => {
       [categoryAtom]
     )
   );
-
-  // const { over, setNodeRef } = useDroppable({
-  //   id: `category-${categoryAtom}`,
-  // });
 
   return (
     <div className="pl-4 pr-3 w-full mt-1 select-none">

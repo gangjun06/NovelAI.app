@@ -37,6 +37,7 @@ body,
   height: 100%;
   overflow-x: hidden;
   @apply text-base bg-base;
+  overflow-y: hidden;
 }
  #__next{
   position: relative;

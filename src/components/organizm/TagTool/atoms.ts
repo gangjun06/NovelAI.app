@@ -78,9 +78,12 @@ export const appendTagCurrentAtom = atom(
         tags: [...category.tags, atom(newTag)],
       });
       const elem = document.getElementById(`category-${categoryAtom}`);
+      const elem2 = document.getElementById(`show-library`);
       elem?.classList.add("adding-animation");
+      elem2?.classList.add("adding-animation");
       setTimeout(() => {
         elem?.classList.remove("adding-animation");
+        elem2?.classList.remove("adding-animation");
       }, 1000);
       works = true;
     });
