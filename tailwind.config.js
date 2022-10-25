@@ -12,7 +12,7 @@ module.exports = {
         primary: colors.sky,
       },
       backgroundColor: {
-        light: colors.zinc["50"],
+        light: colors.gray["50"],
         dark: "#1f2224",
       },
       textColor: {
