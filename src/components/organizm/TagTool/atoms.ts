@@ -1,6 +1,6 @@
 import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { atom, PrimitiveAtom } from "jotai";
+import { atom, PrimitiveAtom, useAtom } from "jotai";
 import { atomWithStorage, splitAtom } from "jotai/utils";
 import { DropResult } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
@@ -159,3 +159,5 @@ export const moveTagAtom = atom(
     }));
   }
 );
+
+export const directCopyAtom = atomWithStorage<boolean>("fast-copy", false);

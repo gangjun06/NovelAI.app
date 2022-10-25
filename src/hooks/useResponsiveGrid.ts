@@ -16,5 +16,5 @@ export const useResponsiveGrid = (gridSize: number[]) => {
     };
   }, [gridSize, size.width]);
 
-  return { ...size, gridStyle };
+  return { ref: size.ref, gridStyle };
 };

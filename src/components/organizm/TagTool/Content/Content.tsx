@@ -1,13 +1,13 @@
-import { atom, useAtomValue, useSetAtom } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import { useCallback, useMemo, useState } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
 import { useDebounce } from "use-debounce";
 import tags from "~/assets/tags.json";
 import { settingAtom } from "~/hooks/useSetting";
 import { Tag as TagType, TagsData } from "~/types";
 import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
-import { Input, Tag } from "~/components/atoms";
+import { Input, Switch, Tag } from "~/components/atoms";
 import { TagToolCard } from "./Card";
+import { directCopyAtom } from "../atoms";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
@@ -16,11 +16,9 @@ export const TagToolContent = () => {
   const [selected, setSelected] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [debouncedText] = useDebounce(text, 500);
-  // const updatePromptList = useSetAtom(updatePromptListAtom);
+  const [directCopy, setDirectCopy] = useAtom(directCopyAtom);
   const useNSFW = useAtomValue(nsfwAtom);
-  const { ref, width, height, gridStyle } = useResponsiveGrid([
-    1, 2, 3, 4, 5, 6, 7,
-  ]);
+  const { ref, gridStyle } = useResponsiveGrid([1, 2, 3, 4, 5, 6, 7]);
 
   const disabled = useMemo(() => text.length > 0, [text]);
   const onSelectGroup = useCallback((label: string) => {
@@ -89,8 +87,10 @@ export const TagToolContent = () => {
     return result;
   }, [debouncedText, disabled, selected, selectedGroup, useNSFW]);
 
+  console.log("A");
+
   return (
-    <div className="overflow-y-auto" ref={ref}>
+    <div className="overflow-y-auto relative" ref={ref}>
       <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
         NovelAI 태그 생성기
       </h1>
@@ -102,7 +102,14 @@ export const TagToolContent = () => {
             placeholder="키워드/태그를 입력하여 주세요"
             className="basic"
           />
-          <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+          <div className="my-2">
+            <Switch
+              label="바로 복사"
+              checked={directCopy}
+              onChange={(value) => setDirectCopy(value)}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2 select-none w-full justify-center">
             {groupList.map((text) => (
               <Tag
                 label={text.replace("!", "")}

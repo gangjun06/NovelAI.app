@@ -5,7 +5,10 @@ import { copyText, replaceText } from "~/utils";
 import classNames from "classnames";
 import { settingAtom } from "~/hooks/useSetting";
 import { Tag } from "~/components/atoms";
-import { appendTagCurrentAtom } from "~/components/organizm/TagTool/atoms";
+import {
+  appendTagCurrentAtom,
+  directCopyAtom,
+} from "~/components/organizm/TagTool/atoms";
 
 interface Props {
   category: string;
@@ -13,16 +16,15 @@ interface Props {
   tags: string[];
 }
 
-const copyAtom = atom((get) => get(settingAtom).useCopyEach);
 const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
 
 export const TagToolCard = ({ category, name, tags }: Props) => {
   const appendTag = useSetAtom(appendTagCurrentAtom);
-  const copyEach = useAtomValue(copyAtom);
   const withUnderbar = useAtomValue(replaceAtom);
+  const directCopy = useAtomValue(directCopyAtom);
 
   const onSelect = (tag: string) => {
-    if (copyEach) {
+    if (directCopy) {
       copyText(replaceText(tag, withUnderbar));
       toast.success("태그를 복사하였습니다!");
       return;

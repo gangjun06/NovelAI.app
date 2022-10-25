@@ -12,19 +12,20 @@ import {
 import classNames from "classnames";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Button, GripVerticalIcon, Input } from "~/components/atoms";
 import { Menu } from "~/components/molecule";
 import { Category, CategoryAtom } from "~/components/organizm/TagTool/atoms";
 import { useDisclosure } from "~/hooks/useDisclosure";
-import { priorityAtom } from "~/hooks/useSetting";
-import { copyText, formatPriority } from "~/utils";
+import { priorityAtom, settingAtom } from "~/hooks/useSetting";
+import { copyText, formatPriority, replaceText } from "~/utils";
 import { TagToolPlaceholder, TagToolTag } from "./Tag";
 import { CSS } from "@dnd-kit/utilities";
 
 const PLACEHOLDER_ID = "placeholder";
 
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
 interface Props {
   categoryAtom: CategoryAtom;
   duplicate?: (value: Category) => void;
@@ -35,6 +36,7 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
   const priorityChar = useAtomValue(priorityAtom);
   const [open, handleOpen] = useDisclosure();
   const [rename, setRename] = useState<null | string>(null);
+  const withUnderbar = useAtomValue(replaceAtom);
 
   const {
     active,
@@ -55,18 +57,21 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
         let result = "";
         category.tags.forEach((tagAtom) => {
           const tag = get(tagAtom);
-          result += `${formatPriority(
-            tag.tag,
-            tag.priority,
-            priorityChar[0],
-            priorityChar[1]
+          result += `${replaceText(
+            formatPriority(
+              tag.tag,
+              tag.priority,
+              priorityChar[0],
+              priorityChar[1]
+            ),
+            withUnderbar
           )}, `;
         });
         result = result.slice(0, -2);
         copyText(result);
         toast.success("성공적으로 태그를 복사하였습니다.");
       },
-      [category.tags, priorityChar]
+      [category.tags, priorityChar, withUnderbar]
     )
   );
 
@@ -90,10 +95,16 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  useEffect(() => {
+    if (((active?.id ?? "") as string).startsWith("container-")) {
+      handleOpen.close();
+    }
+  }, [active?.id, handleOpen]);
+
   return (
     <div
       className={classNames(
-        "border border-base-color px-2 py-2 rounded-lg cursor-pointer",
+        "border border-base-color px-2 rounded-lg cursor-pointer",
         over &&
           over.data.current?.sortable?.containerId ===
             `category-${categoryAtom}`
@@ -105,97 +116,99 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
       id={`category-${categoryAtom}`}
     >
       <div className="flex gap-x-2 items-center">
-        <div className="flex items-center gap-x-2 w-full">
-          {rename !== null ? (
-            <>
-              <Input
-                value={rename}
-                onChange={(e) => setRename(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && rename.trim().length > 0) {
-                    setCategory((prev) => ({ ...prev, name: rename }));
-                    setRename(null);
-                  } else if (e.key === "Escape") {
-                    setRename(null);
-                  }
-                }}
-              />
-              <Button
-                variant="primary"
-                disabled={rename.trim().length < 1}
-                onClick={() => {
+        {rename !== null ? (
+          <div className="flex items-center gap-x-2 w-full py-2">
+            <Input
+              value={rename}
+              onChange={(e) => setRename(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && rename.trim().length > 0) {
                   setCategory((prev) => ({ ...prev, name: rename }));
                   setRename(null);
-                }}
-              >
-                저장
-              </Button>
-              <Button variant="default" onClick={() => setRename(null)}>
-                취소
-              </Button>
-            </>
-          ) : (
-            <button
-              onClick={handleOpen.toggle}
-              className="w-full flex items-center gap-x-2"
+                } else if (e.key === "Escape") {
+                  setRename(null);
+                }
+              }}
+            />
+            <Button
+              variant="primary"
+              disabled={rename.trim().length < 1}
+              onClick={() => {
+                setCategory((prev) => ({ ...prev, name: rename }));
+                setRename(null);
+              }}
             >
-              <ChevronUpIcon
-                className={classNames(
-                  `h-5 w-5 text-title-color`,
-                  open ? "rotate-180 transform" : ""
-                )}
-              />
-              <span className="text-title-color">{category.name}</span>
-            </button>
+              저장
+            </Button>
+            <Button variant="default" onClick={() => setRename(null)}>
+              취소
+            </Button>
+          </div>
+        ) : (
+          <button
+            onClick={handleOpen.toggle}
+            className="w-full flex items-center gap-x-2 py-2"
+          >
+            <ChevronUpIcon
+              className={classNames(
+                `h-5 w-5 text-title-color`,
+                open ? "rotate-180 transform" : ""
+              )}
+            />
+            <span className="text-title-color">{category.name}</span>
+          </button>
+        )}
+
+        <div className="flex items-center gap-x-2 py-2">
+          <Button
+            forIcon
+            variant={category.isFocus ? "primary" : "default"}
+            onClick={() => {
+              setCategory((prev) => ({ ...prev, isFocus: !prev.isFocus }));
+            }}
+          >
+            <CheckIcon className="w-5 h-5" />
+          </Button>
+          <Button forIcon onClick={copyTag}>
+            <ClipboardIcon className="w-5 h-5" />
+          </Button>
+          <Menu>
+            <Menu.Button>
+              <Button forIcon>
+                <EllipsisVerticalIcon className="w-5 h-5" />
+              </Button>
+            </Menu.Button>
+            <Menu.Dropdown direction="bottom-end">
+              <Menu.Item icon={RectangleStackIcon} onClick={cleanTag}>
+                태그 전체 지우기
+              </Menu.Item>
+              <Menu.Item
+                icon={PencilIcon}
+                disabled={rename !== null}
+                onClick={() => setRename(category.name)}
+              >
+                이름변경
+              </Menu.Item>
+              <Menu.Item
+                icon={Square2StackIcon}
+                onClick={() => duplicate && duplicate(category)}
+              >
+                카테고리 복제
+              </Menu.Item>
+              <Menu.Item icon={TrashIcon} onClick={remove}>
+                카테고리 삭제
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+
+          {rename === null && (
+            <GripVerticalIcon
+              className="w-5 h-5 text-subtitle-color"
+              {...attributes}
+              {...listeners}
+            />
           )}
         </div>
-
-        <Button
-          forIcon
-          variant={category.isFocus ? "primary" : "default"}
-          onClick={() => {
-            setCategory((prev) => ({ ...prev, isFocus: !prev.isFocus }));
-          }}
-        >
-          <CheckIcon className="w-5 h-5" />
-        </Button>
-        <Button forIcon onClick={copyTag}>
-          <ClipboardIcon className="w-5 h-5" />
-        </Button>
-        <Menu>
-          <Menu.Button>
-            <Button forIcon>
-              <EllipsisVerticalIcon className="w-5 h-5" />
-            </Button>
-          </Menu.Button>
-          <Menu.Dropdown direction="bottom-end">
-            <Menu.Item icon={RectangleStackIcon} onClick={cleanTag}>
-              태그 전체 지우기
-            </Menu.Item>
-            <Menu.Item
-              icon={PencilIcon}
-              disabled={rename !== null}
-              onClick={() => setRename(category.name)}
-            >
-              이름변경
-            </Menu.Item>
-            <Menu.Item
-              icon={Square2StackIcon}
-              onClick={() => duplicate && duplicate(category)}
-            >
-              카테고리 복제
-            </Menu.Item>
-            <Menu.Item icon={TrashIcon} onClick={remove}>
-              카테고리 삭제
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-
-        <GripVerticalIcon
-          className="w-5 h-5 text-subtitle-color"
-          {...attributes}
-          {...listeners}
-        />
       </div>
 
       <SortableContext
@@ -208,7 +221,9 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
         strategy={() => {}}
       >
         {open && !((active?.id ?? "") as string).startsWith("container-") && (
-          <Content categoryAtom={categoryAtom} />
+          <div className="pb-2">
+            <Content categoryAtom={categoryAtom} />
+          </div>
         )}
       </SortableContext>
     </div>

@@ -50,16 +50,6 @@ export const SettingModal = () => {
               }
             />
             <Switch
-              label="개별복사"
-              checked={setting.useCopyEach}
-              onChange={(useCopyEach) =>
-                setSetting((prev) => ({
-                  ...prev,
-                  useCopyEach,
-                }))
-              }
-            />
-            <Switch
               label="복사시 _ 사용"
               checked={setting.useCopyReplace}
               onChange={(useCopyReplace) => {

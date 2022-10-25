@@ -103,7 +103,9 @@ export const TagToolCategories = () => {
         moveTag(data);
       }}
       onDragEnd={(data) => {
-        if ((data.active.id as string).startsWith("container-")) moveTag(data);
+        if ((data.active.id as string).startsWith("container-")) {
+          moveTag(data);
+        }
         setActiveAtom(null);
       }}
       onDragCancel={() => {

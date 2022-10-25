@@ -8,14 +8,14 @@ import {
   Square2StackIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useAtom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import { Draggable } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
 import { Button, Tag } from "~/components/atoms";
 import { Menu } from "~/components/molecule";
 import { ArchivedAtom } from "~/components/organizm/TagTool/atoms";
-import { priorityAtom } from "~/hooks/useSetting";
-import { copyText, formatPriority } from "~/utils";
+import { priorityAtom, settingAtom } from "~/hooks/useSetting";
+import { copyText, formatPriority, replaceText } from "~/utils";
 import { CSS } from "@dnd-kit/utilities";
 import { CSSProperties } from "react";
 
@@ -50,12 +50,21 @@ export const TagToolPlaceholder = () => {
   );
 };
 
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
+
 export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
   const [tag, setTag] = useAtom(tagAtom);
   const priorityChar = useAtomValue(priorityAtom);
+  const withUnderbar = useAtomValue(replaceAtom);
 
   const copyTag = () => {
-    copyText(tag.tag);
+    const text = `${formatPriority(
+      tag.tag,
+      tag.priority,
+      priorityChar[0],
+      priorityChar[1]
+    )}`;
+    copyText(replaceText(text, withUnderbar));
     toast.success("성공적으로 텍스트를 복사하였습니다.");
   };
 
