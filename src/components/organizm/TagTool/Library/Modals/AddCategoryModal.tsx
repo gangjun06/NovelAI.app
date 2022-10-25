@@ -3,7 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Input } from "~/components/atoms";
 import { FormBlock, Modal } from "~/components/molecule";
-import { archivedCategoryAtomsAtom, CategoryAtom } from "~/hooks/tagTool";
+import {
+  archivedCategoryAtomsAtom,
+  CategoryAtom,
+} from "~/components/organizm/TagTool/atoms";
 
 export const AddCategoryModal = ({
   show,
@@ -33,7 +36,11 @@ export const AddCategoryModal = ({
     if (!editTarget || !editTarget) {
       handleArchivedCategoryAtoms({
         type: "insert",
-        value: { name: value, tags: [], isFocus: true },
+        value: {
+          name: value,
+          tags: [],
+          isFocus: true,
+        },
       });
       toast.success("카테로리를 생성하였습니다");
       return true;

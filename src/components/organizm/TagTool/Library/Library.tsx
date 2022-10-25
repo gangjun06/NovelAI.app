@@ -1,29 +1,21 @@
 import {
   ArchiveBoxIcon,
   ListBulletIcon,
+  PencilIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
 import { useAtom, useSetAtom } from "jotai";
 import { useState } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
 import toast from "react-hot-toast";
 import { Button } from "~/components/atoms";
-import {
-  archivedCategoryAtomsAtom,
-  CategoryAtom,
-  moveTagAtom,
-} from "~/hooks/tagTool";
+import { CategoryAtom } from "~/components/organizm/TagTool/atoms";
 import { useDisclosure } from "~/hooks/useDisclosure";
 import { AddCategoryModal } from "./Modals/AddCategoryModal";
-import { CategoryView } from "./CategoryView";
+import { TagToolCategories } from "./Categories";
 
 export const TagToolLibrary = () => {
-  const [categoryAtoms, handleCategoryAtoms] = useAtom(
-    archivedCategoryAtomsAtom
-  );
   const [showAddModal, handleShowAddModal] = useDisclosure();
   const [targetAtom, setTargetAtom] = useState<CategoryAtom | null>(null);
-  const movetag = useSetAtom(moveTagAtom);
 
   return (
     <>
@@ -48,35 +40,9 @@ export const TagToolLibrary = () => {
           </div>
         </div>
 
-        <DragDropContext onDragEnd={(result) => movetag(result)}>
-          <div className="flex flex-col gap-3 overflow-y-scroll px-4 h-full">
-            {categoryAtoms.map((categoryAtom) => (
-              <CategoryView
-                key={`${categoryAtom}`}
-                categoryAtom={categoryAtom}
-                rename={() => {
-                  setTargetAtom(categoryAtom);
-                  handleShowAddModal.open();
-                }}
-                duplicate={(value) => {
-                  handleCategoryAtoms({
-                    type: "insert",
-                    value: { ...value, name: `${value.name}의 복사본` },
-                  });
-                }}
-                remove={() => {
-                  if (categoryAtoms.length < 2) {
-                    toast.error(
-                      "최소 한개 이상의 카테고리가 존재하여야 합니다."
-                    );
-                    return;
-                  }
-                  handleCategoryAtoms({ type: "remove", atom: categoryAtom });
-                }}
-              />
-            ))}
-          </div>
-        </DragDropContext>
+        <div className="flex flex-col gap-3 overflow-y-scroll px-4 h-full">
+          <TagToolCategories />
+        </div>
       </div>
     </>
   );

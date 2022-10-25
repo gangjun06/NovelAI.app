@@ -1,3 +1,5 @@
+import { DragEndEvent, DragOverEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { atom, PrimitiveAtom } from "jotai";
 import { atomWithStorage, splitAtom } from "jotai/utils";
 import { DropResult } from "react-beautiful-dnd";
@@ -42,8 +44,9 @@ archivedCategoryAtom.onMount = (setAtom) => {
   setAtom((prev) =>
     prev.map((data) => ({
       ...data,
-      //@ts-ignore
-      tags: data.tags.map((tagData) => atom(tagData.init)),
+      tags: data.tags
+        .filter((tagData) => tagData && (tagData as any).init)
+        .map((tagData) => atom((tagData as any).init)),
     }))
   );
 };
@@ -89,53 +92,70 @@ export const appendTagCurrentAtom = atom(
 
 export const moveTagAtom = atom(
   null,
-  (get, set, { destination, source }: DropResult) => {
-    if (!destination) return;
+  (get, set, { active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
 
     const atoms = get(archivedCategoryAtomsAtom);
+    if ((active.id as string).startsWith("container-")) {
+      set(archivedCategoryAtom, (prev) =>
+        arrayMove(
+          prev,
+          active.data.current?.sortable.index ?? 0,
+          over.data.current?.sortable.index ?? 0
+        )
+      );
+      return;
+    }
 
-    const sourceAtomStr = source.droppableId.replace("category-", "");
-    const destAtomStr = destination.droppableId.replace("category-", "");
+    const activeContainerId = (
+      (active.data.current?.sortable?.containerId as string) ?? ""
+    ).replace("category-", "");
 
-    if (sourceAtomStr === destAtomStr) {
-      // Same Category => Swap
+    const overContainerId = (
+      (over?.data.current?.sortable?.containerId as string) ?? ""
+    ).replace("category-", "");
+
+    if (!activeContainerId || !overContainerId) return;
+
+    const activeIndex = active.data.current?.sortable?.index;
+    const overIndex = over.data.current?.sortable?.index;
+
+    if (activeContainerId === overContainerId) {
       const targetAtom = atoms.find(
-        (atomData) => `${atomData}` === sourceAtomStr
+        (atomData) => `${atomData}` === activeContainerId
       );
       if (!targetAtom) return;
       const target = get(targetAtom);
 
       const cloned = [...target.tags];
-      const item = target.tags[source.index];
+      const item = target.tags[activeIndex];
 
-      cloned.splice(source.index, 1);
-      cloned.splice(destination.index, 0, item);
+      cloned.splice(activeIndex, 1);
+      cloned.splice(overIndex, 0, item);
       set(targetAtom, (prev) => ({ ...prev, tags: cloned }));
       return;
     }
-
-    // Not Same Category => Remove and insert
-    const sourceAtom = atoms.find(
-      (atomData) => `${atomData}` === sourceAtomStr
+    const activeAtom = atoms.find(
+      (atomData) => `${atomData}` === activeContainerId
     );
-    const destAtom = atoms.find((atomData) => `${atomData}` === destAtomStr);
-    if (!sourceAtom || !destAtom) return;
+    const overAtom = atoms.find(
+      (atomData) => `${atomData}` === overContainerId
+    );
+    if (!activeAtom || !overAtom) return;
 
-    const sourceTags = [...get(sourceAtom).tags];
-    const destItem = get(get(sourceAtom).tags[source.index]);
-    sourceTags.splice(source.index, 1);
+    const activeTags = [
+      ...get(activeAtom).tags.filter((tagAtom) => `${tagAtom}`),
+    ];
+    const overItem = get(activeAtom).tags[activeIndex];
+    activeTags.splice(activeIndex, 1);
 
-    set(sourceAtom, (prev) => ({
+    set(activeAtom, (prev) => ({
       ...prev,
-      tags: sourceTags,
+      tags: activeTags,
     }));
-    set(destAtom, ({ tags, ...prev }) => ({
+    set(overAtom, ({ tags, ...prev }) => ({
       ...prev,
-      tags: [
-        ...tags.slice(0, destination.index),
-        atom(destItem),
-        ...tags.slice(destination.index),
-      ],
+      tags: [...tags.slice(0, overIndex), overItem, ...tags.slice(overIndex)],
     }));
   }
 );

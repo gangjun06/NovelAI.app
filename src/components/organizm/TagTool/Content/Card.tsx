@@ -5,7 +5,7 @@ import { copyText, replaceText } from "~/utils";
 import classNames from "classnames";
 import { settingAtom } from "~/hooks/useSetting";
 import { Tag } from "~/components/atoms";
-import { appendTagCurrentAtom } from "~/hooks/tagTool";
+import { appendTagCurrentAtom } from "~/components/organizm/TagTool/atoms";
 
 interface Props {
   category: string;

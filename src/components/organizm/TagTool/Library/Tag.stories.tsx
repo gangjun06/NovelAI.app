@@ -3,7 +3,7 @@ import type { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { TagToolTag } from "./Tag";
 import { atom, Provider } from "jotai";
-import { Archived } from "~/hooks/tagTool";
+import { Archived } from "~/components/organizm/TagTool/atoms";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 export default {
