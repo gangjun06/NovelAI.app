@@ -52,6 +52,8 @@ export const TagToolContent = () => {
   const filtered = useMemo(() => {
     const result: TagType[] = [];
 
+    if (!selectedGroup) return [];
+
     if (!disabled) {
       const current = (tags as unknown as TagsData)[selectedGroup];
       if (!current) {
@@ -132,7 +134,7 @@ export const TagToolContent = () => {
               ))}
             </div>
             {categoryList && (
-              <div className="flex flex-wrap gap-2 mt-4 select-none w-full justify-center">
+              <div className="flex flex-wrap gap-2 mt-2 select-none w-full justify-center">
                 {categoryList.map((text) => (
                   <Tag
                     label={text}
@@ -145,6 +147,13 @@ export const TagToolContent = () => {
               </div>
             )}
           </section>
+          {filtered.length === 0 && (
+            <>
+              <div className="mt-4 text-base-color text-center">
+                <div>카테고리를 선택하여 태그를 확인하세요!</div>
+              </div>
+            </>
+          )}
           <section
             id="tag-list"
             className="mt-4 grid gap-4 pb-16"

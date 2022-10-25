@@ -26,17 +26,22 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
   "archived-data",
   [
     {
-      name: "Hello",
-      isFocus: false,
+      name: "기본 프롬프트",
+      isFocus: true,
       tags: [
         atom<Archived>({
-          category: "hello",
-          name: "name",
-          tag: "tag",
+          category: "품질/완성도",
+          name: "명작",
+          tag: "masterpiece",
           pinned: false,
           priority: 0,
         }),
       ],
+    },
+    {
+      name: "부정 프롬프트",
+      isFocus: false,
+      tags: [],
     },
   ]
 );
