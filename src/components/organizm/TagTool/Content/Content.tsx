@@ -8,7 +8,10 @@ import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
 import { Input, Switch, Tag } from "~/components/atoms";
 import { TagToolCard } from "./Card";
 import { directCopyAtom } from "../atoms";
-import { ChevronDoubleUpIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDoubleUpIcon,
+  RectangleGroupIcon,
+} from "@heroicons/react/24/outline";
 
 const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
 
@@ -52,9 +55,8 @@ export const TagToolContent = () => {
   const filtered = useMemo(() => {
     const result: TagType[] = [];
 
-    if (!selectedGroup) return [];
-
     if (!disabled) {
+      if (!selectedGroup) return [];
       const current = (tags as unknown as TagsData)[selectedGroup];
       if (!current) {
         Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
@@ -128,8 +130,15 @@ export const TagToolContent = () => {
                   label={text.replace("!", "")}
                   key={text}
                   disabled={disabled}
-                  selected={selected === text}
+                  selected={selectedGroup === text}
                   onSelect={() => onSelectGroup(text)}
+                  unselectedLeft={
+                    <RectangleGroupIcon
+                      className="dark:text-white"
+                      width={20}
+                      height={20}
+                    />
+                  }
                 />
               ))}
             </div>
@@ -150,7 +159,11 @@ export const TagToolContent = () => {
           {filtered.length === 0 && (
             <>
               <div className="mt-4 text-base-color text-center">
-                <div>카테고리를 선택하여 태그를 확인하세요!</div>
+                <div>
+                  {disabled
+                    ? "검색어를 찾을 수 없습니다."
+                    : "카테고리를 선택하여 태그를 확인하세요!"}{" "}
+                </div>
               </div>
             </>
           )}
