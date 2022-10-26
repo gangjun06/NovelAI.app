@@ -34,7 +34,6 @@ interface Props {
 export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
   const [category, setCategory] = useAtom(categoryAtom);
   const priorityChar = useAtomValue(priorityAtom);
-  const [open, handleOpen] = useDisclosure();
   const [rename, setRename] = useState<null | string>(null);
   const withUnderbar = useAtomValue(replaceAtom);
 
@@ -78,14 +77,14 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
   const cleanTag = useAtomCallback(
     useCallback(
       (get, set) => {
-        handleOpen.open();
+        setCategory((prev) => ({ ...prev, isOpen: true }));
         const filtered = category.tags.filter((tagAtom) => {
           const tag = get(tagAtom);
           return tag.pinned;
         });
         set(categoryAtom, (prev) => ({ ...prev, tags: filtered }));
       },
-      [category.tags, categoryAtom, handleOpen]
+      [category.tags, categoryAtom, setCategory]
     )
   );
 
@@ -94,12 +93,6 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.5 : 1,
   };
-
-  useEffect(() => {
-    if (((active?.id ?? "") as string).startsWith("container-")) {
-      handleOpen.close();
-    }
-  }, [active?.id, handleOpen]);
 
   const duplicateTag = useAtomCallback(
     useCallback(
@@ -159,13 +152,15 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
           </div>
         ) : (
           <button
-            onClick={handleOpen.toggle}
+            onClick={() =>
+              setCategory((prev) => ({ ...prev, isOpen: !prev.isOpen }))
+            }
             className="w-full flex items-center gap-x-2 py-2 text-left"
           >
             <ChevronUpIcon
               className={classNames(
                 `h-5 w-5 text-title-color`,
-                open ? "rotate-180 transform" : ""
+                category.isOpen ? "rotate-180 transform" : ""
               )}
             />
             <span className="text-title-color">{category.name}</span>
@@ -230,11 +225,12 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
         //@ts-ignore
         strategy={() => {}}
       >
-        {open && !((active?.id ?? "") as string).startsWith("container-") && (
-          <div className="pb-2">
-            <Content categoryAtom={categoryAtom} />
-          </div>
-        )}
+        {category.isOpen &&
+          !((active?.id ?? "") as string).startsWith("container-") && (
+            <div className="pb-2">
+              <Content categoryAtom={categoryAtom} />
+            </div>
+          )}
       </SortableContext>
     </div>
   );
@@ -270,20 +266,22 @@ const Content = ({ categoryAtom }: Pick<Props, "categoryAtom">) => {
           <TagToolPlaceholder />
         </>
       )}
-      {category.tags.map((tagAtom, index) => (
-        <TagToolTag
-          key={`${tagAtom}`}
-          index={index}
-          tagAtom={tagAtom}
-          duplicate={() => duplicateTag(index)}
-          remove={() => {
-            setCategory((prev) => ({
-              ...prev,
-              tags: prev.tags.filter((data) => `${data}` !== `${tagAtom}`),
-            }));
-          }}
-        />
-      ))}
+      {category.tags
+        .filter((tagAtom) => typeof tagAtom.read === "function")
+        .map((tagAtom, index) => (
+          <TagToolTag
+            key={`${tagAtom}`}
+            index={index}
+            tagAtom={tagAtom}
+            duplicate={() => duplicateTag(index)}
+            remove={() => {
+              setCategory((prev) => ({
+                ...prev,
+                tags: prev.tags.filter((data) => `${data}` !== `${tagAtom}`),
+              }));
+            }}
+          />
+        ))}
     </div>
   );
 };

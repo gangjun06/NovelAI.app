@@ -18,6 +18,7 @@ export type Category = {
   name: string;
   isFocus: boolean;
   tags: ArchivedAtom[];
+  isOpen: boolean;
 };
 
 export type CategoryAtom = PrimitiveAtom<Category>;
@@ -28,6 +29,7 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
     {
       name: "기본 프롬프트",
       isFocus: true,
+      isOpen: true,
       tags: [
         atom<Archived>({
           category: "품질/완성도",
@@ -39,6 +41,7 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
       ],
     },
     {
+      isOpen: true,
       name: "부정 프롬프트",
       isFocus: false,
       tags: [],
@@ -47,12 +50,16 @@ export const archivedCategoryAtom = atomWithStorage<Category[]>(
 );
 archivedCategoryAtom.onMount = (setAtom) => {
   setAtom((prev) =>
-    prev.map((data) => ({
-      ...data,
-      tags: data.tags
+    prev.map((data) => {
+      const tags = data.tags
         .filter((tagData) => tagData && (tagData as any).init)
-        .map((tagData) => atom((tagData as any).init)),
-    }))
+        .map((tagData) => atom((tagData as any).init));
+      return {
+        ...data,
+        isOpen: data.isOpen ?? false,
+        tags,
+      };
+    })
   );
 };
 
