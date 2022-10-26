@@ -40,6 +40,7 @@ export const AddCategoryModal = ({
           name: value,
           tags: [],
           isFocus: true,
+          isOpen: true,
         },
       });
       toast.success("카테로리를 생성하였습니다");
