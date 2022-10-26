@@ -161,14 +161,14 @@ export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
               <ChevronRightIcon className="w-5 h-5" />
             </Button>
           </Menu.ItemNoButton>
-          <Menu.Item icon={LockClosedIcon} onClick={handlePin}>
-            고정
+          <Menu.Item icon={ClipboardIcon} onClick={copyTag}>
+            클립보드 복사
           </Menu.Item>
           <Menu.Item icon={Square2StackIcon} onClick={duplicate}>
             복제
           </Menu.Item>
-          <Menu.Item icon={ClipboardIcon} onClick={copyTag}>
-            클립보드 복사
+          <Menu.Item icon={LockClosedIcon} onClick={handlePin}>
+            고정
           </Menu.Item>
           <Menu.Item icon={TrashIcon} onClick={remove}>
             삭제
