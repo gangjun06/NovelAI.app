@@ -29,6 +29,8 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
     },
     ref
   ) => {
+    const selectHandle = onSelect ?? props.onClick;
+
     const leftElement = selected
       ? selectedLeft || (
           <CheckIcon
@@ -53,7 +55,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
     return (
       <div
         className={classNames(
-          "border shadow-sm rounded-full flex max-w-fit gap-x-1 items-center dark:bg-zinc-800 dark:border-gray-600 bg-white pl-2",
+          "border shadow-sm rounded-full flex gap-x-1 items-center dark:bg-zinc-800 dark:border-gray-600 bg-white pl-2",
           !disabled &&
             (selected
               ? "border-primary-300 dark:border-primary-600"
@@ -62,7 +64,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
             "hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer",
           className
         )}
-        onClick={disabled ? undefined : onSelect}
+        onClick={disabled ? undefined : selectHandle}
         ref={ref}
         {...props}
       >
@@ -70,7 +72,7 @@ export const Tag = forwardRef<HTMLDivElement, Props>(
         <span
           className={classNames(
             disabled ? "text-gray-500" : "text-gray-800 dark:text-gray-200",
-            "py-0.5 pr-2"
+            "py-0.5 pr-2 text-ellipsis"
           )}
         >
           {label}

@@ -5,3 +5,4 @@ export * from "./Transition/Transition";
 export * from "./Checkbox/Checkbox";
 export * from "./Switch/Switch";
 export * from "./Select/Select";
+export * from "./Icons/Icons";

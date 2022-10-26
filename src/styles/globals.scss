@@ -37,6 +37,7 @@ body,
   height: 100%;
   overflow-x: hidden;
   @apply text-base bg-base;
+  overflow-y: hidden;
 }
  #__next{
   position: relative;
@@ -77,4 +78,37 @@ input[type='checkbox']:checked {
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.gutter.gutter-horizontal {
+  cursor: col-resize;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.adding-animation{
+  animation: addingAnimation 1s infinite;
+}
+
+.dark .adding-animation{
+  animation: addingAnimationDark 1s infinite !important;
+}
+@keyframes addingAnimation{
+  0%{     @apply bg-transparent;    }
+  50%{    @apply bg-primary-300/25 }
+  100%{   @apply bg-transparent;    }
+}
+@keyframes addingAnimationDark{
+  0%{     @apply bg-transparent;    }
+  50%{    @apply bg-primary-700/25 }
+  100%{   @apply bg-transparent;    }
 }

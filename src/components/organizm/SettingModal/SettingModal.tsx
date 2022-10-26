@@ -26,22 +26,27 @@ export const SettingModal = () => {
               ]}
             />
           </FormBlock>
+          <FormBlock label="우선순위 문자">
+            <Select
+              defaultValue={setting.priorityChar}
+              onChange={(value) =>
+                setSetting((prev) => ({
+                  ...prev,
+                  priorityChar: value as any,
+                }))
+              }
+              options={[
+                { label: "{ 태그 } [NovelAI.net]", value: "{" },
+                { label: "( 태그 ) [WEB UI]", value: "(" },
+              ]}
+            />
+          </FormBlock>
           <FormBlock label="태그 생성기">
             <Switch
               label="NSFW"
               checked={setting.useNSFW}
               onChange={(useNSFW) =>
                 setSetting((prev) => ({ ...prev, useNSFW }))
-              }
-            />
-            <Switch
-              label="개별복사"
-              checked={setting.useCopyEach}
-              onChange={(useCopyEach) =>
-                setSetting((prev) => ({
-                  ...prev,
-                  useCopyEach,
-                }))
               }
             />
             <Switch

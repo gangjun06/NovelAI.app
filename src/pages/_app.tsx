@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Toaster />
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </>
   );
 }

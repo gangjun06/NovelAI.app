@@ -17,22 +17,22 @@ const btnClassNames = (
   otherClasses?: string
 ) =>
   classNames(
-    "transition text-black rounded flex-none text-center",
+    "transition text-black rounded flex-none text-center border ",
     {
       "px-4 py-1.5": !compact && !forIcon,
       "px-2 py-1": compact && !forIcon,
       "px-1 py-1": forIcon,
       "bg-gray-100 text-gray-400 dark:bg-zinc-700": disabled,
       "shadow-sm": variant !== "subtle",
-      "bg-white hover:bg-gray-100 border border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
+      "bg-white hover:bg-gray-100 border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white":
         !disabled && variant === "default",
-      "bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white":
+      "bg-primary-500 hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600 text-white border-transparent":
         !disabled && variant === "primary",
-      "bg-primary-300/50 text-primary-600 hover:bg-primary-400/50 dark:bg-primary-700/50 dark:text-primary-300 dark:hover:bg-primary-600/50":
+      "bg-primary-300/50 text-primary-600 hover:bg-primary-400/50 dark:bg-primary-700/50 dark:text-primary-300 dark:hover:bg-primary-600/50 border-transparent":
         !disabled && variant === "light",
-      "hover:bg-primary-300/50 text-primary-600 hover:dark:bg-primary-700/50 dark:text-primary-300":
+      "hover:bg-primary-300/50 text-primary-600 hover:dark:bg-primary-700/50 dark:text-primary-300 border-transparent":
         !disabled && variant === "subtle",
-      "bg-primary-300/50 dark:bg-primary-700/50":
+      "bg-primary-300/50 dark:bg-primary-700/50 border-transparent":
         !disabled && variant === "subtle" && active,
       // : "hover:bg-primary-300/40 hover:text-primary-500"
     },
