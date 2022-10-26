@@ -1,56 +1,33 @@
-import { atom, SetStateAction, useAtom, useSetAtom } from "jotai";
-import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import { Input } from "~/components/atoms";
-import { FormBlock, Modal } from "~/components/molecule";
-import {
-  archivedCategoryAtomsAtom,
-  CategoryAtom,
-} from "~/components/organizm/TagTool/atoms";
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import { useSetAtom } from 'jotai'
 
-export const AddCategoryModal = ({
-  show,
-  onClose,
-  editTargetAtom,
-}: {
-  show: boolean;
-  editTargetAtom?: CategoryAtom | null;
-  onClose: () => void;
-}) => {
-  const [name, setName] = useState<string>("");
-  const handleArchivedCategoryAtoms = useSetAtom(archivedCategoryAtomsAtom);
-  const [editTarget, setEditTarget] = useAtom(
-    useMemo(() => editTargetAtom ?? atom(null), [editTargetAtom])
-  );
+import { Input } from '~/components/atoms'
+import { FormBlock, Modal } from '~/components/molecule'
+import { archivedCategoryAtomsAtom } from '~/components/organizm/TagTool/atoms'
 
-  useEffect(() => {
-    if (editTarget?.name) setName(editTarget.name);
-  }, [editTarget?.name]);
+export const AddCategoryModal = ({ show, onClose }: { show: boolean; onClose: () => void }) => {
+  const [name, setName] = useState<string>('')
+  const handleArchivedCategoryAtoms = useSetAtom(archivedCategoryAtomsAtom)
 
   const handleSubmit = () => {
-    const value = name.trim();
-    if (value === "") {
-      toast.error("이름을 입력하여 주세요");
-      return false;
+    const value = name.trim()
+    if (value === '') {
+      toast.error('이름을 입력하여 주세요')
+      return false
     }
-    if (!editTarget || !editTarget) {
-      handleArchivedCategoryAtoms({
-        type: "insert",
-        value: {
-          name: value,
-          tags: [],
-          isFocus: true,
-          isOpen: true,
-        },
-      });
-      toast.success("카테로리를 생성하였습니다");
-      return true;
-    }
-    //@ts-ignore
-    setEditTarget((prev) => ({ ...prev, name: value }));
-    toast.success("카테로리 이름을 수정하였습니다");
-    return true;
-  };
+    handleArchivedCategoryAtoms({
+      type: 'insert',
+      value: {
+        name: value,
+        tags: [],
+        isFocus: true,
+        isOpen: true,
+      },
+    })
+    toast.success('카테로리를 생성하였습니다')
+    return true
+  }
 
   return (
     <>
@@ -59,7 +36,7 @@ export const AddCategoryModal = ({
         onClose={onClose}
         onSubmit={handleSubmit}
         show={show}
-        submitBtn={editTarget ? "수정" : "생성"}
+        submitBtn={'생성'}
         title="보관함 카테고리 생성"
       >
         <FormBlock label="이름">
@@ -67,5 +44,5 @@ export const AddCategoryModal = ({
         </FormBlock>
       </Modal>
     </>
-  );
-};
+  )
+}

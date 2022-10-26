@@ -1,15 +1,16 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
+import React from 'react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import { Provider } from 'jotai'
 
-import { SettingModal as SettingModalUI, showModalAtom } from "./SettingModal";
-import { Provider } from "jotai";
-import { defaultSetting, settingAtom } from "~/hooks/useSetting";
+import { defaultSetting, settingAtom } from '~/hooks/useSetting'
+
+import { SettingModal as SettingModalUI, showModalAtom } from './SettingModal'
 
 export default {
-  title: "Organizm/SettingModal",
+  title: 'Organizm/SettingModal',
   component: SettingModalUI,
   argTypes: {},
-} as ComponentMeta<typeof SettingModalUI>;
+} as ComponentMeta<typeof SettingModalUI>
 
 const Template: ComponentStory<typeof SettingModalUI> = () => (
   <Provider
@@ -20,6 +21,6 @@ const Template: ComponentStory<typeof SettingModalUI> = () => (
   >
     <SettingModalUI />
   </Provider>
-);
-export const SettingModal = Template.bind({});
-SettingModal.args = {};
+)
+export const SettingModal = Template.bind({})
+SettingModal.args = {}

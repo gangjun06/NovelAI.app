@@ -1,4 +1,7 @@
-import { useSortable } from "@dnd-kit/sortable";
+import { CSSProperties } from 'react'
+import toast from 'react-hot-toast'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import {
   ChevronDoubleUpIcon,
   ChevronLeftIcon,
@@ -7,111 +10,85 @@ import {
   LockClosedIcon,
   Square2StackIcon,
   TrashIcon,
-} from "@heroicons/react/24/outline";
-import { atom, useAtom, useAtomValue } from "jotai";
-import { Draggable } from "react-beautiful-dnd";
-import toast from "react-hot-toast";
-import { Button, Tag } from "~/components/atoms";
-import { Menu } from "~/components/molecule";
-import { ArchivedAtom } from "~/components/organizm/TagTool/atoms";
-import { priorityAtom, settingAtom } from "~/hooks/useSetting";
-import { copyText, formatPriority, replaceText } from "~/utils";
-import { CSS } from "@dnd-kit/utilities";
-import { CSSProperties } from "react";
+} from '@heroicons/react/24/outline'
+import { atom, useAtom, useAtomValue } from 'jotai'
+
+import { Button, Tag } from '~/components/atoms'
+import { Menu } from '~/components/molecule'
+import { ArchivedAtom } from '~/components/organizm/TagTool/atoms'
+import { priorityAtom, settingAtom } from '~/hooks/useSetting'
+import { copyText, formatPriority, replaceText } from '~/utils'
 
 interface Props {
-  tagAtom: ArchivedAtom;
-  remove?: () => void;
-  duplicate?: () => void;
-  index?: number;
+  tagAtom: ArchivedAtom
+  remove?: () => void
+  duplicate?: () => void
 }
 
 export const TagToolPlaceholder = () => {
-  const { attributes, setNodeRef, listeners, transform, transition } =
-    useSortable({
-      id: `placeholder`,
-      resizeObserverConfig: {
-        disabled: true,
-      },
-    });
+  const { attributes, setNodeRef, listeners, transform, transition } = useSortable({
+    id: `placeholder`,
+    resizeObserverConfig: {
+      disabled: true,
+    },
+  })
 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: 0.3,
-    position: "relative",
-    display: "inline-block",
-  };
+    position: 'relative',
+    display: 'inline-block',
+  }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Tag label="또는 이곳에 드래그" />
     </div>
-  );
-};
+  )
+}
 
-const replaceAtom = atom((get) => get(settingAtom).useCopyReplace);
+const replaceAtom = atom((get) => get(settingAtom).useCopyReplace)
 
-export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
-  const [tag, setTag] = useAtom(tagAtom);
-  const priorityChar = useAtomValue(priorityAtom);
-  const withUnderbar = useAtomValue(replaceAtom);
+export const TagToolTag = ({ tagAtom, remove, duplicate }: Props) => {
+  const [tag, setTag] = useAtom(tagAtom)
+  const priorityChar = useAtomValue(priorityAtom)
+  const withUnderbar = useAtomValue(replaceAtom)
 
   const copyTag = () => {
-    const text = `${formatPriority(
-      tag.tag,
-      tag.priority,
-      priorityChar[0],
-      priorityChar[1]
-    )}`;
-    copyText(replaceText(text, withUnderbar));
-    toast.success("성공적으로 텍스트를 복사하였습니다.");
-  };
+    const text = `${formatPriority(tag.tag, tag.priority, priorityChar[0], priorityChar[1])}`
+    copyText(replaceText(text, withUnderbar))
+    toast.success('성공적으로 텍스트를 복사하였습니다.')
+  }
 
   const handlePin = () => {
-    setTag((prev) => ({ ...prev, pinned: !prev.pinned }));
-  };
+    setTag((prev) => ({ ...prev, pinned: !prev.pinned }))
+  }
 
-  const {
-    attributes,
-    setNodeRef,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, setNodeRef, listeners, transform, transition, isDragging } = useSortable({
     id: `${tagAtom}`,
-  });
+  })
 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : 1,
-    position: "relative",
-    display: "inline-block",
-  };
+    position: 'relative',
+    display: 'inline-block',
+  }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <Menu>
         <Menu.Button>
           <Tag
-            label={formatPriority(
-              tag.tag,
-              tag.priority,
-              priorityChar[0],
-              priorityChar[1]
-            )}
+            label={formatPriority(tag.tag, tag.priority, priorityChar[0], priorityChar[1])}
             className="mr-1"
             disabled={false}
             selected={tag.pinned}
             selectedLeft={
               tag.pinned ? (
-                <LockClosedIcon
-                  width={18}
-                  height={18}
-                  className="dark:text-white"
-                />
+                <LockClosedIcon width={18} height={18} className="dark:text-white" />
               ) : undefined
             }
           />
@@ -124,11 +101,11 @@ export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
               forIcon
               className="ml-2"
               onClick={() => {
-                if (tag.priority < 1) return;
+                if (tag.priority < 1) return
                 setTag((prev) => ({
                   ...prev,
                   priority: prev.priority - 1,
-                }));
+                }))
               }}
             >
               <ChevronLeftIcon className="w-5 h-5" />
@@ -138,24 +115,24 @@ export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
               value={tag.priority}
               onClick={(e) => e.currentTarget.select()}
               onChange={(e) => {
-                let priority = parseInt(e.currentTarget.value);
-                if (priority > 100) priority = 100;
-                if (priority < 0) priority = 0;
+                let priority = parseInt(e.currentTarget.value)
+                if (priority > 100) priority = 100
+                if (priority < 0) priority = 0
                 setTag((prev) => ({
                   ...prev,
                   priority,
-                }));
+                }))
               }}
               type="number"
             />
             <Button
               forIcon
               onClick={() => {
-                if (tag.priority >= 100) return;
+                if (tag.priority >= 100) return
                 setTag((prev) => ({
                   ...prev,
                   priority: prev.priority + 1,
-                }));
+                }))
               }}
             >
               <ChevronRightIcon className="w-5 h-5" />
@@ -176,5 +153,5 @@ export const TagToolTag = ({ tagAtom, remove, index, duplicate }: Props) => {
         </Menu.Dropdown>
       </Menu>
     </div>
-  );
-};
+  )
+}

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import React from 'react'
+import { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { Tag } from "./Tag";
+import { Tag } from './Tag'
 
 export default {
-  title: "Atoms/Tag",
+  title: 'Atoms/Tag',
   component: Tag,
-} as ComponentMeta<typeof Tag>;
+} as ComponentMeta<typeof Tag>
 
-const Template: ComponentStory<typeof Tag> = (args) => <Tag {...args} />;
+const Template: ComponentStory<typeof Tag> = (args) => <Tag {...args} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
-  label: "This is a Tag",
-};
+  label: 'This is a Tag',
+}

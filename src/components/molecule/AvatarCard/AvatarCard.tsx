@@ -1,27 +1,22 @@
-import classNames from "classnames";
-import Image from "next/image";
-import { Button, ButtonLink } from "~/components/atoms";
+import Image from 'next/image'
+import classNames from 'classnames'
+
+import { ButtonLink } from '~/components/atoms'
 
 interface Props {
-  avatarURL?: string;
-  name: string;
-  description: string;
-  buttonText: string;
-  buttonLink: string;
+  avatarURL?: string
+  name: string
+  description: string
+  buttonText: string
+  buttonLink: string
 }
 
-export const AvatarCard = ({
-  avatarURL,
-  name,
-  description,
-  buttonText,
-  buttonLink,
-}: Props) => {
+export const AvatarCard = ({ avatarURL, name, description, buttonText, buttonLink }: Props) => {
   return (
     <div
       className={classNames(
-        "border-base-color border items-center rounded px-6 py-4 flex flex-col gap-y-2 bg-white dark:bg-zinc-700/50",
-        !avatarURL && "justify-center"
+        'border-base-color border items-center rounded px-6 py-4 flex flex-col gap-y-2 bg-white dark:bg-zinc-700/50',
+        !avatarURL && 'justify-center',
       )}
     >
       {avatarURL && (
@@ -37,5 +32,5 @@ export const AvatarCard = ({
         {buttonText}
       </ButtonLink>
     </div>
-  );
-};
+  )
+}

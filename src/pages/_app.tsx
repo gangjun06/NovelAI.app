@@ -1,36 +1,37 @@
-import { GetServerSideProps } from "next";
-import type { AppProps } from "next/app";
-import { DragDropContext, resetServerContext } from "react-beautiful-dnd";
-import "~/styles/globals.scss";
-import { Toaster } from "react-hot-toast";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
+
+import '~/styles/globals.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
     const handleRouteChange = (url: any) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       //@ts-ignore
-      if (typeof gtag !== "undefined" && typeof gtag.pageview === "function") {
+      if (typeof gtag !== 'undefined' && typeof gtag.pageview === 'function') {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
-        gtag.pageview(url);
+        gtag.pageview(url)
       }
-    };
-    router.events.on("routeChangeComplete", handleRouteChange);
-    router.events.on("hashChangeComplete", handleRouteChange);
+    }
+    router.events.on('routeChangeComplete', handleRouteChange)
+    router.events.on('hashChangeComplete', handleRouteChange)
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-      router.events.off("hashChangeComplete", handleRouteChange);
-    };
-  }, [router.events]);
+      router.events.off('routeChangeComplete', handleRouteChange)
+      router.events.off('hashChangeComplete', handleRouteChange)
+    }
+  }, [router.events])
 
   return (
     <>
       <Toaster />
       <Component {...pageProps} />
     </>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

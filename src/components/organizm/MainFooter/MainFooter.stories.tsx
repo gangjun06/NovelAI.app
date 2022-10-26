@@ -1,19 +1,19 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
+import React from 'react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { MainFooter } from "./MainFooter";
+import { MainFooter } from './MainFooter'
 
 export default {
-  title: "Organizm/Main/Footer",
+  title: 'Organizm/Main/Footer',
   component: MainFooter,
   argTypes: {},
-} as ComponentMeta<typeof MainFooter>;
+} as ComponentMeta<typeof MainFooter>
 
-const Template: ComponentStory<typeof MainFooter> = (_args) => <MainFooter />;
-export const Footer = Template.bind({});
-Footer.args = {};
+const Template: ComponentStory<typeof MainFooter> = (_args) => <MainFooter />
+export const Footer = Template.bind({})
+Footer.args = {}
 Footer.parameters = {
   nextRouter: {
-    path: "/",
+    path: '/',
   },
-};
+}

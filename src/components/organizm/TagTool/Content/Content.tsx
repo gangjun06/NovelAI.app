@@ -1,97 +1,91 @@
-import { atom, useAtom, useAtomValue } from "jotai";
-import { useCallback, useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
-import tags from "~/assets/tags.json";
-import { settingAtom } from "~/hooks/useSetting";
-import { Tag as TagType, TagsData } from "~/types";
-import { useResponsiveGrid } from "~/hooks/useResponsiveGrid";
-import { Input, Switch, Tag } from "~/components/atoms";
-import { TagToolCard } from "./Card";
-import { directCopyAtom } from "../atoms";
-import {
-  ArchiveBoxIcon,
-  ChevronDoubleUpIcon,
-  RectangleGroupIcon,
-} from "@heroicons/react/24/outline";
+import { useCallback, useMemo, useState } from 'react'
+import { ArchiveBoxIcon, RectangleGroupIcon } from '@heroicons/react/24/outline'
+import { atom, useAtom, useAtomValue } from 'jotai'
+import { useDebounce } from 'use-debounce'
 
-const nsfwAtom = atom((get) => get(settingAtom).useNSFW);
+import tags from '~/assets/tags.json'
+import { Input, Switch, Tag } from '~/components/atoms'
+import { useResponsiveGrid } from '~/hooks/useResponsiveGrid'
+import { settingAtom } from '~/hooks/useSetting'
+import { Tag as TagType, TagsData } from '~/types'
+
+import { directCopyAtom } from '../atoms'
+import { TagToolCard } from './Card'
+
+const nsfwAtom = atom((get) => get(settingAtom).useNSFW)
 
 export const TagToolContent = () => {
-  const [selectedGroup, setSelectedGroup] = useState<string>("");
-  const [selected, setSelected] = useState<string | null>(null);
-  const [text, setText] = useState("");
-  const [debouncedText] = useDebounce(text, 500);
-  const [directCopy, setDirectCopy] = useAtom(directCopyAtom);
-  const useNSFW = useAtomValue(nsfwAtom);
-  const { ref, gridStyle } = useResponsiveGrid([1, 2, 3, 4, 5, 6, 7]);
+  const [selectedGroup, setSelectedGroup] = useState<string>('')
+  const [selected, setSelected] = useState<string | null>(null)
+  const [text, setText] = useState('')
+  const [debouncedText] = useDebounce(text, 500)
+  const [directCopy, setDirectCopy] = useAtom(directCopyAtom)
+  const useNSFW = useAtomValue(nsfwAtom)
+  const { ref, gridStyle } = useResponsiveGrid([1, 2, 3, 4, 5, 6, 7])
 
-  const disabled = useMemo(() => text.length > 0, [text]);
+  const disabled = useMemo(() => text.length > 0, [text])
   const onSelectGroup = useCallback((label: string) => {
-    setSelected(null);
-    setSelectedGroup((prev) => (prev === label ? "" : label));
-  }, []);
+    setSelected(null)
+    setSelectedGroup((prev) => (prev === label ? '' : label))
+  }, [])
   const onSelectTag = useCallback((label: string) => {
-    setSelected((prev) => (prev === label ? "" : label));
-  }, []);
+    setSelected((prev) => (prev === label ? '' : label))
+  }, [])
 
   const groupList = useMemo(
-    () =>
-      Object.keys(tags as unknown as TagsData).filter(
-        (str) => !str.startsWith("!") || useNSFW
-      ),
-    [useNSFW]
-  );
+    () => Object.keys(tags as unknown as TagsData).filter((str) => !str.startsWith('!') || useNSFW),
+    [useNSFW],
+  )
 
   const categoryList = useMemo(() => {
-    const current = (tags as unknown as TagsData)[selectedGroup];
-    if (!current) return null;
-    const result: { [key: string]: boolean } = {};
+    const current = (tags as unknown as TagsData)[selectedGroup]
+    if (!current) return null
+    const result: { [key: string]: boolean } = {}
     for (const item of current) {
-      if (item.nsfw && !useNSFW) continue;
-      result[item.category] = true;
+      if (item.nsfw && !useNSFW) continue
+      result[item.category] = true
     }
-    return Object.keys(result).reduce((a: string[], b) => [...a, b], []);
-  }, [selectedGroup, useNSFW]);
+    return Object.keys(result).reduce((a: string[], b) => [...a, b], [])
+  }, [selectedGroup, useNSFW])
 
   const filtered = useMemo(() => {
-    const result: TagType[] = [];
+    const result: TagType[] = []
 
     if (!disabled) {
-      if (!selectedGroup) return [];
-      const current = (tags as unknown as TagsData)[selectedGroup];
+      if (!selectedGroup) return []
+      const current = (tags as unknown as TagsData)[selectedGroup]
       if (!current) {
         Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
-          if (!useNSFW && key.startsWith("!")) return;
+          if (!useNSFW && key.startsWith('!')) return
           list.forEach((item) => {
-            if (!useNSFW && item.nsfw) return;
-            result.push(item);
-          });
-        });
-        return result;
+            if (!useNSFW && item.nsfw) return
+            result.push(item)
+          })
+        })
+        return result
       }
       return current.filter(
         ({ category, nsfw }) =>
-          (selected ? category === selected : true) &&
-          (!nsfw || (nsfw && useNSFW))
-      );
+          (selected ? category === selected : true) && (!nsfw || (nsfw && useNSFW)),
+      )
     }
 
     Object.entries(tags as unknown as TagsData).forEach(([key, list]) => {
-      if (!useNSFW && key.startsWith("!")) return;
+      if (!useNSFW && key.startsWith('!')) return
       list.forEach((item) => {
-        if (!useNSFW && item.nsfw) return;
+        if (!useNSFW && item.nsfw) return
         if (
           !item.category.includes(debouncedText) &&
           !item.subCategory.includes(debouncedText) &&
           !item.name.includes(debouncedText) &&
           !item.tags.includes(debouncedText)
         )
-          return;
-        result.push(item);
-      });
-    });
-    return result;
-  }, [debouncedText, disabled, selected, selectedGroup, useNSFW]);
+          return
+        result.push(item)
+      })
+    })
+    return result
+  }, [debouncedText, disabled, selected, selectedGroup, useNSFW])
 
   return (
     <>
@@ -103,10 +97,7 @@ export const TagToolContent = () => {
       >
         <ChevronDoubleUpIcon className="w-6 h-6" />
       </button> */}
-      <div
-        className="overflow-y-auto relative h-full overflow-x-hidden"
-        ref={ref}
-      >
+      <div className="overflow-y-auto relative h-full overflow-x-hidden" ref={ref}>
         <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
           NovelAI 태그 생성기
         </h1>
@@ -128,17 +119,13 @@ export const TagToolContent = () => {
             <div className="flex flex-wrap gap-2 select-none w-full justify-center">
               {groupList.map((text) => (
                 <Tag
-                  label={text.replace("!", "")}
+                  label={text.replace('!', '')}
                   key={text}
                   disabled={disabled}
                   selected={selectedGroup === text}
                   onSelect={() => onSelectGroup(text)}
                   unselectedLeft={
-                    <RectangleGroupIcon
-                      className="dark:text-white"
-                      width={20}
-                      height={20}
-                    />
+                    <RectangleGroupIcon className="dark:text-white" width={20} height={20} />
                   }
                 />
               ))}
@@ -162,7 +149,7 @@ export const TagToolContent = () => {
               <div className="mt-4 text-base-color text-center">
                 <div>
                   {disabled ? (
-                    "검색어를 찾을 수 없습니다."
+                    '검색어를 찾을 수 없습니다.'
                   ) : (
                     <>
                       카테고리를 선택하여 태그를 확인하세요!
@@ -176,15 +163,11 @@ export const TagToolContent = () => {
               </div>
             </>
           )}
-          <section
-            id="tag-list"
-            className="mt-4 grid gap-4 pb-16"
-            style={gridStyle}
-          >
+          <section id="tag-list" className="mt-4 grid gap-4 pb-16" style={gridStyle}>
             {filtered.map(({ category, subCategory, name, tags }) => (
               <TagToolCard
                 key={`${category}/${subCategory}/${name}/${tags}`}
-                category={`${category}${subCategory ? `/${subCategory}` : ""}`}
+                category={`${category}${subCategory ? `/${subCategory}` : ''}`}
                 name={name}
                 tags={tags}
               />
@@ -193,5 +176,5 @@ export const TagToolContent = () => {
         </main>
       </div>
     </>
-  );
-};
+  )
+}

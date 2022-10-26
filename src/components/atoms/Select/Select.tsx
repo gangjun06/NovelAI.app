@@ -1,50 +1,36 @@
-import { forwardRef, Fragment, useCallback, useEffect, useState } from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import classNames from "classnames";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { forwardRef, Fragment, useCallback, useState } from 'react'
+import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import classNames from 'classnames'
 
-type OptionType<T> = { label: string; value: T };
+type OptionType<T> = { label: string; value: T }
 
 export type SelectProps<T> = {
-  name?: string;
-  defaultValue?: T;
-  options: OptionType<T>[];
-  onChange?: (value: T) => void;
-  labelProps?: React.ComponentPropsWithoutRef<"label">;
-  onBlur?: React.PropsWithoutRef<JSX.IntrinsicElements["div"]>["onBlur"];
-  ref?: any;
-};
+  name?: string
+  defaultValue?: T
+  options: OptionType<T>[]
+  onChange?: (value: T) => void
+  labelProps?: React.ComponentPropsWithoutRef<'label'>
+  onBlur?: React.PropsWithoutRef<JSX.IntrinsicElements['div']>['onBlur']
+  ref?: any
+}
 
 const SelectContent = <T,>(
-  {
-    name,
-    onBlur,
-    defaultValue,
-    options,
-    onChange,
-    labelProps,
-    ...props
-  }: SelectProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
+  { name, defaultValue, options, onChange, ...props }: SelectProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) => {
-  const [selected, setSelected] = useState<T>(defaultValue ?? options[0].value);
+  const [selected, setSelected] = useState<T>(defaultValue ?? options[0].value)
 
   const onSelect = useCallback(
     (value: any) => {
-      setSelected(value);
-      if (typeof onChange === "function") onChange(value);
+      setSelected(value)
+      if (typeof onChange === 'function') onChange(value)
     },
-    [onChange]
-  );
+    [onChange],
+  )
 
   return (
-    <Listbox
-      as="div"
-      name={name}
-      {...props}
-      value={selected}
-      onChange={onSelect}
-    >
+    <Listbox as="div" name={name} {...props} value={selected} onChange={onSelect}>
       {({ open }) => (
         <div ref={ref} className="relative mt-1">
           <Listbox.Button className="relative mt-1 w-full cursor-default rounded-lg border text-subtitle-color border-base-color bg-white dark:bg-zinc-800 py-2 pl-3 pr-10 text-left sm:text-sm">
@@ -54,8 +40,8 @@ const SelectContent = <T,>(
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronDownIcon
                 className={classNames(
-                  "h-5 w-5 text-gray-400 transition-all duration-300",
-                  open && "rotate-180"
+                  'h-5 w-5 text-gray-400 transition-all duration-300',
+                  open && 'rotate-180',
                 )}
                 aria-hidden="true"
               />
@@ -77,8 +63,8 @@ const SelectContent = <T,>(
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active
-                        ? "bg-primary-400 dark:bg-primary-600 text-white"
-                        : "text-subtitle-color dark:text-white"
+                        ? 'bg-primary-400 dark:bg-primary-600 text-white'
+                        : 'text-subtitle-color dark:text-white'
                     }`
                   }
                   value={option.value}
@@ -87,8 +73,8 @@ const SelectContent = <T,>(
                     <>
                       <span
                         className={classNames(
-                          "block truncate",
-                          selected ? "font-medium" : "font-normal"
+                          'block truncate',
+                          selected ? 'font-medium' : 'font-normal',
                         )}
                       >
                         {option.label}
@@ -107,7 +93,7 @@ const SelectContent = <T,>(
         </div>
       )}
     </Listbox>
-  );
-};
+  )
+}
 
-export const Select = forwardRef(SelectContent);
+export const Select = forwardRef(SelectContent)

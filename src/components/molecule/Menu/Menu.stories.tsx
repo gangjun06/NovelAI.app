@@ -1,15 +1,16 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
-import { TrashIcon, ClipboardIcon } from "@heroicons/react/24/outline";
+import React from 'react'
+import { ClipboardIcon, TrashIcon } from '@heroicons/react/24/outline'
+import type { ComponentMeta } from '@storybook/react'
 
-import { Menu as MenuUI } from "./Menu";
-import { Button } from "~/components/atoms";
+import { Button } from '~/components/atoms'
+
+import { Menu as MenuUI } from './Menu'
 
 export default {
-  title: "Molecule/Menu",
+  title: 'Molecule/Menu',
   component: MenuUI,
   argTypes: {},
-} as ComponentMeta<any>;
+} as ComponentMeta<any>
 
 const Template = () => (
   <MenuUI>
@@ -21,6 +22,6 @@ const Template = () => (
       <MenuUI.Item icon={ClipboardIcon}>Copy</MenuUI.Item>
     </MenuUI.Dropdown>
   </MenuUI>
-);
+)
 
-export const Menu = Template.bind({});
+export const Menu = Template.bind({})

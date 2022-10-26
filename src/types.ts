@@ -1,11 +1,11 @@
 export type TagsData = {
-  [key: string]: Tag[];
-};
+  [key: string]: Tag[]
+}
 
 export type Tag = {
-  category: string;
-  subCategory: string;
-  name: string;
-  tags: string[];
-  nsfw: boolean;
-};
+  category: string
+  subCategory: string
+  name: string
+  tags: string[]
+  nsfw: boolean
+}

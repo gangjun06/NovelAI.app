@@ -1,50 +1,50 @@
 import {
   closestCorners,
+  DroppableContainer,
   getFirstCollision,
   KeyboardCode,
-  DroppableContainer,
   KeyboardCoordinateGetter,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core'
 
 const directions: string[] = [
   KeyboardCode.Down,
   KeyboardCode.Right,
   KeyboardCode.Up,
   KeyboardCode.Left,
-];
+]
 
 export const coordinateGetter: KeyboardCoordinateGetter = (
   event,
-  { context: { active, droppableRects, droppableContainers, collisionRect } }
+  { context: { active, droppableRects, droppableContainers, collisionRect } },
 ) => {
   if (directions.includes(event.code)) {
-    event.preventDefault();
+    event.preventDefault()
 
     if (!active || !collisionRect) {
-      return;
+      return
     }
 
-    const filteredContainers: DroppableContainer[] = [];
+    const filteredContainers: DroppableContainer[] = []
 
     droppableContainers.getEnabled().forEach((entry) => {
       if (!entry || entry?.disabled) {
-        return;
+        return
       }
 
-      const rect = droppableRects.get(entry.id);
+      const rect = droppableRects.get(entry.id)
 
       if (!rect) {
-        return;
+        return
       }
 
-      const data = entry.data.current;
+      const data = entry.data.current
 
       if (data) {
-        const { type, children } = data;
+        const { type, children } = data
 
-        if (type === "container" && children?.length > 0) {
-          if (active.data.current?.type !== "container") {
-            return;
+        if (type === 'container' && children?.length > 0) {
+          if (active.data.current?.type !== 'container') {
+            return
           }
         }
       }
@@ -52,26 +52,26 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
       switch (event.code) {
         case KeyboardCode.Down:
           if (collisionRect.top < rect.top) {
-            filteredContainers.push(entry);
+            filteredContainers.push(entry)
           }
-          break;
+          break
         case KeyboardCode.Up:
           if (collisionRect.top > rect.top) {
-            filteredContainers.push(entry);
+            filteredContainers.push(entry)
           }
-          break;
+          break
         case KeyboardCode.Left:
           if (collisionRect.left >= rect.left + rect.width) {
-            filteredContainers.push(entry);
+            filteredContainers.push(entry)
           }
-          break;
+          break
         case KeyboardCode.Right:
           if (collisionRect.left + collisionRect.width <= rect.left) {
-            filteredContainers.push(entry);
+            filteredContainers.push(entry)
           }
-          break;
+          break
       }
-    });
+    })
 
     const collisions = closestCorners({
       active,
@@ -79,29 +79,29 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
       droppableRects,
       droppableContainers: filteredContainers,
       pointerCoordinates: null,
-    });
-    const closestId = getFirstCollision(collisions, "id");
+    })
+    const closestId = getFirstCollision(collisions, 'id')
 
     if (closestId != null) {
-      const newDroppable = droppableContainers.get(closestId);
-      const newNode = newDroppable?.node.current;
-      const newRect = newDroppable?.rect.current;
+      const newDroppable = droppableContainers.get(closestId)
+      const newNode = newDroppable?.node.current
+      const newRect = newDroppable?.rect.current
 
       if (newNode && newRect) {
-        if (newDroppable.data.current?.type === "container") {
+        if (newDroppable.data.current?.type === 'container') {
           return {
             x: newRect.left + (newRect.width - collisionRect.width) / 2,
             y: newRect.top + (newRect.height - collisionRect.height) / 2,
-          };
+          }
         }
 
         return {
           x: newRect.left,
           y: newRect.top,
-        };
+        }
       }
     }
   }
 
-  return undefined;
-};
+  return undefined
+}

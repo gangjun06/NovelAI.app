@@ -1,15 +1,15 @@
-import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
-import { Select, Switch } from "~/components/atoms";
-import { FormBlock, Modal } from "~/components/molecule";
-import { settingAtom, Theme, themeAtom } from "~/hooks/useSetting";
+import { atom, useAtom } from 'jotai'
 
-export const showModalAtom = atom(false);
+import { Select, Switch } from '~/components/atoms'
+import { FormBlock, Modal } from '~/components/molecule'
+import { settingAtom, Theme, themeAtom } from '~/hooks/useSetting'
+
+export const showModalAtom = atom(false)
 
 export const SettingModal = () => {
-  const [show, setShow] = useAtom(showModalAtom);
-  const [setting, setSetting] = useAtom(settingAtom);
-  const [theme, setTheme] = useAtom(themeAtom);
+  const [show, setShow] = useAtom(showModalAtom)
+  const [setting, setSetting] = useAtom(settingAtom)
+  const [theme, setTheme] = useAtom(themeAtom)
 
   return (
     <>
@@ -20,9 +20,9 @@ export const SettingModal = () => {
               defaultValue={theme}
               onChange={(value) => setTheme(value as Theme)}
               options={[
-                { label: "라이트 모드", value: "light" },
-                { label: "다크 모드", value: "dark" },
-                { label: "시스템 설정", value: "system" },
+                { label: '라이트 모드', value: 'light' },
+                { label: '다크 모드', value: 'dark' },
+                { label: '시스템 설정', value: 'system' },
               ]}
             />
           </FormBlock>
@@ -36,8 +36,8 @@ export const SettingModal = () => {
                 }))
               }
               options={[
-                { label: "{ 태그 } [NovelAI.net]", value: "{" },
-                { label: "( 태그 ) [WEB UI]", value: "(" },
+                { label: '{ 태그 } [NovelAI.net]', value: '{' },
+                { label: '( 태그 ) [WEB UI]', value: '(' },
               ]}
             />
           </FormBlock>
@@ -45,9 +45,7 @@ export const SettingModal = () => {
             <Switch
               label="NSFW"
               checked={setting.useNSFW}
-              onChange={(useNSFW) =>
-                setSetting((prev) => ({ ...prev, useNSFW }))
-              }
+              onChange={(useNSFW) => setSetting((prev) => ({ ...prev, useNSFW }))}
             />
             <Switch
               label="복사시 _ 사용"
@@ -56,12 +54,12 @@ export const SettingModal = () => {
                 setSetting((prev) => ({
                   ...prev,
                   useCopyReplace,
-                }));
+                }))
               }}
             />
           </FormBlock>
         </div>
       </Modal>
     </>
-  );
-};
+  )
+}

@@ -1,21 +1,16 @@
-import { NextPage } from "next";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-import { ButtonLink } from "~/components/atoms";
-import { AvatarCard, Modal } from "~/components/molecule";
-import { MainTemplate } from "~/components/template";
+import { useState } from 'react'
+import { NextPage } from 'next'
+
+import { ButtonLink } from '~/components/atoms'
+import { AvatarCard, Modal } from '~/components/molecule'
+import { MainTemplate } from '~/components/template'
 
 const About: NextPage = () => {
-  const [showDonate, setShowDonate] = useState(false);
+  const [showDonate, setShowDonate] = useState(false)
 
   return (
     <>
-      <Modal
-        show={showDonate}
-        onClose={() => setShowDonate(false)}
-        title="후원하기"
-        closeBtn
-      >
+      <Modal show={showDonate} onClose={() => setShowDonate(false)} title="후원하기" closeBtn>
         <div className="mb-2">
           후원으로 사이트 운영과 개발을 도울 수 있습니다.
           <br />
@@ -26,23 +21,16 @@ const About: NextPage = () => {
           페이팔
         </ButtonLink>
       </Modal>
-      <MainTemplate
-        title="정보"
-        description="NovelAI APP과 관련된 정보 페이지입니다."
-      >
-        <h1 className="text-center text-4xl font-bold pt-8 text-title-color">
-          NovelAI.APP 정보
-        </h1>
+      <MainTemplate title="정보" description="NovelAI APP과 관련된 정보 페이지입니다.">
+        <h1 className="text-center text-4xl font-bold pt-8 text-title-color">NovelAI.APP 정보</h1>
 
         <main className="container mx-auto px-4 my-4 py-4 flex flex-col items-center justify-center text-base-color text-center">
           <div>
             <b>본 웹사이트는 Anlatan사의 NovelAI와 직접적인 관련이 없습니다.</b>
             <br />
-            아직 개발 중이며 로드맵은{" "}
-            <a href="https://github.com/gangjun06/NovelAI.app/issues/1">
-              이곳
-            </a>{" "}
-            에서 보실 수 있습니다.
+            아직 개발 중이며 로드맵은{' '}
+            <a href="https://github.com/gangjun06/NovelAI.app/issues/1">이곳</a> 에서 보실 수
+            있습니다.
             <br />
             <div className="flex gap-3 justify-center flex-wrap">
               <a href="mailto:me@gangjun.dev">문의</a>
@@ -53,11 +41,7 @@ const About: NextPage = () => {
               >
                 태그목록
               </a>
-              <a
-                href="https://github.com/gangjun06/NovelAI.app"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="https://github.com/gangjun06/NovelAI.app" target="_blank" rel="noreferrer">
                 소스코드(깃허브)
               </a>
               <a onClick={() => setShowDonate(true)} href="#">
@@ -91,7 +75,7 @@ const About: NextPage = () => {
         </main>
       </MainTemplate>
     </>
-  );
-};
+  )
+}
 
-export default About;
+export default About

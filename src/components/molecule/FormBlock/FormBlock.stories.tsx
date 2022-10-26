@@ -1,20 +1,20 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
-import { TrashIcon, ClipboardIcon } from "@heroicons/react/24/outline";
+import React from 'react'
+import type { ComponentMeta } from '@storybook/react'
 
-import { FormBlock as FormBlockUI } from "./FormBlock";
-import { Button, Input } from "~/components/atoms";
+import { Input } from '~/components/atoms'
+
+import { FormBlock as FormBlockUI } from './FormBlock'
 
 export default {
-  title: "Molecule/FormBlock",
+  title: 'Molecule/FormBlock',
   component: FormBlockUI,
   argTypes: {},
-} as ComponentMeta<any>;
+} as ComponentMeta<any>
 
 const Template = () => (
   <FormBlockUI label="Form Block">
     <Input />
   </FormBlockUI>
-);
+)
 
-export const FormBlock = Template.bind({});
+export const FormBlock = Template.bind({})

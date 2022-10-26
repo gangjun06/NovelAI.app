@@ -1,33 +1,25 @@
-import { CogIcon } from "@heroicons/react/24/outline";
-import { useAtom, useSetAtom } from "jotai";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Button, ButtonLink } from "~/components/atoms";
-import { SettingModal, showModalAtom } from "../SettingModal/SettingModal";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { CogIcon } from '@heroicons/react/24/outline'
+import { useSetAtom } from 'jotai'
 
-interface Props {}
+import { Button, ButtonLink } from '~/components/atoms'
 
-const NavItem = ({
-  name,
-  href,
-  isActive,
-}: {
-  name: string;
-  href: string;
-  isActive: boolean;
-}) => {
+import { SettingModal, showModalAtom } from '../SettingModal/SettingModal'
+
+const NavItem = ({ name, href, isActive }: { name: string; href: string; isActive: boolean }) => {
   return (
     <Link passHref href={href}>
       <ButtonLink variant="subtle" active={isActive}>
         {name}
       </ButtonLink>
     </Link>
-  );
-};
+  )
+}
 
-export const MainNav = ({}: Props) => {
-  const { pathname } = useRouter();
-  const setShowSetting = useSetAtom(showModalAtom);
+export const MainNav = () => {
+  const { pathname } = useRouter()
+  const setShowSetting = useSetAtom(showModalAtom)
 
   return (
     <>
@@ -36,23 +28,17 @@ export const MainNav = ({}: Props) => {
         <div className="sm:max-w-nav mx-auto flex justify-between items-center">
           <div className="flex gap-x-2 items-center">
             <Link href="/" passHref>
-              <a className="font-bold text-xl text-title-color pr-4">
-                NovelAI.APP
-              </a>
+              <a className="font-bold text-xl text-title-color pr-4">NovelAI.APP</a>
             </Link>
-            <NavItem name="태그 생성기" href="/" isActive={pathname === "/"} />
-            <NavItem
-              name="정보"
-              href="/about"
-              isActive={pathname === "/about"}
-            />
+            <NavItem name="태그 생성기" href="/" isActive={pathname === '/'} />
+            <NavItem name="정보" href="/about" isActive={pathname === '/about'} />
           </div>
           <div>
             <Button
               variant="subtle"
               forIcon
               onClick={() => {
-                setShowSetting(true);
+                setShowSetting(true)
               }}
             >
               <CogIcon width={28} height={28} />
@@ -61,5 +47,5 @@ export const MainNav = ({}: Props) => {
         </div>
       </nav>
     </>
-  );
-};
+  )
+}
