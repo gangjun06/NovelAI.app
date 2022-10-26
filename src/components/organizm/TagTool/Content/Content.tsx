@@ -9,6 +9,7 @@ import { Input, Switch, Tag } from "~/components/atoms";
 import { TagToolCard } from "./Card";
 import { directCopyAtom } from "../atoms";
 import {
+  ArchiveBoxIcon,
   ChevronDoubleUpIcon,
   RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
@@ -160,9 +161,17 @@ export const TagToolContent = () => {
             <>
               <div className="mt-4 text-base-color text-center">
                 <div>
-                  {disabled
-                    ? "검색어를 찾을 수 없습니다."
-                    : "카테고리를 선택하여 태그를 확인하세요!"}{" "}
+                  {disabled ? (
+                    "검색어를 찾을 수 없습니다."
+                  ) : (
+                    <>
+                      카테고리를 선택하여 태그를 확인하세요!
+                      <br />
+                      클릭하여 추가한 태그는 보관함
+                      <ArchiveBoxIcon className="w-5 h-6 inline mx-2 pb-1" />
+                      에서 확인할 수 있습니다
+                    </>
+                  )}
                 </div>
               </div>
             </>
