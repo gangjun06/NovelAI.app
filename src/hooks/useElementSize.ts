@@ -1,7 +1,7 @@
 // MIT, Mantine, https://mantine.dev/hooks/use-element-size/
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-type ObserverRect = Omit<DOMRectReadOnly, "toJSON">;
+type ObserverRect = Omit<DOMRectReadOnly, 'toJSON'>
 
 const defaultState: ObserverRect = {
   x: 0,
@@ -12,53 +12,53 @@ const defaultState: ObserverRect = {
   left: 0,
   bottom: 0,
   right: 0,
-};
+}
 
 export function useResizeObserver<T extends HTMLElement = any>() {
-  const frameID = useRef(0);
-  const ref = useRef<T>(null);
+  const frameID = useRef(0)
+  const ref = useRef<T>(null)
 
-  const [rect, setRect] = useState<ObserverRect>(defaultState);
+  const [rect, setRect] = useState<ObserverRect>(defaultState)
 
   const observer = useMemo(
     () =>
-      typeof window !== "undefined"
+      typeof window !== 'undefined'
         ? new ResizeObserver((entries: any) => {
-            const entry = entries[0];
+            const entry = entries[0]
 
             if (entry) {
-              cancelAnimationFrame(frameID.current);
+              cancelAnimationFrame(frameID.current)
 
               frameID.current = requestAnimationFrame(() => {
                 if (ref.current) {
-                  setRect(entry.contentRect);
+                  setRect(entry.contentRect)
                 }
-              });
+              })
             }
           })
         : null,
-    []
-  );
+    [],
+  )
 
   useEffect(() => {
     if (ref.current) {
-      observer?.observe(ref.current);
+      observer?.observe(ref.current)
     }
 
     return () => {
-      observer?.disconnect();
+      observer?.disconnect()
 
       if (frameID.current) {
-        cancelAnimationFrame(frameID.current);
+        cancelAnimationFrame(frameID.current)
       }
-    };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref.current]);
+  }, [ref.current])
 
-  return [ref, rect] as const;
+  return [ref, rect] as const
 }
 
 export function useElementSize<T extends HTMLElement = any>() {
-  const [ref, { width, height }] = useResizeObserver<T>();
-  return { ref, width, height };
+  const [ref, { width, height }] = useResizeObserver<T>()
+  return { ref, width, height }
 }

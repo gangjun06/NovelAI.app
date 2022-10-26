@@ -1,23 +1,21 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
+import React from 'react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
-import { AvatarCard as AvatarCardUI } from "./AvatarCard";
+import { AvatarCard as AvatarCardUI } from './AvatarCard'
 
 export default {
-  title: "Molecule/AvatarCard",
+  title: 'Molecule/AvatarCard',
   component: AvatarCardUI,
   argTypes: {},
-} as ComponentMeta<typeof AvatarCardUI>;
+} as ComponentMeta<typeof AvatarCardUI>
 
-const Template: ComponentStory<typeof AvatarCardUI> = (args) => (
-  <AvatarCardUI {...args} />
-);
+const Template: ComponentStory<typeof AvatarCardUI> = (args) => <AvatarCardUI {...args} />
 
-export const AvatarCard = Template.bind({});
+export const AvatarCard = Template.bind({})
 AvatarCard.args = {
-  avatarURL: "https://via.placeholder.com/150",
-  name: "John Doe",
-  description: "JohnDoe@example.com",
-  buttonLink: "https://example.com",
-  buttonText: "Send Message",
-};
+  avatarURL: 'https://via.placeholder.com/150',
+  name: 'John Doe',
+  description: 'JohnDoe@example.com',
+  buttonLink: 'https://example.com',
+  buttonText: 'Send Message',
+}

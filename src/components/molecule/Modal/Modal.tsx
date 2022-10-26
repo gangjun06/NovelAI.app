@@ -1,18 +1,19 @@
-import { Fragment, ReactNode } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import classNames from "classnames";
-import { Button } from "~/components/atoms";
+import { Fragment, ReactNode } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import classNames from 'classnames'
+
+import { Button } from '~/components/atoms'
 
 interface ModalProps {
-  children: ReactNode;
-  show: boolean;
-  onClose?: () => void;
-  onCancel?: () => void;
-  onSubmit?: () => boolean;
-  closeBtn?: boolean;
-  submitBtn?: string;
-  title?: string;
-  buttons?: ReactNode;
+  children: ReactNode
+  show: boolean
+  onClose?: () => void
+  onCancel?: () => void
+  onSubmit?: () => boolean
+  closeBtn?: boolean
+  submitBtn?: string
+  title?: string
+  buttons?: ReactNode
 }
 
 export const Modal = ({
@@ -22,7 +23,7 @@ export const Modal = ({
   submitBtn,
   onCancel,
   onSubmit = () => {
-    return true;
+    return true
   },
   closeBtn,
   title,
@@ -56,7 +57,7 @@ export const Modal = ({
             >
               <Dialog.Panel
                 className={classNames(
-                  "bg-base text-base-color w-full max-w-lg transform overflow-y-auto rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all"
+                  'bg-base text-base-color w-full max-w-lg transform overflow-y-auto rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all',
                 )}
               >
                 {title && (
@@ -70,21 +71,18 @@ export const Modal = ({
                 <div className="px-6 py-5 text-base-color">{children}</div>
                 <div className="bg-gray-200 dark:bg-zinc-800 flex justify-end gap-2 py-3 px-6">
                   {buttons}
-                  {typeof onCancel === "function" && (
+                  {typeof onCancel === 'function' && (
                     <Button variant="default" onClick={onCancel}>
                       취소
                     </Button>
                   )}
                   {closeBtn && (
                     <Button variant="primary" onClick={onClose}>
-                      {typeof closeBtn === "string" ? closeBtn : "확인"}
+                      {typeof closeBtn === 'string' ? closeBtn : '확인'}
                     </Button>
                   )}
                   {submitBtn && (
-                    <Button
-                      variant="primary"
-                      onClick={() => (onSubmit() ? onClose() : undefined)}
-                    >
+                    <Button variant="primary" onClick={() => (onSubmit() ? onClose() : undefined)}>
                       {submitBtn}
                     </Button>
                   )}
@@ -95,5 +93,5 @@ export const Modal = ({
         </div>
       </Dialog>
     </Transition>
-  );
-};
+  )
+}

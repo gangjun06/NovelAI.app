@@ -1,8 +1,8 @@
 // https://tabler-icons.io/
 
-import React from "react";
+import React from 'react'
 
-interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements["svg"]> {}
+type Props = React.PropsWithoutRef<JSX.IntrinsicElements['svg']>
 
 export const GripVerticalIcon = (props: Props) => (
   <svg
@@ -23,4 +23,4 @@ export const GripVerticalIcon = (props: Props) => (
     <circle cx="15" cy="12" r="1"></circle>
     <circle cx="15" cy="19" r="1"></circle>
   </svg>
-);
+)

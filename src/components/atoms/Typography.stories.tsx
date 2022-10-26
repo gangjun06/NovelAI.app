@@ -1,12 +1,11 @@
-import React from "react";
-import type { ComponentMeta, ComponentStory } from "@storybook/react";
+import React from 'react'
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  title: "Atoms/Typography",
-};
+  title: 'Atoms/Typography',
+}
 
-const TEXT = "This text is ";
+const TEXT = 'This text is '
 
 export const Typography = () => (
   <div className="text-md">
@@ -25,11 +24,9 @@ export const Typography = () => (
     <div className="border border-base bg-white dark:bg-zinc-900 rounded px-2 py-2">
       <div className="text-title-color text-2xl">{TEXT} text-title-color</div>
       <div className="text-subtitle-color">{TEXT} text-subtitle-color</div>
-      <div className="text-description-color">
-        {TEXT} text-description-color
-      </div>
+      <div className="text-description-color">{TEXT} text-description-color</div>
 
       <div className="text-base-color">{TEXT} text-base-color</div>
     </div>
   </div>
-);
+)
