@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import { CogIcon } from '@heroicons/react/24/outline'
 import { useSetAtom } from 'jotai'
 
 import { Button, ButtonLink } from '~/components/atoms'
+import { UserMenu } from '~/components/molecule'
 
 import { SettingModal, showModalAtom } from '../SettingModal/SettingModal'
 
@@ -20,6 +22,7 @@ const NavItem = ({ name, href, isActive }: { name: string; href: string; isActiv
 export const MainNav = () => {
   const { pathname } = useRouter()
   const setShowSetting = useSetAtom(showModalAtom)
+  const { data } = useSession()
 
   return (
     <>
@@ -34,16 +37,23 @@ export const MainNav = () => {
             <NavItem name="EXIF 뷰어" href="/tools/exif" isActive={pathname === '/tools/exif'} />
             <NavItem name="정보" href="/about" isActive={pathname === '/about'} />
           </div>
-          <div>
-            <Button
-              variant="subtle"
-              forIcon
-              onClick={() => {
-                setShowSetting(true)
-              }}
-            >
-              <CogIcon width={28} height={28} />
-            </Button>
+          <div className="flex items-center gap-x-2">
+            {data ? (
+              <UserMenu {...data.user} openSetting={() => setShowSetting(true)} />
+            ) : (
+              <>
+                <ButtonLink variant="light">로그인</ButtonLink>
+                <Button
+                  variant="subtle"
+                  forIcon
+                  onClick={() => {
+                    setShowSetting(true)
+                  }}
+                >
+                  <CogIcon width={28} height={28} />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </nav>

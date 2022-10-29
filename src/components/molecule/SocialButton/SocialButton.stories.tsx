@@ -11,4 +11,6 @@ export default {
 const Template: ComponentStory<typeof SocialButtonUI> = (args) => <SocialButtonUI {...args} />
 
 export const SocialButton = Template.bind({})
-SocialButton.args = {}
+SocialButton.args = {
+  social: 'kakao',
+}

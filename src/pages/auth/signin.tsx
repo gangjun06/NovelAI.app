@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import { signIn } from 'next-auth/react'
 
 import { SocialButton } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
@@ -13,9 +14,9 @@ const SignIn: NextPage = () => {
             소셜 계정으로 로그인하여 다양한 기능을 사용하세요!
           </div>
           <div className="flex flex-col gap-y-2.5 items-center">
-            <SocialButton social="kakao" />
-            <SocialButton social="discord" />
-            <SocialButton social="twitter" />
+            <SocialButton social="kakao" onClick={() => signIn('kakao')} />
+            <SocialButton social="discord" onClick={() => signIn('discord')} />
+            <SocialButton social="twitter" onClick={() => signIn('twitter')} />
           </div>
         </div>
       </div>

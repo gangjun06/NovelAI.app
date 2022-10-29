@@ -51,7 +51,7 @@ const Dropdown = ({
 }
 
 interface ItemProps {
-  icon: (props: React.PropsWithoutRef<JSX.IntrinsicElements['svg']>) => JSX.Element
+  icon?: (props: React.PropsWithoutRef<JSX.IntrinsicElements['svg']>) => JSX.Element
   onClick?: () => void
   children: ReactNode
   disabled?: boolean
@@ -68,7 +68,7 @@ const Item = ({ icon: Icon, onClick, children, disabled = false }: ItemProps) =>
             active && !disabled ? 'bg-primary-500 text-white' : 'text-subtitle-color'
           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
         >
-          <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" />
+          {Icon ? <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" /> : null}
           {children}
         </button>
       )}
@@ -83,7 +83,7 @@ const ItemNoButton = ({ icon: Icon, onClick: _onClick, children, disabled = fals
         !disabled ? 'hover:bg-primary-500 hover:text-white' : 'text-subtitle-color'
       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
     >
-      <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" />
+      {Icon ? <Icon className="mr-2 h-5 w-5 text-primary-400" aria-hidden="true" /> : null}
       {children}
     </div>
   )
