@@ -142,7 +142,7 @@ const ExifViewer: NextPage = () => {
               </div>
               <div className="flex gap-y-4 flex-col">
                 {imageList.map((image, index) => (
-                  <div key={index} className="card flex gap-x-2">
+                  <div key={index} className="card flex flex-col sm:flex-row items-center gap-x-2">
                     <div className="">
                       <img src={image['data_url']} alt="" className="w-48 h-auto" />
                       <div className="image-item__btn-wrapper mt-2 w-full flex justify-center">
@@ -171,7 +171,7 @@ const ExifViewer: NextPage = () => {
                                   </div>
                                 </td>
                                 <td className="p-2 flex flex-wrap">
-                                  <div className="text-left">{v}</div>
+                                  <div className="text-left text-description-color">{v}</div>
                                 </td>
                               </tr>
                             ),

@@ -1,46 +1,47 @@
-const colors = require("tailwindcss/colors");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{ts,tsx}"],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       maxWidth: {
-        nav: "80%",
+        nav: '80%',
       },
       colors: {
         primary: colors.sky,
       },
       backgroundColor: {
-        light: colors.gray["50"],
-        dark: "#1f2224",
+        light: colors.gray['50'],
+        dark: '#1f2224',
       },
       textColor: {
         titles: {
-          light: colors.zinc["900"],
-          dark: colors.zinc["100"],
+          light: colors.zinc['900'],
+          dark: colors.zinc['100'],
         },
         subtitles: {
-          light: colors.zinc["700"],
-          dark: colors.zinc["100"],
+          light: colors.zinc['700'],
+          dark: colors.zinc['100'],
         },
         descriptions: {
-          light: colors.zinc["500"],
-          dark: colors.zinc["500"],
+          light: colors.zinc['500'],
+          dark: colors.zinc['400'],
         },
         bases: {
-          light: colors.zinc["600"],
-          dark: colors.zinc["400"],
+          light: colors.zinc['600'],
+          dark: colors.zinc['400'],
         },
       },
       borderColor: {
         base: {
-          light: colors.gray["300"],
-          dark: colors.zinc["600"],
+          light: colors.gray['300'],
+          dark: colors.zinc['600'],
         },
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
-  darkMode: "class",
-};
+  plugins: [require('@tailwindcss/forms')],
+  darkMode: 'class',
+}
