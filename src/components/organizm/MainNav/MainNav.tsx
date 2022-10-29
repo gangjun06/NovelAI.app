@@ -26,11 +26,12 @@ export const MainNav = () => {
       <SettingModal />
       <nav className="px-4 py-4 shadow fixed bg-white dark:bg-zinc-900 w-full z-10">
         <div className="sm:max-w-nav mx-auto flex justify-between items-center">
-          <div className="flex gap-x-2 items-center">
+          <div className="flex gap-x-2 items-center overflow-x-scroll no-scroll">
             <Link href="/" passHref>
               <a className="font-bold text-xl text-title-color pr-4">NovelAI.APP</a>
             </Link>
             <NavItem name="태그 생성기" href="/" isActive={pathname === '/'} />
+            <NavItem name="EXIF 뷰어" href="/tools/exif" isActive={pathname === '/tools/exif'} />
             <NavItem name="정보" href="/about" isActive={pathname === '/about'} />
           </div>
           <div>

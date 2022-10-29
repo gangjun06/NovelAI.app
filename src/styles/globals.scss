@@ -18,9 +18,16 @@
   .border-base-color {
     @apply border-base-light dark:border-base-dark
   }
+  .border-primary-color {
+    @apply border-primary-400 dark:border-primary-600
+  }
   .bg-base {
     @apply bg-light dark:bg-dark;
   }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html.dark {
@@ -37,7 +44,7 @@ body,
   height: 100%;
   overflow-x: hidden;
   @apply text-base bg-base;
-  overflow-y: hidden;
+  // overflow-y: hidden;
 }
  #__next{
   position: relative;
@@ -111,4 +118,12 @@ input[type=number] {
   0%{     @apply bg-transparent;    }
   50%{    @apply bg-primary-700/25 }
   100%{   @apply bg-transparent;    }
+}
+
+.card {
+  @apply border shadow-sm rounded px-4 py-4 dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none;
 }
