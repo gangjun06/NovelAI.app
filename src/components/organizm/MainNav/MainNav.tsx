@@ -31,6 +31,7 @@ export const MainNav = () => {
               <a className="font-bold text-xl text-title-color pr-4">NovelAI.APP</a>
             </Link>
             <NavItem name="태그 생성기" href="/" isActive={pathname === '/'} />
+            <NavItem name="EXIF 뷰어" href="/tools/exif" isActive={pathname === '/tools/exif'} />
             <NavItem name="정보" href="/about" isActive={pathname === '/about'} />
           </div>
           <div>

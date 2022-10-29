@@ -9486,6 +9486,11 @@ react-hot-toast@^2.4.0:
   dependencies:
     goober "^2.1.10"
 
+react-images-uploading@^3.1.7:
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/react-images-uploading/-/react-images-uploading-3.1.7.tgz#a53bf0d08624802dc6b74db4ec5695b0bfaf5a5c"
+  integrity sha512-woET50eCezm645iIeP4gCoN7HjdR3T64UXC5l53yd+2vHFp+pwABH8Z/aAO5IXDeC1aP6doQ+K738L701zswAw==
+
 react-inspector@^5.1.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/react-inspector/-/react-inspector-5.1.1.tgz#58476c78fde05d5055646ed8ec02030af42953c8"
