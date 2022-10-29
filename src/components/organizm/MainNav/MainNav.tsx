@@ -27,9 +27,9 @@ export const MainNav = () => {
   return (
     <>
       <SettingModal />
-      <nav className="px-4 py-4 shadow fixed bg-white dark:bg-zinc-900 w-full z-10">
+      <nav className="px-4 shadow fixed bg-white dark:bg-zinc-900 w-full z-10">
         <div className="sm:max-w-nav mx-auto flex justify-between items-center">
-          <div className="flex gap-x-2 items-center overflow-x-scroll no-scroll">
+          <div className="flex gap-x-2 items-center overflow-x-scroll no-scroll py-4">
             <Link href="/" passHref>
               <a className="font-bold text-xl text-title-color pr-4">NovelAI.APP</a>
             </Link>
@@ -42,8 +42,11 @@ export const MainNav = () => {
               <UserMenu {...data.user} openSetting={() => setShowSetting(true)} />
             ) : (
               <>
-                <ButtonLink variant="light">로그인</ButtonLink>
+                <ButtonLink variant="light" className="my-4" href="/auth/signin">
+                  로그인
+                </ButtonLink>
                 <Button
+                  className="my-4"
                   variant="subtle"
                   forIcon
                   onClick={() => {

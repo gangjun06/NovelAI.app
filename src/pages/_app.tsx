@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
+import { SessionProvider } from 'next-auth/react'
 
 import '~/styles/globals.scss'
 
@@ -27,10 +28,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events])
 
   return (
-    <>
+    <SessionProvider session={(pageProps as any).session}>
       <Toaster />
       <Component {...pageProps} />
-    </>
+    </SessionProvider>
   )
 }
 

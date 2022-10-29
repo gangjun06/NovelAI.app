@@ -28,6 +28,12 @@ export const authOptions: NextAuthOptions = {
       version: '2.0', // opt-in to Twitter OAuth 2.0
     }),
   ],
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    error: '/auth/error',
+    newUser: '/auth/new-user',
+  },
 }
 
 export default NextAuth(authOptions)
