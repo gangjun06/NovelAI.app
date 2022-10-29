@@ -18,7 +18,7 @@ export const MainTemplate = ({ title, description, children, container = false }
       <NextSeo title={`${title} | NovelAI.APP`} description={description} />
       <MainNav />
       <div className={'h-full pt-[70px]'}>
-        {container ? <div className="container mx-auto mt-4">{children}</div> : children}
+        {container ? <div className="container mx-auto pt-4 pb-8">{children}</div> : children}
       </div>
       {/* <MainFooter /> */}
     </>
