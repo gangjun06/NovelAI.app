@@ -22,7 +22,7 @@ interface ImageData {
   clipSkip?: number
   width: number
   height: number
-  modelHash: string
+  modelHash?: string
 }
 
 const ExifViewer: NextPage = () => {

@@ -35,12 +35,126 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
+  role          UserRole
   accounts      Account[]
   sessions      Session[]
+  Image         Image[]
+  Collection    Collection[]
+  Post          Post[]
+}
+
+enum Software {
+  NOVEL_AI
+  WEB_UI
+}
+
+enum ImageStatus {
+  PUBLIC
+  UNLISTED
+}
+
+model Image {
+  id       String      @id @default(cuid())
+  title    String?
+  content  String?
+  imageUrl String?
+  authorId String
+  author   User        @relation(fields: [authorId], references: [id])
+  status   ImageStatus
+
+  rootId    String?
+  rootImage Image?  @relation("ImageList", fields: [rootId], references: [id])
+  images    Image[] @relation("ImageList")
+
+  originalTitle String?
+  originalURL   String?
+
+  imageSoftware  Software
+  imagePrompt    String
+  imageUCPrompt  String
+  imageSteps     Int
+  imageScale     Int
+  imageStrength  Float
+  imageNoise     Float?
+  imageSeed      Int
+  imageSampler   String
+  imageWidth     Int
+  imageHeight    Int
+  imageClipSkip  Int?
+  imageModelHash String?
+  imageSource    String?
+  other          Json
+
+  tags   Tag[] @relation("GeneralTags")
+  ucTags Tag[] @relation("UCTags")
+
+  collections Collection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  tagId    String  @id
+  mean     String
+  images   Image[] @relation("GeneralTags")
+  ucImages Image[] @relation("UCTags")
+}
+
+enum CollectionStatus {
+  PUBLIC
+  UNLISTED
+  PRIVATE
+}
+
+model Collection {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  status      CollectionStatus
+  images      Image[]
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostCategory {
+  id   String @id @default(cuid())
+  name String
+
+  readAble    UserRole
+  writeAble   UserRole
+  commentAble UserRole
+  post        Post[]
+}
+
+model Post {
+  id             String       @id @default(cuid())
+  title          String
+  content        String
+  authorId       String
+  author         User         @relation(fields: [authorId], references: [id])
+  postCategoryId String
+  postCategory   PostCategory @relation(fields: [postCategoryId], references: [id])
+
+  readAble    UserRole
+  writeAble   UserRole
+  commentAble UserRole
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

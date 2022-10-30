@@ -35,6 +35,7 @@ export const MainNav = () => {
             </Link>
             <NavItem name="태그 생성기" href="/" isActive={pathname === '/'} />
             <NavItem name="EXIF 뷰어" href="/tools/exif" isActive={pathname === '/tools/exif'} />
+            <NavItem name="갤러리" href="/gallery" isActive={pathname.startsWith('/gallery')} />
             <NavItem name="정보" href="/about" isActive={pathname === '/about'} />
           </div>
           <div className="flex items-center gap-x-2">
