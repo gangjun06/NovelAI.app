@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
+import { useSession } from 'next-auth/react'
 
 import { UploadBlock } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
@@ -18,6 +19,7 @@ const NewImage = () => {
       container
       pageBack={{ label: '갤러리', to: '/gallery' }}
       tiny
+      requireAuth
     >
       <ImageUploading value={images} onChange={onChange}>
         {({ imageList, onImageUpload, onImageRemoveAll, onImageRemove, isDragging, dragProps }) => (
