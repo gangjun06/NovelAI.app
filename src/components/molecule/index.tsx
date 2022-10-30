@@ -1,5 +1,5 @@
 export * from './AvatarCard/AvatarCard'
-export * from './FormBlock/FormBlock'
+export * from './Form/Form'
 export * from './Menu/Menu'
 export * from './Modal/Modal'
 export * from './PageBack/PageBack'

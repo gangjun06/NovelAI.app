@@ -3,8 +3,8 @@ import { useState } from 'react'
 import ImageUploading, { ImageListType, ImageType } from 'react-images-uploading'
 import { useSession } from 'next-auth/react'
 
-import { TabSelect, Textarea, Button, Input } from '~/components/atoms'
-import { FormBlock, UploadBlock } from '~/components/molecule'
+import { FormBlock, TabSelect, Textarea, Button, Input } from '~/components/atoms'
+import { UploadBlock } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
 import { ImageInfo } from '~/types/image'
 
@@ -49,12 +49,8 @@ const NewImage = () => {
             />
             {!uploadEach && (
               <div className="flex flex-col gap-y-2">
-                <FormBlock label="제목">
-                  <Input className="w-full" />
-                </FormBlock>
-                <FormBlock label="내용">
-                  <Textarea className="w-full" />
-                </FormBlock>
+                <Input label="제목" className="w-full" />
+                  <Textarea label="내용" className="w-full" />
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">

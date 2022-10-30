@@ -39,7 +39,7 @@ export const MainTemplate = ({
   const content = useMemo(() => {
     if (!container) return children
     const ContentInner = () => {
-      if (!requireAuth) return <>children</>
+      if (!requireAuth) return <>{children}</>
       switch (status) {
         case 'loading':
           return <div className="text-title-color">Loading...</div>

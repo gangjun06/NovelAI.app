@@ -2,8 +2,8 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSetAtom } from 'jotai'
 
-import { Input } from '~/components/atoms'
-import { FormBlock, Modal } from '~/components/molecule'
+import { FormBlock, Input } from '~/components/atoms'
+import { Modal } from '~/components/molecule'
 import { archivedCategoryAtomsAtom } from '~/components/organizm/TagTool/atoms'
 
 export const AddCategoryModal = ({ show, onClose }: { show: boolean; onClose: () => void }) => {
