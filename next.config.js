@@ -4,8 +4,8 @@ const nextConfig = {
   swcMinify: true,
   images: {
     unoptimized: true,
-    domains: ["avatars.githubusercontent.com"],
+    domains: ['avatars.githubusercontent.com'],
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

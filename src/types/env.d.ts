@@ -3,6 +3,7 @@ declare namespace NodeJS {
     DATABASE_URL: string
     NEXTAUTH_URL: string
     NEXT_PUBLIC_GA_ID: string
+    NEXTAUTH_SECRET: string
     NODE_ENV: 'development' | 'production'
     DISCORD_CLIENT_ID: string
     DISCORD_CLIENT_SECRET: string

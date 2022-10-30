@@ -6,7 +6,7 @@ import { signIn, useSession } from 'next-auth/react'
 
 import { SocialButton } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
-import { loadRedirect } from '~/lib/auth'
+import { loadRedirect } from '~/lib/auth.client'
 
 const SignIn: NextPage = () => {
   const { status } = useSession()

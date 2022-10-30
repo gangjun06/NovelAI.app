@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth, { DefaultSession, NextAuthOptions } from 'next-auth'
 import DiscordProvider from 'next-auth/providers/discord'
 import KakaoProvider from 'next-auth/providers/kakao'
 import NaverProvider from 'next-auth/providers/naver'
@@ -6,6 +6,15 @@ import TwitterProvider from 'next-auth/providers/twitter'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 
 import prisma from '~/lib/prisma'
+import { UserRole } from '@prisma/client'
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      role: UserRole
+    } & DefaultSession['user']
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -34,6 +43,13 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
     newUser: '/auth/new-user',
   },
+  callbacks: {
+    async session({ session, token, user: _user }) {
+      console.log('SESSION')
+      return session
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 export default NextAuth(authOptions)

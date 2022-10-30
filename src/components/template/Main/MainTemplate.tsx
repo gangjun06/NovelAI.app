@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import { Button } from '~/components/atoms'
 import { PageBack } from '~/components/molecule'
 import { MainNav } from '~/components/organizm'
-import { setRedirect } from '~/lib/auth'
+import { setRedirect } from '~/lib/auth.client'
 // import { MainFooter } from "~/components/organizm";
 
 interface Props {
@@ -42,7 +42,7 @@ export const MainTemplate = ({
       if (!requireAuth) return <>children</>
       switch (status) {
         case 'loading':
-          return <div className="text-title-color">'Loading...'</div>
+          return <div className="text-title-color">Loading...</div>
         case 'authenticated':
           return <>{children}</>
         case 'unauthenticated':
