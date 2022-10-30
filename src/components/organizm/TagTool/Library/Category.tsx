@@ -112,6 +112,7 @@ export const TagToolCategory = ({ categoryAtom, remove, duplicate }: Props) => {
           <div className="flex items-center gap-x-2 w-full py-2">
             <Input
               value={rename}
+              className="w-72"
               onChange={(e) => setRename(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && rename.trim().length > 0) {

@@ -1,11 +1,11 @@
 import { forwardRef } from 'react'
 import classNames from 'classnames'
 
-type Props = React.PropsWithoutRef<JSX.IntrinsicElements['input']>
+type Props = React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>
 
-export const Input = forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => {
+export const Textarea = forwardRef<HTMLTextAreaElement, Props>(({ className, ...props }, ref) => {
   return (
-    <input
+    <textarea
       ref={ref}
       {...props}
       className={classNames(
@@ -17,4 +17,4 @@ export const Input = forwardRef<HTMLInputElement, Props>(({ className, ...props 
   )
 })
 
-Input.displayName = 'Input'
+Textarea.displayName = 'Input'

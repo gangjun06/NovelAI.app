@@ -122,7 +122,7 @@ input[type=number] {
 }
 
 .card {
-  @apply border shadow-sm rounded dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 bg-white border-base-light;
+  @apply border shadow-sm rounded dark:bg-zinc-700/50 border-base-color dark:text-gray-300 bg-white;
 }
 
 .no-scroll::-webkit-scrollbar {
@@ -135,4 +135,8 @@ input[type=number] {
 
 .goBack:hover > .arrow {
   @apply -translate-x-1;
+}
+
+.galleryUploadCard:hover > .overlay {
+  @apply bg-black/50;
 }

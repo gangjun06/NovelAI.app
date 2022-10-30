@@ -107,7 +107,7 @@ export const TagToolContent = () => {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="키워드/태그를 입력하여 주세요"
-              className="basic"
+              className="basic w-72"
             />
             <div className="my-2">
               <Switch

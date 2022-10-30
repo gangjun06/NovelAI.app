@@ -3,88 +3,70 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { NextPage } from 'next'
-import classNames from 'classnames'
-import Exifr from 'exifr'
 
 import { Button } from '~/components/atoms'
 import { UploadBlock } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
+import { ImageInfo } from '~/types/image'
 import { parseExif, ParseExifError, ParseExifErrorName } from '~/utils/exif'
 
-interface ImageData {
-  program: 'novelAI' | 'webUI'
-  prompt: string
-  negativePrompt: string
-  steps: number
-  strength: number
-  seed: number
-  scale: number
-  sampler: string
-  noise?: number
-  clipSkip?: number
-  width: number
-  height: number
-  modelHash?: string
+export const onChangeImage = async (imageList: ImageListType) => {
+  const errors: { [key in ParseExifErrorName]?: number } = {}
+  let [unknownError, success, error] = [0, 0, 0]
+
+  const parsed: ImageListType & { info: ImageInfo }[] = (
+    await Promise.all(
+      imageList.map(async (data) => {
+        if (data.info) return data
+        try {
+          const info = await parseExif(data)
+          success += 1
+          return { ...data, info }
+        } catch (e) {
+          error += 1
+          if (e instanceof ParseExifError) {
+            errors[e.name] = typeof errors[e.name] === 'number' ? (errors[e.name] as number) + 1 : 1
+            return null
+          }
+          unknownError += 1
+        }
+      }),
+    )
+  ).filter((data) => data) as never[]
+
+  if (error + success !== 0) {
+    const { filetype, format, nodata } = errors
+    if (filetype || format || nodata || unknownError) {
+      if (error === 1) {
+        toast.error(
+          filetype
+            ? 'png, jpg 포멧의 파일만 업로드 가능합니다'
+            : format
+            ? '파일에서 태그를 분석할 수 없습니다'
+            : nodata
+            ? '파일에 exif태그가 존재하지 않습니다'
+            : '알 수 없는 에러가 발생하였습니다',
+        )
+        return parsed
+      }
+      toast.error(
+        `성공: ${success}, 실패: [확장자: ${format ?? 0}, 데이터: ${
+          (format ?? 0) + (nodata ?? 0)
+        }, 알 수 없음: ${unknownError ?? 0}]`,
+      )
+    } else {
+      toast.success(`${success}개의 이미지를 성공적으로 불러왔습니다`)
+    }
+  }
+
+  return parsed
 }
 
 const ExifViewer: NextPage = () => {
-  const [images, setImages] = useState<ImageListType & { info: ImageData }[]>([])
-  // const [metadata, setMetadata] = useState<{ [key: string]: ImageData }>({})
-  const maxNumber = 15
+  const [images, setImages] = useState<ImageListType & { info: ImageInfo }[]>([])
 
   const onChange = async (imageList: ImageListType) => {
-    const errors: { [key in ParseExifErrorName]?: number } = {}
-    let unknownError = 0
-    let success = 0
-    let error = 0
-
-    const parsed: ImageListType & { info: ImageData }[] = (
-      await Promise.all(
-        imageList.map(async (data) => {
-          if (data.info) return data
-          try {
-            const info = await parseExif(data)
-            success += 1
-            return { ...data, info }
-          } catch (e) {
-            error += 1
-            if (e instanceof ParseExifError) {
-              errors[e.name] =
-                typeof errors[e.name] === 'number' ? (errors[e.name] as number) + 1 : 1
-              return null
-            }
-            unknownError += 1
-          }
-        }),
-      )
-    ).filter((data) => data) as never[]
-
-    if (error + success !== 0) {
-      const { filetype, format, nodata } = errors
-      if (filetype || format || nodata || unknownError) {
-        if (error === 1) {
-          toast.error(
-            filetype
-              ? 'png, jpg 포멧의 파일만 업로드 가능합니다'
-              : format
-              ? '파일에서 태그를 분석할 수 없습니다'
-              : nodata
-              ? '파일에 exif태그가 존재하지 않습니다'
-              : '알 수 없는 에러가 발생하였습니다',
-          )
-          return
-        }
-        toast.error(
-          `성공: ${success}, 실패: [확장자: ${format ?? 0}, 데이터: ${
-            (format ?? 0) + (nodata ?? 0)
-          }, 알 수 없음: ${unknownError ?? 0}]`,
-        )
-      } else {
-        toast.success(`${success}개의 이미지를 성공적으로 불러왔습니다`)
-      }
-    }
-
-    setImages(parsed)
+    setImages(await onChangeImage(imageList))
   }
 
   return (
@@ -98,7 +80,7 @@ const ExifViewer: NextPage = () => {
         multiple
         value={images}
         onChange={onChange}
-        maxNumber={maxNumber}
+        maxNumber={30}
         dataURLKey="data_url"
       >
         {({ imageList, onImageUpload, onImageRemoveAll, onImageRemove, isDragging, dragProps }) => (

@@ -17,12 +17,12 @@ const btnClassNames = (
   otherClasses?: string,
 ) =>
   classNames(
-    'transition text-black rounded flex-none text-center border ',
+    'transition text-black rounded flex-none text-center border',
     {
       'px-4 py-1.5': !compact && !forIcon,
       'px-2 py-1': compact && !forIcon,
       'px-1 py-1': forIcon,
-      'bg-gray-100 text-gray-400 dark:bg-zinc-700': disabled,
+      'bg-gray-100 text-gray-400 dark:bg-zinc-700 border-base-color': disabled,
       'shadow-sm': variant !== 'subtle',
       'bg-white hover:bg-gray-100 border-base-light dark:bg-zinc-700 dark:hover:bg-zinc-800 dark:border-base-dark dark:text-white':
         !disabled && variant === 'default',
