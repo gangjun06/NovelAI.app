@@ -2622,6 +2622,11 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
+"@toss/hangul@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@toss/hangul/-/hangul-1.0.3.tgz#0e2bcbac370f37ff431fb366e908f806971729fc"
+  integrity sha512-CMJCj2242e//llq+/nDdBH+rLFScPznfXr7Ur99ulgSpYMDpMQm/y63oAVb+CmJaaMNYsIVS/Rx5W9YyivBYZw==
+
 "@types/aria-query@^4.2.0":
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.2.tgz#ed4e0ad92306a704f9fb132a0cfcf77486dbe2bc"

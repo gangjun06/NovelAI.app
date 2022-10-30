@@ -45,6 +45,7 @@ body,
   overflow-x: hidden;
   @apply text-base bg-base;
   // overflow-y: hidden;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
  #__next{
   position: relative;
@@ -130,4 +131,8 @@ input[type=number] {
 
 .socialBtn:hover > .arrow {
   @apply translate-x-1.5;
+}
+
+.goBack:hover > .arrow {
+  @apply -translate-x-1;
 }

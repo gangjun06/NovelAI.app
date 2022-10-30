@@ -23,6 +23,12 @@ class Document extends NextDocument {
       `,
             }}
           />
+          <link
+            rel="stylesheet"
+            as="style"
+            crossOrigin=""
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-dynamic-subset.css"
+          />
         </Head>
         <body>
           <Main />
