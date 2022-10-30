@@ -9,6 +9,7 @@ import Exifr from 'exifr'
 import { Button } from '~/components/atoms'
 import { UploadBlock } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
+import { parseExif, ParseExifError, ParseExifErrorName } from '~/utils/exif'
 
 interface ImageData {
   program: 'novelAI' | 'webUI'
@@ -29,74 +30,59 @@ interface ImageData {
 const ExifViewer: NextPage = () => {
   const [images, setImages] = useState<ImageListType & { info: ImageData }[]>([])
   // const [metadata, setMetadata] = useState<{ [key: string]: ImageData }>({})
-  const maxNumber = 69
+  const maxNumber = 15
 
   const onChange = async (imageList: ImageListType) => {
+    const errors: { [key in ParseExifErrorName]?: number } = {}
+    let unknownError = 0
+    let success = 0
+    let error = 0
+
     const parsed: ImageListType & { info: ImageData }[] = (
       await Promise.all(
         imageList.map(async (data) => {
-          if (typeof data['data_url'] !== 'string' || !data.file) return
-
-          const { type } = data.file
-          if (type !== 'image/png' && type !== 'image/jpeg' && type !== 'image/jpg') {
-            toast.error('png, jpg형태의 파일만 업로드 가능합니다')
-            return null
-          }
-
-          const imageData = await Exifr.parse(data['data_url'], {})
-
-          if (!imageData) {
-            return null
-          }
-
-          let info: ImageData = {} as never
-
-          console.log(imageData)
-
-          if (imageData.Comment) {
-            const decoded = JSON.parse(imageData.Comment)
-            info = decoded
-            info.program = 'novelAI'
-            info.negativePrompt = decoded.uc
-            info.prompt = imageData.Description
-            info.width = imageData.ImageWidth
-            info.height = imageData.ImageHeight
-          } else if (imageData.parameters) {
-            const splited = imageData.parameters.split('\n')
-            if (splited.length !== 3) return null
-            info.program = 'webUI'
-            info.prompt = splited[0]
-            info.width = imageData.ImageWidth
-            info.height = imageData.ImageHeight
-            info.negativePrompt = splited[1].replace('Negative prompt: ', '')
-            const splited2 = splited[2].split(', ') as string[]
-            for (const item of splited2) {
-              console.log(item)
-              if (item.startsWith('Steps: ')) {
-                info.steps = parseInt(item.replace('Steps: ', ''))
-              } else if (item.startsWith('Sampler: ')) {
-                info.sampler = item.replace('Sampler: ', '')
-              } else if (item.startsWith('CFG scale: ')) {
-                info.scale = parseInt(item.replace('CFG scale: ', ''))
-              } else if (item.startsWith('Seed: ')) {
-                info.seed = parseInt(item.replace('Seed: ', ''))
-              } else if (item.startsWith('Model hash: ')) {
-                info.modelHash = item.replace('Model hash: ', '')
-              } else if (item.startsWith('Clip skip: ')) {
-                info.clipSkip = parseInt(item.replace('Clip skip: ', ''))
-              }
+          if (data.info) return data
+          try {
+            const info = await parseExif(data)
+            success += 1
+            return { ...data, info }
+          } catch (e) {
+            error += 1
+            if (e instanceof ParseExifError) {
+              errors[e.name] =
+                typeof errors[e.name] === 'number' ? (errors[e.name] as number) + 1 : 1
+              return null
             }
-          } else {
-            return null
-          }
-
-          return {
-            ...data,
-            info,
+            unknownError += 1
           }
         }),
       )
     ).filter((data) => data) as never[]
+
+    if (error + success !== 0) {
+      const { filetype, format, nodata } = errors
+      if (filetype || format || nodata || unknownError) {
+        if (error === 1) {
+          toast.error(
+            filetype
+              ? 'png, jpg 포멧의 파일만 업로드 가능합니다'
+              : format
+              ? '파일에서 태그를 분석할 수 없습니다'
+              : nodata
+              ? '파일에 exif태그가 존재하지 않습니다'
+              : '알 수 없는 에러가 발생하였습니다',
+          )
+          return
+        }
+        toast.error(
+          `성공: ${success}, 실패: [확장자: ${format ?? 0}, 데이터: ${
+            (format ?? 0) + (nodata ?? 0)
+          }, 알 수 없음: ${unknownError ?? 0}]`,
+        )
+      } else {
+        toast.success(`${success}개의 이미지를 성공적으로 불러왔습니다`)
+      }
+    }
 
     setImages(parsed)
   }
