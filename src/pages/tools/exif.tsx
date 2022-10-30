@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import Exifr from 'exifr'
 
 import { Button } from '~/components/atoms'
+import { UploadBlock } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
 
 interface ImageData {
@@ -116,19 +117,7 @@ const ExifViewer: NextPage = () => {
       >
         {({ imageList, onImageUpload, onImageRemoveAll, onImageRemove, isDragging, dragProps }) => (
           <div className="upload__image-wrapper">
-            <div className="card">
-              <button
-                className={classNames(
-                  'border-4 border-dashed rounded-lg px-8 py-8 text-center text-subtitle-color w-full transition-colors',
-                  isDragging ? 'border-primary-color' : 'border-base-color ',
-                )}
-                onClick={onImageUpload}
-                {...dragProps}
-              >
-                이미지을 여기로 드래그 또는 클릭하여 파일을 추가하세요
-              </button>
-            </div>
-            &nbsp;
+            <UploadBlock isDragging={isDragging} onClick={onImageUpload} {...dragProps} />
             <div className="flex justify-between items-center mt-4 mb-2">
               <div className="text-xl text-title-color">파일목록</div>
               <Button onClick={onImageRemoveAll}>전체 삭제</Button>
