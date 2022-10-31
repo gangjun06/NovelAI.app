@@ -1,5 +1,4 @@
 // /* eslint-disable @typescript-eslint/no-explicit-any */
-import classNames from 'classnames'
 import {
   ComponentProps,
   JSXElementConstructor,
@@ -11,6 +10,7 @@ import {
 } from 'react'
 import {
   Controller,
+  FieldErrorsImpl,
   FieldPath,
   FieldValues,
   FormProvider,
@@ -20,14 +20,15 @@ import {
   useFormContext,
   UseFormRegisterReturn,
   UseFormReturn,
-  FieldErrorsImpl,
 } from 'react-hook-form'
-import superjson from 'superjson'
 import toast from 'react-hot-toast'
-import { z } from 'zod'
-import useSWR, { mutate } from 'swr'
-import { fetcher } from '~/utils/api'
 import { zodResolver } from '@hookform/resolvers/zod'
+import classNames from 'classnames'
+import superjson from 'superjson'
+import useSWR, { mutate } from 'swr'
+import { z } from 'zod'
+
+import { fetcher } from '~/utils/api'
 
 export const formatError = <FormValues extends FieldValues>(
   error: FieldErrorsImpl<FormValues>,
@@ -90,7 +91,6 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
 
   const { data, error } = useSWR(resultURL, fetcher)
   const methods = useForm<z.infer<TSchema>>({
-    mode: 'onChange',
     resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: data,
   })

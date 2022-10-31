@@ -12,6 +12,7 @@ export const TabSelect = ({ selected, onChange, list }: TabProps) => {
       {list.map((item) => (
         <button
           onClick={() => onChange(item.value)}
+          type="button"
           key={item.value}
           className={classNames(
             'w-full rounded-lg py-2.5',

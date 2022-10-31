@@ -1,6 +1,6 @@
 import { atom, useAtom } from 'jotai'
 
-import { Select, Switch, FormBlock } from '~/components/atoms'
+import { FormBlock, Select, Switch } from '~/components/atoms'
 import { Modal } from '~/components/molecule'
 import { settingAtom, Theme, themeAtom } from '~/hooks/useSetting'
 

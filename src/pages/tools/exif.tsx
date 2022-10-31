@@ -14,7 +14,7 @@ export const onChangeImage = async (imageList: ImageListType) => {
   const errors: { [key in ParseExifErrorName]?: number } = {}
   let [unknownError, success, error] = [0, 0, 0]
 
-  const parsed: ImageListType & { info: ImageInfo }[] = (
+  const parsed: (ImageListType & { info: ImageInfo })[] = (
     await Promise.all(
       imageList.map(async (data) => {
         if (data.info) return data
