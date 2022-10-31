@@ -3,15 +3,15 @@ import { z } from 'zod'
 
 import { customErrorMap } from '~/lib/form'
 
-const titleValidator = z.string().min(10).max(150)
-const contentValidator = z.string().max(10000).optional()
+const titleValidator = z.string().max(150).optional()
+const contentValidator = z.string().max(2500).optional()
 
 export const galleryPostBodyData = z.object({
   title: titleValidator,
   content: contentValidator,
   imageSoftware: z.nativeEnum(Software),
-  imagePrompt: z.string().max(10000),
-  imageUCPrompt: z.string().max(10000),
+  imagePrompt: z.string().max(5000),
+  imageUCPrompt: z.string().max(5000),
   imageSteps: z.number(),
   imageScale: z.number(),
   imageStrength: z.number(),
@@ -31,7 +31,7 @@ export const galleryPostBodyValidator = z
     title: titleValidator,
     content: contentValidator,
     uploadEach: z.boolean(),
-    list: z.array(galleryPostBodyData).min(1),
+    list: z.array(galleryPostBodyData).nonempty(),
   })
   .superRefine(({ list, uploadEach }, ctx) => {
     if (uploadEach && list.length > 2) {

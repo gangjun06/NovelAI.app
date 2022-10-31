@@ -1,21 +1,43 @@
-import { forwardRef } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
 import classNames from 'classnames'
+
 import { FormBlock, FormBlockProps, formBlockPropsRemover } from '~/components/atoms'
 
 interface Props extends React.PropsWithoutRef<JSX.IntrinsicElements['input']>, FormBlockProps {
   type?: 'text' | 'password' | 'email' | 'number'
 }
 
-export const Input = forwardRef<HTMLInputElement, Props>(({ className, ...props }, ref) => {
+export const Input = forwardRef<HTMLInputElement, Props>(({ className, max, ...props }, ref) => {
+  const [value, setValue] = useState('')
   const inputProps = formBlockPropsRemover(props)
+
+  const labelRight = useMemo(() => {
+    if (!max) return <></>
+    const maxNum = typeof max === 'number' ? max : parseInt(max)
+    const strLen = value.length ?? 0
+    if (maxNum && strLen >= maxNum * 0.9) {
+      return (
+        <div
+          className={classNames(strLen > maxNum ? 'text-error-color' : 'text-description-color')}
+        >{`${strLen} / ${max}`}</div>
+      )
+    }
+    return <></>
+  }, [value, max])
+
   return (
-    <FormBlock {...props}>
+    <FormBlock {...props} labelRight={labelRight}>
       <input
         ref={ref}
         {...inputProps}
+        onChange={(e) => {
+          if (typeof inputProps.onChange === 'function') inputProps.onChange(e)
+          setValue(e.target.value)
+        }}
         className={classNames(
-          'block px-4 py-2 rounded-lg border-base-light border focus:outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50',
-          'dark:bg-zinc-800/60 dark:border-base-dark dark:text-white',
+          'block px-4 py-2 rounded-lg border',
+          'dark:bg-zinc-800/60 dark:text-white',
+          props.error ? 'border-error-color error-ring' : 'border-base-color default-ring',
           className,
         )}
       />

@@ -8,6 +8,7 @@ export interface FormBlockProps {
   required?: boolean
   name?: string
   customLabel?: any
+  labelRight?: JSX.Element
 }
 
 export const FormBlock = ({
@@ -17,23 +18,29 @@ export const FormBlock = ({
   customLabel: CustomLabel,
   required,
   name,
+  labelRight,
 }: FormBlockProps) => {
   if (!label) return <>{children}</>
   return (
     <div>
-      {CustomLabel ? (
-        <CustomLabel htmlFor={name} className="text-subtitle-color">
-          {label}
-        </CustomLabel>
-      ) : (
-        <label htmlFor={name} className="text-subtitle-color">
-          {label}
-        </label>
-      )}
+      <div className="flex justify-between">
+        <>
+          {CustomLabel ? (
+            <CustomLabel htmlFor={name} className="text-subtitle-color">
+              {label}
+            </CustomLabel>
+          ) : (
+            <label htmlFor={name} className="text-subtitle-color">
+              {label}
+            </label>
+          )}
+          {labelRight}
+        </>
+      </div>
       <div className={classNames('mt-1.5 mx-0.5 flex flex-col gap-1', error && 'mb-1')}>
         {children}
       </div>
-      {error && <div className="text-red-500 dark:text-red-400 text-sm">{error}</div>}
+      {error && <div className="text-error-color text-sm">{error}</div>}
     </div>
   )
 }

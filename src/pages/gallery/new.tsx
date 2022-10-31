@@ -106,7 +106,6 @@ const Content = ({
     replace(
       list.map(({ info }) => {
         return {
-          title: 'Lorem ipsum ...',
           imageSoftware: info.program === 'novelAI' ? Software.NOVEL_AI : Software.WEB_UI,
           imagePrompt: info.prompt,
           imageUCPrompt: info.negativePrompt,
@@ -205,8 +204,18 @@ const Content = ({
 
             {!uploadEach && (
               <div className="flex flex-col gap-y-2">
-                <Input label="제목" className="w-full" {...register('title')} />
-                <Textarea label="내용" className="w-full" {...register('content')} />
+                <Input
+                  label="제목"
+                  className="w-full"
+                  {...register('title')}
+                  placeholder="(선택) 올라갈 글의 제목을 작성해주세요"
+                />
+                <Textarea
+                  label="내용"
+                  className="w-full"
+                  {...register('content')}
+                  placeholder="(선택) 올라갈 이미지들을 설명해주는 내용을 적어주세요 "
+                />
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">

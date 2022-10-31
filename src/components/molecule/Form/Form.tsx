@@ -28,25 +28,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import classNames from 'classnames'
 import superjson from 'superjson'
 import useSWR, { mutate } from 'swr'
-import { z } from 'zod'
+import { z, ZodEffects, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod'
 
 import { fetcher } from '~/utils/api'
-
-export const formatError = <FormValues extends FieldValues>(
-  error: FieldErrorsImpl<FormValues>,
-  name: keyof FormValues,
-  customName?: string,
-): string => {
-  const err = error[name]
-  if (!err) return ''
-  const label = customName ?? (name as string)
-  switch (err.type) {
-    case 'required':
-      return `${label}은 필수입니다.`
-    default:
-      return err.type as string
-  }
-}
 
 type UseFormRegisterOption<
   TFieldValues extends FieldValues,
@@ -99,6 +83,7 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   const methods = useForm<z.infer<TSchema>>({
     resolver: schema ? zodResolver(schema) : undefined,
     defaultValues: data ?? initialValues,
+    mode: 'onChange',
   })
 
   useEffect(() => {
@@ -119,7 +104,36 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   )
 
   const registerForm: UseFormRegister<z.infer<TSchema>> = (name, options) => {
+    let target = schema?._def
+
+    const inputProps: React.PropsWithoutRef<JSX.IntrinsicElements['input']> = {}
+
+    if (schema instanceof ZodEffects && schema._def.schema instanceof ZodObject)
+      target = schema._def.schema.shape[name]
+    else if (schema instanceof ZodObject) target = schema.shape[name]
+    else target = null
+
+    if (target) {
+      if (target instanceof ZodOptional) {
+        target = target._def.innerType
+      }
+      if (target instanceof ZodNumber || target instanceof ZodString) {
+        target._def.checks.forEach((data) => {
+          if (data.kind === 'email') {
+            inputProps.type = 'email'
+          } else if (data.kind === 'max') {
+            inputProps.max = data.value
+            inputProps.maxLength = data.value
+          } else if (data.kind === 'min') {
+            inputProps.min = data.value
+            inputProps.minLength = data.value
+          }
+        })
+      }
+    }
+
     return {
+      ...inputProps,
       ...methods.register(name, options),
       ...registerFormValue(name, options as any),
     }
@@ -161,10 +175,6 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
           url ? methods.handleSubmit(onSubmitRequest) : methods.handleSubmit(onSubmit!, onInvalid)
         }
         className="flex flex-col gap-y-3"
-        onInvalid={(e) => {
-          console.log(e)
-          console.log('!!!')
-        }}
       >
         {!resultURL || data || error ? children({ ...methods, registerForm }) : 'Loading'}
       </form>
@@ -178,25 +188,3 @@ export type FormFieldProps<T extends keyof JSX.IntrinsicElements | JSXElementCon
   ComponentProps<T> & {
     name: string
   }
-
-interface FormFieldBuilderProps {
-  name: string
-  children: (data: ControllerRender & { error?: string }) => ReactElement
-}
-
-export const FormFieldBuilder = ({ name, children }: FormFieldBuilderProps) => {
-  const {
-    control,
-    formState: { errors },
-  } = useFormContext()
-
-  const error = formatError(errors, name)
-
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={(props) => <>{children({ ...props, error })}</>}
-    />
-  )
-}
