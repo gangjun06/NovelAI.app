@@ -2,7 +2,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSetAtom } from 'jotai'
 
-import { FormBlock, Input } from '~/components/atoms'
+import { Button, FormBlock, Input } from '~/components/atoms'
 import { Modal } from '~/components/molecule'
 import { archivedCategoryAtomsAtom } from '~/components/organizm/TagTool/atoms'
 
@@ -32,9 +32,15 @@ export const AddCategoryModal = ({ show, onClose }: { show: boolean; onClose: ()
   return (
     <>
       <Modal
-        onCancel={onClose}
         onClose={onClose}
-        onSubmit={handleSubmit}
+        buttons={() => (
+          <>
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={handleSubmit} variant="primary">
+              확인
+            </Button>
+          </>
+        )}
         show={show}
         submitBtn={'생성'}
         title="보관함 카테고리 생성"

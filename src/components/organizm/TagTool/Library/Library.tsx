@@ -59,7 +59,7 @@ export const TagToolLibrary = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 overflow-y-scroll px-4 h-full">
+        <div className="flex flex-col gap-3 overflow-y-auto px-4 h-full">
           <TagToolCategories />
         </div>
       </div>

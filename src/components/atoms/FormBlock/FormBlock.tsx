@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import classNames from 'classnames'
 
 export interface FormBlockProps {
   label?: string
@@ -29,8 +30,10 @@ export const FormBlock = ({
           {label}
         </label>
       )}
-      <div className="mt-1.5 mx-0.5 flex flex-col gap-1">{children}</div>
-      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+      <div className={classNames('mt-1.5 mx-0.5 flex flex-col gap-1', error && 'mb-1')}>
+        {children}
+      </div>
+      {error && <div className="text-red-500 dark:text-red-400 text-sm">{error}</div>}
     </div>
   )
 }

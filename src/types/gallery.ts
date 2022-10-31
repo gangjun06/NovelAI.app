@@ -1,12 +1,17 @@
 import { Software } from '@prisma/client'
 import { z } from 'zod'
 
+import { customErrorMap } from '~/lib/form'
+
+const titleValidator = z.string().min(10).max(150)
+const contentValidator = z.string().max(10000).optional()
+
 export const galleryPostBodyData = z.object({
-  title: z.string().optional(),
-  content: z.string().optional(),
+  title: titleValidator,
+  content: contentValidator,
   imageSoftware: z.nativeEnum(Software),
-  imagePrompt: z.string().max(2000),
-  imageUCPrompt: z.string().max(2000),
+  imagePrompt: z.string().max(10000),
+  imageUCPrompt: z.string().max(10000),
   imageSteps: z.number(),
   imageScale: z.number(),
   imageStrength: z.number(),
@@ -21,9 +26,30 @@ export const galleryPostBodyData = z.object({
   // other:       z.object(})
 })
 
-export const galleryPostBodyValidator = z.object({
-  title: z.string().optional(),
-  content: z.string().optional(),
-  uploadEach: z.boolean(),
-  list: z.array(galleryPostBodyData),
-})
+export const galleryPostBodyValidator = z
+  .object({
+    title: titleValidator,
+    content: contentValidator,
+    uploadEach: z.boolean(),
+    list: z.array(galleryPostBodyData).min(1),
+  })
+  .superRefine(({ list, uploadEach }, ctx) => {
+    if (uploadEach && list.length > 2) {
+      ctx.addIssue({
+        path: ['list'],
+        code: 'custom',
+        message: '최대 20개까지만 묶어서 올릴 수 있어요',
+      })
+      return
+    }
+    if (list.length > 100) {
+      ctx.addIssue({
+        path: ['list'],
+        code: 'custom',
+        message: '최대 100개까지만 한번에 올릴 수 있어요',
+      })
+      return {}
+    }
+  })
+
+z.setErrorMap(customErrorMap)

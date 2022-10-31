@@ -125,8 +125,16 @@ input[type=number] {
   @apply border shadow-sm rounded dark:bg-zinc-700/50 border-base-color dark:text-gray-300 bg-white;
 }
 
+.dark div::-webkit-scrollbar {
+  background-color: rgb(39 39 42 / 0.5) !important;
+}
+
+.dark .custom-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(82 82 91 / 0.8);
+}
+
 .no-scroll::-webkit-scrollbar {
-  display: none;
+  display: none !important;
 }
 
 .socialBtn:hover > .arrow {
@@ -137,6 +145,14 @@ input[type=number] {
   @apply -translate-x-1;
 }
 
-.galleryUploadCard:hover > .overlay {
-  @apply bg-black/50;
+.galleryUploadCard {
+  &:hover > .overlay {
+    @apply bg-black/50;
+  }
+  & .show-when-hover {
+    @apply text-transparent transition-colors duration-300;
+ }
+ &:hover .show-when-hover {
+  color: #cccccc;
+ }
 }

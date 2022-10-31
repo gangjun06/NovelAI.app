@@ -1,6 +1,8 @@
 import React from 'react'
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
+import { Button } from '~/components/atoms'
+
 import { Modal } from './Modal'
 
 export default {
@@ -30,4 +32,19 @@ Title.args = {
   show: true,
   closeBtn: true,
   title: 'Demo modal',
+}
+
+export const WithCustomButton = Template.bind({})
+WithCustomButton.args = {
+  show: true,
+  closeBtn: false,
+  title: 'Demo modal',
+  buttons: () => (
+    <>
+      <Button onClick={() => {}}>취소</Button>
+      <Button onClick={() => {}} variant="primary">
+        확인
+      </Button>
+    </>
+  ),
 }

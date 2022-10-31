@@ -15,7 +15,7 @@ export const UploadBlock = forwardRef<HTMLButtonElement, Props>((props, ref) => 
         ref={ref}
         {...props}
       >
-        이미지을 여기로 드래그 또는 클릭하여 파일을 추가하세요
+        파일을 이곳으로 끌어오거나 클릭해서 불러올 수 있어요
       </button>
     </div>
   )

@@ -8,26 +8,19 @@ interface ModalProps {
   children: ReactNode
   show: boolean
   onClose?: () => void
-  onCancel?: () => void
-  onSubmit?: () => boolean
   closeBtn?: boolean
   submitBtn?: string
   title?: string
-  buttons?: ReactNode
+  buttons?: ReactNode | (() => JSX.Element)
 }
 
 export const Modal = ({
   children,
   show,
   onClose = () => {},
-  submitBtn,
-  onCancel,
-  onSubmit = () => {
-    return true
-  },
   closeBtn,
   title,
-  buttons,
+  buttons: Buttons,
 }: ModalProps) => {
   return (
     <Transition appear show={show} as={Fragment}>
@@ -44,7 +37,7 @@ export const Modal = ({
           <div className="fixed inset-0 bg-black bg-opacity-50" />
         </Transition.Child>
 
-        <div className="fixed inset-0 flex items-center justify-center overflow-y-scroll p-5">
+        <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-5">
           <div className="flex min-h-full items-center justify-center text-center w-full">
             <Transition.Child
               as={Fragment}
@@ -57,7 +50,7 @@ export const Modal = ({
             >
               <Dialog.Panel
                 className={classNames(
-                  'bg-base text-base-color w-full max-w-lg transform overflow-y-auto rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all',
+                  'bg-base text-base-color w-full max-w-lg xl:max-w-xl transform rounded-xl text-left align-middle shadow-xl backdrop-blur-md transition-all max-h-[600px] flex flex-col',
                 )}
               >
                 {title && (
@@ -68,24 +61,18 @@ export const Modal = ({
                     {title}
                   </Dialog.Title>
                 )}
-                <div className="px-6 py-5 text-base-color">{children}</div>
-                <div className="bg-gray-200 dark:bg-zinc-800 flex justify-end gap-2 py-3 px-6">
-                  {buttons}
-                  {typeof onCancel === 'function' && (
-                    <Button variant="default" onClick={onCancel}>
-                      취소
-                    </Button>
-                  )}
-                  {closeBtn && (
-                    <Button variant="primary" onClick={onClose}>
-                      {typeof closeBtn === 'string' ? closeBtn : '확인'}
-                    </Button>
-                  )}
-                  {submitBtn && (
-                    <Button variant="primary" onClick={() => (onSubmit() ? onClose() : undefined)}>
-                      {submitBtn}
-                    </Button>
-                  )}
+                <div className="px-6 py-5 text-base-color overflow-y-auto custom-scroll">
+                  {children}
+                </div>
+                <div className="bg-gray-200 dark:bg-zinc-800 flex justify-end gap-2 py-3 px-6 rounded-b-xl">
+                  <>
+                    {typeof Buttons === 'function' ? <Buttons /> : Buttons}
+                    {closeBtn && (
+                      <Button variant="primary" onClick={onClose}>
+                        {typeof closeBtn === 'string' ? closeBtn : '확인'}
+                      </Button>
+                    )}
+                  </>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

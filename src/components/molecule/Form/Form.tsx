@@ -10,11 +10,13 @@ import {
 } from 'react'
 import {
   Controller,
+  DeepPartial,
   FieldErrorsImpl,
   FieldPath,
   FieldValues,
   FormProvider,
   RegisterOptions,
+  SubmitErrorHandler,
   SubmitHandler,
   useForm,
   useFormContext,
@@ -51,7 +53,7 @@ type UseFormRegisterOption<
   TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = RegisterOptions<TFieldValues, TFieldName> &
   Partial<{
-    customLabel: string
+    customLabel?: string
   }>
 
 export declare type UseFormRegister<TFieldValues extends FieldValues> = <
@@ -60,12 +62,13 @@ export declare type UseFormRegister<TFieldValues extends FieldValues> = <
   name: TFieldName,
   options?: UseFormRegisterOption<TFieldValues, TFieldName>,
 ) => UseFormRegisterReturn<TFieldName> & {
-  error: string
-  withAsterisk: boolean
+  error?: string
+  required?: boolean
 }
 
 type FormProps<TSchema extends z.ZodType<any, any>> = {
   onSubmit?: SubmitHandler<z.infer<TSchema>>
+  onInvalid?: SubmitErrorHandler<z.TypeOf<TSchema>>
   children: (
     methods: UseFormReturn<z.infer<TSchema>> & {
       registerForm: UseFormRegister<z.infer<TSchema>>
@@ -76,6 +79,7 @@ type FormProps<TSchema extends z.ZodType<any, any>> = {
   onSuccess?: () => void
   schema?: TSchema
   getInitialValues?: boolean
+  initialValues?: DeepPartial<z.TypeOf<TSchema>>
 }
 
 export const Form = <TSchema extends z.ZodType<any, any, any>>({
@@ -86,13 +90,15 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   onSuccess,
   schema,
   getInitialValues = false,
+  onInvalid,
+  initialValues,
 }: FormProps<TSchema>) => {
   const resultURL = getInitialValues ? url : null
 
   const { data, error } = useSWR(resultURL, fetcher)
   const methods = useForm<z.infer<TSchema>>({
     resolver: schema ? zodResolver(schema) : undefined,
-    defaultValues: data,
+    defaultValues: data ?? initialValues,
   })
 
   useEffect(() => {
@@ -105,8 +111,8 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   const registerFormValue = useCallback(
     (name: string, options: UseFormRegisterOption<z.infer<TSchema>, any>) => {
       return {
-        error: formatError(errors, name as any, options.customLabel),
-        withAsterisk: !!options.required,
+        required: !!options?.required,
+        error: (errors[name]?.message as string) ?? '',
       }
     },
     [errors],
@@ -151,8 +157,14 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={url ? methods.handleSubmit(onSubmitRequest) : methods.handleSubmit(onSubmit!)}
+        onSubmit={
+          url ? methods.handleSubmit(onSubmitRequest) : methods.handleSubmit(onSubmit!, onInvalid)
+        }
         className="flex flex-col gap-y-3"
+        onInvalid={(e) => {
+          console.log(e)
+          console.log('!!!')
+        }}
       >
         {!resultURL || data || error ? children({ ...methods, registerForm }) : 'Loading'}
       </form>
