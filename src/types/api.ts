@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Session } from 'next-auth'
-import { ZodType } from 'zod'
+import { z, ZodType } from 'zod'
 
 export interface DefaultRequest<
   T extends ZodType<any, any, any>['_output'],
@@ -13,4 +13,4 @@ export interface DefaultRequest<
   queryData: U
 }
 
-export type DefaultResponse = NextApiResponse
+export type DefaultResponse<T = any> = NextApiResponse<T | { msg: string; errors?: z.ZodIssue[] }>

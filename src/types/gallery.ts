@@ -6,7 +6,15 @@ import { customErrorMap } from '~/lib/form'
 const titleValidator = z.string().max(150).optional()
 const contentValidator = z.string().max(2500).optional()
 
-export const galleryPostBodyData = z.object({
+export const galleryUploadImagePostValidator = z.object({
+  count: z.number().min(1).max(50),
+})
+export interface GalleryUploadImagePostRes {
+  token: string
+  uploadURL: string[]
+}
+
+export const galleryUploadPostData = z.object({
   title: titleValidator,
   content: contentValidator,
   imageSoftware: z.nativeEnum(Software),
@@ -25,13 +33,12 @@ export const galleryPostBodyData = z.object({
   imageSource: z.string().max(100).optional(),
   // other:       z.object(})
 })
-
-export const galleryPostBodyValidator = z
+export const galleryUploadPostValidator = z
   .object({
     title: titleValidator,
     content: contentValidator,
     uploadEach: z.boolean(),
-    list: z.array(galleryPostBodyData).nonempty(),
+    list: z.array(galleryUploadPostData).nonempty(),
   })
   .superRefine(({ list, uploadEach }, ctx) => {
     if (uploadEach && list.length > 2) {

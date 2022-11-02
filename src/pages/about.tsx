@@ -5,6 +5,10 @@ import { ButtonLink } from '~/components/atoms'
 import { AvatarCard, Modal } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
 
+interface Button {
+  variant: 'primary' | 'outline'
+}
+
 const About: NextPage = () => {
   const [showDonate, setShowDonate] = useState(false)
 

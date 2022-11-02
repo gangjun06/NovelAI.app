@@ -1,8 +1,8 @@
 import { getMiddlewares, handler } from '~/lib/api'
-import { galleryPostBodyValidator } from '~/types/gallery'
+import { galleryUploadPostValidator } from '~/types/gallery'
 
 export default handler().post(
-  ...getMiddlewares({ auth: 'USER', schema: galleryPostBodyValidator }),
+  ...getMiddlewares({ auth: 'USER', schema: galleryUploadPostValidator }),
   (req, res) => {
     res.json({})
     return

@@ -1,12 +1,24 @@
-import { z } from 'zod'
-import superjson from 'superjson'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nextConnect, { Middleware, Options } from 'next-connect'
-import { auth } from './auth'
+import { UserRole } from '@prisma/client'
 import { NotFoundError } from '@prisma/client/runtime'
+import superjson from 'superjson'
+import { z } from 'zod'
 
 import { DefaultRequest, DefaultResponse } from '~/types/api'
-import { UserRole } from '@prisma/client'
+
+import { auth } from './auth'
+
+export class BadRequestError extends Error {
+  constructor(message?: string | undefined) {
+    super(message)
+  }
+}
+export class UnauthorizedError extends Error {
+  constructor(message?: string | undefined) {
+    super(message)
+  }
+}
 
 export const getAPIQuery = (req: NextApiRequest, res: NextApiResponse, name: string) => {
   const data = req.query[name]
@@ -19,11 +31,20 @@ export const getAPIQuery = (req: NextApiRequest, res: NextApiResponse, name: str
 
 type parserSchemaType = z.ZodEffects<any> | z.ZodObject<any>
 
-export const parser = <T extends parserSchemaType>(schema: T) => {
-  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse> = async (req, res, next) => {
-    const parsed = await schema.safeParseAsync(superjson.deserialize(req.body))
+export const parser = <T extends parserSchemaType, U = any>(schema: T) => {
+  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse<U>> = async (
+    req,
+    res,
+    next,
+  ) => {
+    console.log(req.url)
+    console.log(req.body)
+    const parsed = await schema.safeParseAsync(req.body)
     if (!parsed.success) {
-      res.status(400).json({ msg: 'Bad Request' })
+      res.status(400).json({
+        msg: 'Bad Request',
+        errors: parsed.error.errors,
+      })
       return
     }
     req.data = parsed.data
@@ -32,8 +53,12 @@ export const parser = <T extends parserSchemaType>(schema: T) => {
   return func
 }
 
-export const parseQuery = <T extends parserSchemaType>(schema: T) => {
-  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse> = async (req, res, next) => {
+export const parseQuery = <T extends parserSchemaType, U>(schema: T) => {
+  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse<U>> = async (
+    req,
+    res,
+    next,
+  ) => {
     const parsed = await schema.safeParseAsync(req.query)
     if (!parsed.success) {
       res.status(400).json({ msg: 'Bad Request' })
@@ -49,6 +74,10 @@ export const nextConnectOptions: Options<DefaultRequest<z.TypeOf<any>>, DefaultR
   onError: (err, _req, res, _next) => {
     if (err instanceof NotFoundError) {
       res.status(404).json({ msg: 'Not Found!' })
+    } else if (err instanceof BadRequestError) {
+      res.status(400).json({ msg: err.message ?? 'Bad Request' })
+    } else if (err instanceof UnauthorizedError) {
+      res.status(401).json({ msg: err.message ?? 'Bad Request' })
     } else {
       console.log(err)
       res.status(500).end('Something broke!')
@@ -59,12 +88,13 @@ export const nextConnectOptions: Options<DefaultRequest<z.TypeOf<any>>, DefaultR
   },
 }
 
-interface HandlerOptions<T extends parserSchemaType, U extends parserSchemaType> {
+interface HandlerOptions<T extends parserSchemaType, U extends parserSchemaType, Res = any> {
   schema?: T
   options?: any
   auth?: UserRole | null
   query?: U
   skip?: boolean
+  res?: Res
 }
 
 export const defaultHandlerOptions: HandlerOptions<any, any> = {
@@ -76,9 +106,7 @@ export const defaultHandlerOptions: HandlerOptions<any, any> = {
 export const handler = <T extends parserSchemaType, U extends parserSchemaType>(
   options?: HandlerOptions<T, U>,
 ) => {
-  let handler = nextConnect<DefaultRequest<z.infer<T>, z.infer<U>>, DefaultResponse>(
-    options?.options ?? defaultHandlerOptions.options,
-  )
+  const handler = nextConnect(options?.options ?? defaultHandlerOptions.options)
 
   if (options?.skip !== true) {
     const middlewares = getMiddlewares(options)
@@ -90,13 +118,14 @@ export const handler = <T extends parserSchemaType, U extends parserSchemaType>(
   return handler
 }
 
-export const getMiddlewares = <T extends parserSchemaType, U extends parserSchemaType>(
-  options?: HandlerOptions<T, U>,
+export const getMiddlewares = <T extends parserSchemaType, U extends parserSchemaType, Res>(
+  options?: HandlerOptions<T, U, Res>,
 ) => {
   let {
+    // eslint-disable-next-line prefer-const
     schema = null,
-    options: ncOptions = defaultHandlerOptions.options,
     auth: useAuth,
+    // eslint-disable-next-line prefer-const
     query = defaultHandlerOptions.query,
   } = options || {}
 
@@ -106,9 +135,9 @@ export const getMiddlewares = <T extends parserSchemaType, U extends parserSchem
 
   const result = []
 
-  if (useAuth) result.push(auth(useAuth))
-  if (query) result.push(parseQuery(query))
-  if (schema) result.push(parser(schema))
+  if (useAuth) result.push(auth<Res>(useAuth))
+  if (query) result.push(parseQuery<U, Res>(query))
+  if (schema) result.push(parser<T, Res>(schema))
 
   return result
 }

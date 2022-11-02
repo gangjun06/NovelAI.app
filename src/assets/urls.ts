@@ -1,1 +1,2 @@
-export const galleryURL = `/gallery`
+export const galleryURL = `/api/gallery`
+export const galleryUploadImageURL = `/api/gallery/upload-image`

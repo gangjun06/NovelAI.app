@@ -14,13 +14,19 @@ import ImageUploading, { ImageListType, ImageType } from 'react-images-uploading
 import { useSession } from 'next-auth/react'
 import { InformationCircleIcon, PencilIcon } from '@heroicons/react/24/outline'
 import { Software } from '@prisma/client'
+import axios from 'axios'
 import { z } from 'zod'
 
+import { galleryUploadImageURL } from '~/assets/urls'
 import { Button, FormBlock, Input, TabSelect, Textarea } from '~/components/atoms'
 import { Form, Modal, TableModal, UploadBlock, UseFormRegister } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
 import { useDisclosure } from '~/hooks/useDisclosure'
-import { galleryPostBodyData, galleryPostBodyValidator } from '~/types/gallery'
+import {
+  galleryUploadImagePostValidator,
+  galleryUploadPostData,
+  galleryUploadPostValidator,
+} from '~/types/gallery'
 import { ImageInfo } from '~/types/image'
 import { replaceText } from '~/utils'
 
@@ -39,10 +45,12 @@ const NewImage = () => {
       requireAuth
     >
       <Form
-        schema={galleryPostBodyValidator}
-        onSubmit={(data) => {
-          console.log('ON SUBMIT')
-          console.log(data)
+        schema={galleryUploadPostValidator}
+        onSubmit={async (data) => {
+          const res = await axios.post(galleryUploadImageURL, { count: 1 } as z.infer<
+            typeof galleryUploadImagePostValidator
+          >)
+          console.log(res)
         }}
         onInvalid={(errors) => {
           console.log(errors)
@@ -76,10 +84,10 @@ const Content = ({
   getValues,
   register,
 }: {
-  control: Control<z.infer<typeof galleryPostBodyValidator>>
-  watch: UseFormWatch<z.infer<typeof galleryPostBodyValidator>>
-  register: UseFormRegister<z.infer<typeof galleryPostBodyValidator>>
-  getValues: UseFormGetValues<z.infer<typeof galleryPostBodyValidator>>
+  control: Control<z.infer<typeof galleryUploadPostValidator>>
+  watch: UseFormWatch<z.infer<typeof galleryUploadPostValidator>>
+  register: UseFormRegister<z.infer<typeof galleryUploadPostValidator>>
+  getValues: UseFormGetValues<z.infer<typeof galleryUploadPostValidator>>
 }) => {
   const { fields, append, replace, prepend, remove, swap, move, insert } = useFieldArray({
     control,
@@ -277,7 +285,7 @@ const EditModal = ({
 }: {
   show: boolean
   onClose: () => void
-  register: UseFormRegister<z.infer<typeof galleryPostBodyValidator>>
+  register: UseFormRegister<z.infer<typeof galleryUploadPostValidator>>
   index: number | null
 }) => {
   return (
