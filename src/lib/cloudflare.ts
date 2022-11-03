@@ -19,21 +19,18 @@ export const getImagesDirectURL = async (count: number) => {
     formData.append('requireSignedURLs', 'false')
     formData.append('expiry', expiry.toISOString())
 
-    try {
-      const res = await axios.post(
-        `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`,
-          },
+    const res = await axios.post(
+      `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`,
         },
-      )
-      if (res.status !== 200) throw new Error('request failed')
-      console.log(res.data)
-      result.push((res.data as CloudflareDirectImageRes).result)
-    } catch (e) {}
+      },
+    )
+    if (res.status !== 200) throw new Error('request failed')
+    result.push((res.data as CloudflareDirectImageRes).result)
   }
 
   return result

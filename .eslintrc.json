@@ -38,9 +38,9 @@
     "react/display-name": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "simple-import-sort/exports": "error",
+    "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": [
-      "error",
+      "warn",
       {
         "groups": [
           // Packages `react` related packages

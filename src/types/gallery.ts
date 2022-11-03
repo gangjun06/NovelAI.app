@@ -49,11 +49,11 @@ export const galleryUploadPostValidator = z
       })
       return
     }
-    if (list.length > 100) {
+    if (list.length > 50) {
       ctx.addIssue({
         path: ['list'],
         code: 'custom',
-        message: '최대 100개까지만 한번에 올릴 수 있어요',
+        message: '최대 50개까지만 한번에 올릴 수 있어요',
       })
       return {}
     }
