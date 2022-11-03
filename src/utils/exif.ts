@@ -184,14 +184,28 @@ export const fileGetterWIthExif = async (
   return result
 }
 
-export const dataURLtoBlob = (dataurl: string) => {
-  const arr = dataurl.split(',')
-  const mime = (arr[0].match(/:(.*?);/) ?? ['', ''])[1]
-  const bstr = Buffer.from(arr[1], 'base64').toString('base64')
-  let n = bstr.length
-  const u8arr = new Uint8Array(n)
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
+export const dataURLtoBlob = (dataURL: string) => {
+  //https://stackoverflow.com/questions/12168909/blob-from-dataurl
+
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  const byteString = atob(dataURL.split(',')[1])
+
+  // separate out the mime component
+  const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
+
+  // write the bytes of the string to an ArrayBuffer
+  const ab = new ArrayBuffer(byteString.length)
+
+  // create a view into the buffer
+  const ia = new Uint8Array(ab)
+
+  // set the bytes of the buffer to the correct values
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
   }
-  return new Blob([u8arr], { type: mime })
+
+  // write the ArrayBuffer to a blob, and you're done
+  const blob = new Blob([ab], { type: mimeString })
+  return blob
 }

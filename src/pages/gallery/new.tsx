@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Dropzone, { DropEvent } from 'react-dropzone'
 import { Control, Controller, useFieldArray, UseFormGetValues, UseFormWatch } from 'react-hook-form'
@@ -9,9 +9,10 @@ import { Software } from '@prisma/client'
 import axios, { AxiosResponse } from 'axios'
 import classNames from 'classnames'
 import { atom, useAtom, useAtomValue } from 'jotai'
+import { useAtomCallback } from 'jotai/utils'
 import { z } from 'zod'
 
-import { galleryUploadImageURL } from '~/assets/urls'
+import { galleryUploadImageURL, galleryUploadURL } from '~/assets/urls'
 import { Button, Input, TabSelect, Textarea } from '~/components/atoms'
 import { Form, Modal, TableModal, UploadBlock, UseFormRegister } from '~/components/molecule'
 import { MainTemplate } from '~/components/template'
@@ -21,13 +22,52 @@ import {
   galleryUploadImagePostValidator,
   galleryUploadPostValidator,
 } from '~/types/gallery'
-import { delay } from '~/utils'
 import { dataURLtoBlob, fileGetterWIthExif, FileGetterWithExifResult } from '~/utils/exif'
 
 const imagesAtom = atom<FileGetterWithExifResult[]>([])
 
 const NewImage = () => {
-  const images = useAtomValue(imagesAtom)
+  const onSubmit = useAtomCallback(
+    useCallback(async (get, set, data: z.infer<typeof galleryUploadPostValidator>) => {
+      const images = get(imagesAtom)
+      const toastId = toast.loading('이미지 업로드를 요청하고 있어요')
+      try {
+        const res = await axios.post<
+          z.infer<typeof galleryUploadImagePostValidator>,
+          AxiosResponse<GalleryUploadImagePostRes>
+        >(galleryUploadImageURL, {
+          count: data.list.length,
+        })
+
+        for (let i = 0; i < res.data.uploadURL.length; i++) {
+          toast.loading(`이미지를 업로드하고 있어요 ${1} / ${data.list.length}`, {
+            id: toastId,
+          })
+
+          const blob = dataURLtoBlob(images[i].dataURL)
+
+          const formData = new FormData()
+          formData.append('file', blob)
+
+          await axios.post(res.data.uploadURL[i], formData)
+        }
+
+        toast.loading(`갤러리에 글을 올리고 있어요`, { id: toastId })
+
+        const _res = await axios.post(galleryUploadURL, data, {
+          headers: {
+            'X-Images-Token': res.data.token,
+          },
+        })
+        toast.success(`성공적으로 글을 올렸어요`, { id: toastId })
+      } catch (e) {
+        console.error(e)
+        toast.error('요청을 실패하였어요 :(', { id: toastId })
+        return
+      }
+    }, []),
+  )
+
   return (
     <MainTemplate
       title="이미지 업로드"
@@ -40,33 +80,7 @@ const NewImage = () => {
       <Form
         schema={galleryUploadPostValidator}
         onSubmit={async (data) => {
-          const toastId = toast.loading('이미지 업로드를 요청하고 있어요')
-          try {
-            const res = await axios.post<
-              z.infer<typeof galleryUploadImagePostValidator>,
-              AxiosResponse<GalleryUploadImagePostRes>
-            >(galleryUploadImageURL, {
-              count: data.list.length,
-            })
-
-            for (let i = 0; i < res.data.uploadURL.length; i++) {
-              toast.loading(`이미지를 업로드하고 있어요 ${1} / ${data.list.length}`, {
-                id: toastId,
-              })
-              const formData = new FormData()
-              formData.append('file', dataURLtoBlob(images[i].dataURL))
-              axios.post(res.data.uploadURL[i], formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-              })
-            }
-          } catch (e) {
-            console.error(e)
-            toast.error('요청을 실패하였어요 :(', { id: toastId })
-            return
-          }
-
-          toast.loading(`갤러리에 글을 올리고 있어요`, { id: toastId })
-          toast.success(`성공적으로 게시글을 올렸어요`, { id: toastId })
+          onSubmit(data)
         }}
         onInvalid={(errors) => {
           console.log(errors)
@@ -165,12 +179,7 @@ const Content = ({
   const onDrop = useCallback(
     (acceptedFiles: FileGetterWithExifResult[]) => {
       setImages((prev) => [...prev, ...acceptedFiles])
-      const list = acceptedFiles.map(({ info }) => info)
-      try {
-        append(list)
-      } catch (e) {
-        console.error(e)
-      }
+      append(acceptedFiles.map(({ info }) => info))
     },
     [append, setImages],
   )

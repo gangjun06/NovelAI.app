@@ -22,7 +22,7 @@ export const galleryUploadPostData = z.object({
   imageUCPrompt: z.string().max(5000),
   imageSteps: z.number(),
   imageScale: z.number(),
-  imageStrength: z.number(),
+  imageStrength: z.number().optional(),
   imageNoise: z.number().positive().optional(),
   imageSeed: z.number().int().positive(),
   imageSampler: z.string(),

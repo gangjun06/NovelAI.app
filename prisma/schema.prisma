@@ -83,18 +83,18 @@ model Image {
   imageSoftware  Software
   imagePrompt    String
   imageUCPrompt  String
-  imageSteps     Int
-  imageScale     Int
-  imageStrength  Float
-  imageNoise     Float?
-  imageSeed      Int
-  imageSampler   String
   imageWidth     Int
   imageHeight    Int
+  imageSteps     Int?
+  imageScale     Int?
+  imageStrength  Float?
+  imageNoise     Float?
+  imageSeed      Int?
+  imageSampler   String?
   imageClipSkip  Int?
   imageModelHash String?
   imageSource    String?
-  other          Json
+  other          Json?
 
   tags   Tag[] @relation("GeneralTags")
   ucTags Tag[] @relation("UCTags")

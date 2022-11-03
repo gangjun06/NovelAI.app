@@ -21,43 +21,6 @@ export default handler().post(
 
     const imageList = await getImagesDirectURL(count)
 
-    // const formatData = (data: z.infer<typeof galleryPostBodyData>): prismaDataType => {
-    //   return {
-    //     title: data.title || null,
-    //     content: data.content || null,
-    //     originalTitle: null,
-    //     originalURL: null,
-    //     status: 'PUBLIC',
-    //     imageUrl: '',
-    //     other: {},
-    //     author: {
-    //       connect: {
-    //         id: req.user.id,
-    //       },
-    //     },
-    //     imageSoftware: data.imageSoftware,
-    //     imagePrompt: data.imagePrompt,
-    //     imageUCPrompt: data.imageUCPrompt,
-    //     imageSteps: data.imageSteps,
-    //     imageScale: data.imageScale,
-    //     imageStrength: data.imageStrength,
-    //     imageNoise: data.imageNoise,
-    //     imageSeed: data.imageSeed,
-    //     imageSampler: data.imageSampler,
-    //     imageWidth: data.imageWidth,
-    //     imageHeight: data.imageHeight,
-    //     imageClipSkip: data.imageClipSkip,
-    //     imageModelHash: data.imageModelHash,
-    //     imageSource: data.imageSource,
-    //   }
-    // }
-
-    // const data: Prisma.ImageCreateArgs = {
-    //   data: {
-    //     ...formatData(list[0]),
-    //   },
-    // }
-
     const imageListIds = imageList.map(({ id }) => id)
     const uploadURL = imageList.map(({ uploadURL }) => uploadURL)
 

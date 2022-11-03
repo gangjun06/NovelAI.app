@@ -37,8 +37,6 @@ export const parser = <T extends parserSchemaType, U = any>(schema: T) => {
     res,
     next,
   ) => {
-    console.log(req.url)
-    console.log(req.body)
     const parsed = await schema.safeParseAsync(req.body)
     if (!parsed.success) {
       res.status(400).json({
