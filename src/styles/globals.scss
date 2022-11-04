@@ -162,9 +162,9 @@ input[type=number] {
     @apply bg-black/50;
   }
   & .show-when-hover {
-    @apply text-transparent transition-colors duration-300;
+    @apply opacity-0 transition-opacity duration-300;
  }
  &:hover .show-when-hover {
-  color: #cccccc;
+  @apply opacity-100;
  }
 }

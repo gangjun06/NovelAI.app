@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Image from 'next/image'
-import { Image as ImageType } from '@prisma/client'
+import { Image as ImageType, User } from '@prisma/client'
 import axios from 'axios'
 
 import { galleryURL } from '~/assets/urls'
@@ -11,6 +11,7 @@ import { MainTemplate } from '~/components/template'
 import Masonry from 'react-masonry-css'
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
+import { ImageView } from '~/components/organizm/ImageView/ImageView'
 
 const Loader = () => <div>데이터를 불러오고 있어요</div>
 
@@ -24,7 +25,7 @@ const breakpointColumns = {
 }
 
 const GalleryPage = () => {
-  const [images, setImages] = useState<ImageType[]>([])
+  const [images, setImages] = useState<(ImageType & { author: User })[]>([])
 
   const [hasMore, setHasMore] = useState(true)
 
@@ -72,14 +73,12 @@ const GalleryPage = () => {
             </a>
           </Link>
           {images.map((item) => (
-            <div key={item.id}>
-              <Image
-                src={`https://imagedelivery.net/${process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH}/${item.imageUrl}/public`}
-                alt={item.id}
-                width={item.imageWidth}
-                height={item.imageHeight}
-              />
-            </div>
+            <ImageView
+              key={item.id}
+              image={item}
+              author={item.author.name}
+              authorImage={item.author.image}
+            />
           ))}
         </Masonry>
       </InfiniteScroll>

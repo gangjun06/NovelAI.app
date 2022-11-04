@@ -1,9 +1,9 @@
 import { getMiddlewares, handler } from '~/lib/api'
-import { GalleryGetRes, galleryGetValidator, galleryUploadPostValidator } from '~/types/gallery'
 import prisma from '~/lib/prisma'
+import { GalleryGetRes, galleryGetValidator, galleryUploadPostValidator } from '~/types/gallery'
 
 export default handler().get(
-  ...getMiddlewares({ auth: null, query: galleryGetValidator, res: {} as GalleryGetRes }),
+  ...getMiddlewares({ auth: null, query: galleryGetValidator }),
   async (req, res) => {
     const { cursor, limit } = req.queryData
     console.log(cursor, limit)
@@ -17,12 +17,32 @@ export default handler().get(
           }
         : {}),
       take: limit,
-      include: {
-        images: true,
-      },
       where: {
         rootId: {
           equals: null,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
+        imageWidth: true,
+        imageHeight: true,
+        imageSoftware: true,
+        images: {
+          select: {
+            id: true,
+            imageUrl: true,
+            imageWidth: true,
+            imageHeight: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
         },
       },
     })
