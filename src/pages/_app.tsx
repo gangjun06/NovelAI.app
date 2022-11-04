@@ -3,11 +3,19 @@ import { Toaster } from 'react-hot-toast'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import { SessionProvider } from 'next-auth/react'
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import '~/styles/globals.scss'
+import 'swiper/css'
+
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import React from 'react'
+// import 'swiper/css/scrollbar';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
+  const [queryClient] = React.useState(() => new QueryClient())
 
   useEffect(() => {
     const handleRouteChange = (url: any) => {
@@ -28,10 +36,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events])
 
   return (
-    <SessionProvider session={(pageProps as any).session}>
-      <Toaster />
-      <Component {...pageProps} />
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={(pageProps as any).dehydratedState}>
+        <SessionProvider session={(pageProps as any).session}>
+          <Toaster />
+          <Component {...pageProps} />
+        </SessionProvider>
+      </Hydrate>
+    </QueryClientProvider>
   )
 }
 

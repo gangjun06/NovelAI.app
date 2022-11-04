@@ -6,9 +6,10 @@ interface Props {
   image: ImageType
   authorImage?: string | null
   author?: string | null
+  onClickInfo: () => void
 }
 
-export const ImageView = ({ image, author, authorImage }: Props) => {
+export const ImageView = ({ image, author, authorImage, onClickInfo }: Props) => {
   return (
     <div className="dark:bg-zinc-700/50 dark:border-base-dark dark:text-gray-300 rounded galleryUploadCard relative flex items-center">
       <Image
@@ -41,6 +42,11 @@ export const ImageView = ({ image, author, authorImage }: Props) => {
             <span className="font-bold bg-black/50 p-2 rounded h-fit">{image.imageSoftware}</span>
             <button
               className="font-bold bg-black/50 hover:bg-black/80 p-2 rounded h-fit transition-all"
+              onClick={onClickInfo}
+              // onClick={() => {
+              //   window.history.pushState({}, '', `/gallery/${image.id}`)
+              //   document.title = '이미지 상세보기 | NovelAI.APP'
+              // }}
               type="button"
             >
               <InformationCircleIcon className="w-5 h-5" />
