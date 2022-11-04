@@ -31,8 +31,10 @@ export const getAPIQuery = (req: NextApiRequest, res: NextApiResponse, name: str
 
 type parserSchemaType = z.ZodEffects<any> | z.ZodObject<any>
 
-export const parser = <T extends parserSchemaType, U = any>(schema: T) => {
-  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse<U>> = async (
+export const parser = <T extends parserSchemaType, U extends parserSchemaType, Res = any>(
+  schema: T,
+) => {
+  const func: Middleware<DefaultRequest<z.infer<T>, z.infer<U>>, DefaultResponse<Res>> = async (
     req,
     res,
     next,
@@ -51,13 +53,24 @@ export const parser = <T extends parserSchemaType, U = any>(schema: T) => {
   return func
 }
 
-export const parseQuery = <T extends parserSchemaType, U>(schema: T) => {
-  const func: Middleware<DefaultRequest<z.infer<T>>, DefaultResponse<U>> = async (
+export const parseQuery = <T extends parserSchemaType, U extends parserSchemaType, Res = any>(
+  schema: U,
+) => {
+  const func: Middleware<DefaultRequest<z.infer<T>, z.infer<U>>, DefaultResponse<Res>> = async (
     req,
     res,
     next,
   ) => {
-    const parsed = await schema.safeParseAsync(req.query)
+    const query = Object.entries(req.query).reduce(
+      (prev, [k, v]) => ({
+        ...prev,
+        [k]: isNaN(v as unknown as any) ? v : typeof v === 'string' ? parseInt(v as string) : v,
+      }),
+      {},
+    )
+    console.log(query)
+
+    const parsed = await schema.safeParseAsync(query)
     if (!parsed.success) {
       res.status(400).json({ msg: 'Bad Request' })
       return
@@ -97,7 +110,6 @@ interface HandlerOptions<T extends parserSchemaType, U extends parserSchemaType,
 
 export const defaultHandlerOptions: HandlerOptions<any, any> = {
   options: nextConnectOptions,
-  auth: UserRole.USER,
   skip: true,
 }
 
@@ -131,11 +143,11 @@ export const getMiddlewares = <T extends parserSchemaType, U extends parserSchem
     useAuth = defaultHandlerOptions.auth
   }
 
-  const result = []
+  const result: Middleware<DefaultRequest<z.infer<T>, z.infer<U>>, DefaultResponse<Res>>[] = []
 
   if (useAuth) result.push(auth<Res>(useAuth))
-  if (query) result.push(parseQuery<U, Res>(query))
-  if (schema) result.push(parser<T, Res>(schema))
+  if (query) result.push(parseQuery<T, U, Res>(query))
+  if (schema) result.push(parser<T, U, Res>(schema))
 
   return result
 }

@@ -1,7 +1,16 @@
-import { Software } from '@prisma/client'
+import { Image, Prisma, Software } from '@prisma/client'
 import { z } from 'zod'
 
 import { customErrorMap } from '~/lib/form'
+
+export const galleryGetValidator = z.object({
+  cursor: z.string().cuid().optional(),
+  limit: z.number().min(10).max(50).default(50),
+})
+
+export interface GalleryGetRes {
+  images: Image[]
+}
 
 const titleValidator = z.string().max(150).optional()
 const contentValidator = z.string().max(2500).optional()
@@ -41,7 +50,7 @@ export const galleryUploadPostValidator = z
     list: z.array(galleryUploadPostData).nonempty(),
   })
   .superRefine(({ list, uploadEach }, ctx) => {
-    if (uploadEach && list.length > 2) {
+    if (!uploadEach && list.length > 20) {
       ctx.addIssue({
         path: ['list'],
         code: 'custom',

@@ -40,7 +40,7 @@ const NewImage = () => {
         })
 
         for (let i = 0; i < res.data.uploadURL.length; i++) {
-          toast.loading(`이미지를 업로드하고 있어요 ${1} / ${data.list.length}`, {
+          toast.loading(`이미지를 업로드하고 있어요 ${i} / ${data.list.length}`, {
             id: toastId,
           })
 

@@ -2,6 +2,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     DATABASE_URL: string
     NEXTAUTH_URL: string
+    NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH: string
     CLOUDFLARE_ACCOUNT_ID: string
     CLOUDFLARE_API_TOKEN: string
     NEXT_PUBLIC_GA_ID: string
