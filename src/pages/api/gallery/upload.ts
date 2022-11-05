@@ -6,6 +6,8 @@ import { BadRequestError, getMiddlewares, handler, UnauthorizedError } from '~/l
 import prisma from '~/lib/prisma'
 import { galleryUploadPostData, galleryUploadPostValidator } from '~/types/gallery'
 
+const TagRegex = new RegExp('[A-Za-z0-9 _]{2,}', 'g')
+
 export default handler().post(
   ...getMiddlewares({ auth: 'USER', schema: galleryUploadPostValidator }),
   async (req, res) => {
@@ -23,9 +25,16 @@ export default handler().post(
     })
 
     const imageList = (tokenData as any).imageList as string[]
-    console.log(imageList)
 
     if (imageList.length !== list.length) throw new BadRequestError()
+
+    const parseTags = (tag: string) => {
+      const list = tag.match(TagRegex)
+      if (!list) return []
+      return Array.from(
+        new Set([...list.map((tag) => tag.trim().replaceAll('_', ' ').toLowerCase())]),
+      )
+    }
 
     const formatData = (
       data: z.infer<typeof galleryUploadPostData>,
@@ -56,6 +65,28 @@ export default handler().post(
         imageEta: data.imageEta,
         imageHypernet: data.imageHypernet,
         imageMaskBlur: data.imageMaskBlur,
+        tags: {
+          connectOrCreate: parseTags(data.imagePrompt).map((item) => ({
+            create: {
+              mean: '',
+              tagId: item,
+            },
+            where: {
+              tagId: item,
+            },
+          })),
+        },
+        ucTags: {
+          connectOrCreate: parseTags(data.imageUCPrompt).map((item) => ({
+            create: {
+              mean: '',
+              tagId: item,
+            },
+            where: {
+              tagId: item,
+            },
+          })),
+        },
       }
     }
 
