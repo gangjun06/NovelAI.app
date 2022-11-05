@@ -127,9 +127,11 @@ export const fileGetterWIthExif = async (
                 } else if (item.startsWith('Batch pos: ')) {
                   info.imageBatchPos = parseFloat(item.replace('Batch pos: ', ''))
                 } else if (item.startsWith('Hypernet: ')) {
-                  info.imageBatchPos = parseFloat(item.replace('Hypernet: ', ''))
+                  info.imageHypernet = item.replace('Hypernet: ', '')
                 }
               }
+
+              console.log(info)
 
               file!.info = info
               return resolve(file)

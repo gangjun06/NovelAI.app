@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - Added the required column `role` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
@@ -16,11 +10,46 @@ CREATE TYPE "ImageStatus" AS ENUM ('PUBLIC', 'UNLISTED');
 -- CreateEnum
 CREATE TYPE "CollectionStatus" AS ENUM ('PUBLIC', 'UNLISTED', 'PRIVATE');
 
--- AlterTable
-ALTER TABLE "Account" ADD COLUMN     "refresh_token_expires_in" INTEGER;
+-- CreateTable
+CREATE TABLE "Account" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "refresh_token" TEXT,
+    "refresh_token_expires_in" INTEGER,
+    "access_token" TEXT,
+    "expires_at" INTEGER,
+    "token_type" TEXT,
+    "scope" TEXT,
+    "id_token" TEXT,
+    "session_state" TEXT,
 
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "role" "UserRole" NOT NULL;
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Session" (
+    "id" TEXT NOT NULL,
+    "sessionToken" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "emailVerified" TIMESTAMP(3),
+    "image" TEXT,
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Image" (
@@ -36,18 +65,23 @@ CREATE TABLE "Image" (
     "imageSoftware" "Software" NOT NULL,
     "imagePrompt" TEXT NOT NULL,
     "imageUCPrompt" TEXT NOT NULL,
-    "imageSteps" INTEGER NOT NULL,
-    "imageScale" INTEGER NOT NULL,
-    "imageStrength" DOUBLE PRECISION NOT NULL,
-    "imageNoise" DOUBLE PRECISION,
-    "imageSeed" INTEGER NOT NULL,
-    "imageSampler" TEXT NOT NULL,
     "imageWidth" INTEGER NOT NULL,
     "imageHeight" INTEGER NOT NULL,
+    "imageSteps" INTEGER,
+    "imageScale" DOUBLE PRECISION,
+    "imageStrength" DOUBLE PRECISION,
+    "imageNoise" DOUBLE PRECISION,
+    "imageSeed" INTEGER,
+    "imageSampler" TEXT,
     "imageClipSkip" INTEGER,
     "imageModelHash" TEXT,
     "imageSource" TEXT,
-    "other" JSONB NOT NULL,
+    "imageHypernet" TEXT,
+    "imageEta" DOUBLE PRECISION,
+    "imageMaskBlur" DOUBLE PRECISION,
+    "imageBatchSize" DOUBLE PRECISION,
+    "imageBatchPos" DOUBLE PRECISION,
+    "other" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -121,6 +155,15 @@ CREATE TABLE "_CollectionToImage" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_GeneralTags_AB_unique" ON "_GeneralTags"("A", "B");
 
 -- CreateIndex
@@ -137,6 +180,12 @@ CREATE UNIQUE INDEX "_CollectionToImage_AB_unique" ON "_CollectionToImage"("A", 
 
 -- CreateIndex
 CREATE INDEX "_CollectionToImage_B_index" ON "_CollectionToImage"("B");
+
+-- AddForeignKey
+ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Image" ADD CONSTRAINT "Image_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

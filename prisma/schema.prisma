@@ -102,20 +102,15 @@ model Image {
 
   other Json?
 
-  tags   Tag[] @relation("GeneralTags")
-  ucTags Tag[] @relation("UCTags")
+  tags   String[]
+  ucTags String[]
 
   collections Collection[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
 
-model Tag {
-  tagId    String  @id
-  mean     String
-  images   Image[] @relation("GeneralTags")
-  ucImages Image[] @relation("UCTags")
+  @@index([createdAt])
 }
 
 enum CollectionStatus {

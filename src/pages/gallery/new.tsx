@@ -120,7 +120,7 @@ const Content = ({
   getValues: UseFormGetValues<z.infer<typeof galleryUploadPostValidator>>
 }) => {
   const [images, setImages] = useAtom(imagesAtom)
-  const { fields, append, replace, prepend, remove, swap, move, insert } = useFieldArray({
+  const { append, replace, remove } = useFieldArray({
     control,
     name: 'list',
   })

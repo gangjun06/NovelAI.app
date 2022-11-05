@@ -1,16 +1,18 @@
-import { Prisma } from '@prisma/client'
+import { ImageStatus, Prisma } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import { z } from 'zod'
 
 import { BadRequestError, getMiddlewares, handler, UnauthorizedError } from '~/lib/api'
 import prisma from '~/lib/prisma'
+import AuthError from '~/pages/auth/error'
 import { galleryUploadPostData, galleryUploadPostValidator } from '~/types/gallery'
 
-const TagRegex = new RegExp('[A-Za-z0-9 _]{2,}', 'g')
+const TagRegex = new RegExp('[A-Za-z0-9 _]{2,40}', 'g')
 
 export default handler().post(
   ...getMiddlewares({ auth: 'USER', schema: galleryUploadPostValidator }),
   async (req, res) => {
+    console.log('A')
     const { title, content, uploadEach, list } = req.data
     if (!req.user) throw new Error('Server error')
 
@@ -23,6 +25,7 @@ export default handler().post(
         else resolve(decoded)
       })
     })
+    console.log(tokenData)
 
     const imageList = (tokenData as any).imageList as string[]
 
@@ -32,20 +35,23 @@ export default handler().post(
       const list = tag.match(TagRegex)
       if (!list) return []
       return Array.from(
-        new Set([...list.map((tag) => tag.trim().replaceAll('_', ' ').toLowerCase())]),
+        new Set([
+          ...list.filter((tag) => tag).map((tag) => tag.trim().replace(/_/g, ' ').toLowerCase()),
+        ]),
       )
     }
 
-    const formatData = (
-      data: z.infer<typeof galleryUploadPostData>,
-      imageUrl: string,
-    ): Prisma.ImageCreateArgs['data'] => {
+    const formatData = (data: z.infer<typeof galleryUploadPostData>, imageUrl: string) => {
       return {
         title: data.title || null,
         content: data.content || null,
-        status: 'PUBLIC',
+        status: ImageStatus.PUBLIC,
         imageUrl,
-        authorId: req.user.id,
+        author: {
+          connect: {
+            id: req.user.id,
+          },
+        },
         imageSoftware: data.imageSoftware,
         imagePrompt: data.imagePrompt,
         imageUCPrompt: data.imageUCPrompt,
@@ -65,40 +71,18 @@ export default handler().post(
         imageEta: data.imageEta,
         imageHypernet: data.imageHypernet,
         imageMaskBlur: data.imageMaskBlur,
-        tags: {
-          connectOrCreate: parseTags(data.imagePrompt).map((item) => ({
-            create: {
-              mean: '',
-              tagId: item,
-            },
-            where: {
-              tagId: item,
-            },
-          })),
-        },
-        ucTags: {
-          connectOrCreate: parseTags(data.imageUCPrompt).map((item) => ({
-            create: {
-              mean: '',
-              tagId: item,
-            },
-            where: {
-              tagId: item,
-            },
-          })),
-        },
+        tags: parseTags(data.imagePrompt),
+        ucTags: parseTags(data.imageUCPrompt),
       }
     }
 
     if (!uploadEach) {
-      await prisma.image.create({
+      const root = await prisma.image.create({
         data: {
           ...formatData(list[0], imageList[0]),
           title,
           content,
           images: {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             create: list
               .slice(1)
               .map((data, index) => ({ ...formatData(data, imageList[index + 1]) })),
@@ -110,6 +94,7 @@ export default handler().post(
         data: [
           ...list.map((item, index) => ({
             ...formatData(item, imageList[index]),
+            author: undefined,
             authorId: req.user.id,
           })),
         ],
