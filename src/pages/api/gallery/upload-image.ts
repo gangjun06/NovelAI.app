@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { getMiddlewares, handler } from '~/lib/api'
 import { getImagesDirectURL } from '~/lib/cloudflare'
 import prisma from '~/lib/prisma'
-import GalleryPage from '~/pages/gallery'
+import GalleryPage from '~/pages'
 import { GalleryUploadImagePostRes, galleryUploadImagePostValidator } from '~/types/gallery'
 
 export default handler().post(

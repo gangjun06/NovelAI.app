@@ -36,15 +36,20 @@ export const galleryUploadPostData = z.object({
   imageSteps: z.number(),
   imageScale: z.number(),
   imageStrength: z.number().optional(),
-  imageNoise: z.number().positive().optional(),
-  imageSeed: z.number().int().positive(),
-  imageSampler: z.string(),
-  imageWidth: z.number().int().positive(),
-  imageHeight: z.number().int().positive(),
-  imageClipSkip: z.number().int().positive().optional(),
+  imageNoise: z.number().optional(),
+  imageSeed: z.number().int(),
+  imageSampler: z.string().max(100),
+  imageWidth: z.number().int(),
+  imageHeight: z.number().int(),
+  imageClipSkip: z.number().optional(),
   imageModelHash: z.string().max(30).optional(),
   imageSource: z.string().max(100).optional(),
-  // other:       z.object(})
+  imageHypernet: z.string().max(100).optional(),
+  imageEta: z.number().optional(),
+  imageMaskBlur: z.number().optional(),
+  imageBatchSize: z.number().optional(),
+  imageBatchPos: z.number().optional(),
+  other: z.object({}).optional(),
 })
 export const galleryUploadPostValidator = z
   .object({

@@ -86,7 +86,7 @@ model Image {
   imageWidth     Int
   imageHeight    Int
   imageSteps     Int?
-  imageScale     Int?
+  imageScale     Float?
   imageStrength  Float?
   imageNoise     Float?
   imageSeed      Int?
@@ -94,7 +94,13 @@ model Image {
   imageClipSkip  Int?
   imageModelHash String?
   imageSource    String?
-  other          Json?
+  imageHypernet  String?
+  imageEta       Float?
+  imageMaskBlur  Float?
+  imageBatchSize Float?
+  imageBatchPos  Float?
+
+  other Json?
 
   tags   Tag[] @relation("GeneralTags")
   ucTags Tag[] @relation("UCTags")

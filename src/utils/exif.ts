@@ -66,6 +66,7 @@ export const fileGetterWIthExif = async (
               })
 
               const imageData = await Exifr.parse(dataURL, {})
+              console.log(imageData)
 
               if (!imageData) return reject(new ParseExifError('nodata'))
 
@@ -108,13 +109,25 @@ export const fileGetterWIthExif = async (
                 } else if (item.startsWith('Sampler: ')) {
                   info.imageSampler = item.replace('Sampler: ', '')
                 } else if (item.startsWith('CFG scale: ')) {
-                  info.imageScale = parseInt(item.replace('CFG scale: ', ''))
+                  info.imageScale = parseFloat(item.replace('CFG scale: ', ''))
                 } else if (item.startsWith('Seed: ')) {
                   info.imageSeed = parseInt(item.replace('Seed: ', ''))
                 } else if (item.startsWith('Model hash: ')) {
                   info.imageModelHash = item.replace('Model hash: ', '')
                 } else if (item.startsWith('Clip skip: ')) {
                   info.imageClipSkip = parseInt(item.replace('Clip skip: ', ''))
+                } else if (item.startsWith('Denoising strength: ')) {
+                  info.imageStrength = parseFloat(item.replace('Denoising strength: ', ''))
+                } else if (item.startsWith('Eta: ')) {
+                  info.imageEta = parseFloat(item.replace('Eta: ', ''))
+                } else if (item.startsWith('Mask blur: ')) {
+                  info.imageMaskBlur = parseFloat(item.replace('Mask blur: ', ''))
+                } else if (item.startsWith('Batch size: ')) {
+                  info.imageBatchSize = parseFloat(item.replace('Batch size:', ''))
+                } else if (item.startsWith('Batch pos: ')) {
+                  info.imageBatchPos = parseFloat(item.replace('Batch pos: ', ''))
+                } else if (item.startsWith('Hypernet: ')) {
+                  info.imageBatchPos = parseFloat(item.replace('Hypernet: ', ''))
                 }
               }
 

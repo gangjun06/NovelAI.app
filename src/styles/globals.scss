@@ -66,8 +66,8 @@ body,
   min-height: 100%;
 }
 
-a {
-  @apply text-primary-800 dark:text-primary-500;
+a[class=""] {
+   @apply text-primary-800 dark:text-primary-500;
 }
 
 

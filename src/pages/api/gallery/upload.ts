@@ -51,6 +51,11 @@ export default handler().post(
         imageClipSkip: data.imageClipSkip,
         imageModelHash: data.imageModelHash,
         imageSource: data.imageSource,
+        imageBatchPos: data.imageBatchPos,
+        imageBatchSize: data.imageBatchSize,
+        imageEta: data.imageEta,
+        imageHypernet: data.imageHypernet,
+        imageMaskBlur: data.imageMaskBlur,
       }
     }
 
