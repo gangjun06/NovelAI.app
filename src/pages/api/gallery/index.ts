@@ -1,8 +1,6 @@
-import { Swiper, SwiperSlide } from 'swiper/react'
-
 import { getMiddlewares, handler } from '~/lib/api'
 import prisma from '~/lib/prisma'
-import { GalleryGetRes, galleryGetValidator, galleryUploadPostValidator } from '~/types/gallery'
+import { galleryGetValidator } from '~/types/gallery'
 
 export default handler().get(
   ...getMiddlewares({ auth: null, query: galleryGetValidator }),

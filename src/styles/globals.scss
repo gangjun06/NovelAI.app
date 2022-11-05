@@ -168,3 +168,36 @@ input[type=number] {
   @apply opacity-100;
  }
 }
+
+.swiper-slide {
+  max-height: 60rem;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  justify-content: center;
+  font-size: 1.5rem;
+  height: auto !important;
+}
+.swiper-slide img {
+  user-select: none;
+}
+
+.thumb-swiper .swiper-slide {
+  max-height: 10rem;
+}
+
+.thumb-swiper {
+  height: 20%;
+  box-sizing: border-box;
+  padding: 10px 0;
+}
+
+.thumb-swiper .swiper-slide {
+  width: 20%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.thumb-swiper .swiper-slide-thumb-active {
+  opacity: 1;
+}

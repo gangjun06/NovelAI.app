@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import React from 'react'
 import { Toaster } from 'react-hot-toast'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
@@ -10,8 +11,10 @@ import 'swiper/css'
 
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
-import React from 'react'
-// import 'swiper/css/scrollbar';
+import 'swiper/css/scrollbar'
+import 'swiper/css/effect-fade'
+import 'swiper/css/free-mode'
+import 'swiper/css/thumbs'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()

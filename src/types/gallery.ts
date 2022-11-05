@@ -3,6 +3,10 @@ import { z } from 'zod'
 
 import { customErrorMap } from '~/lib/form'
 
+export const galleryDetailGetValidator = z.object({
+  id: z.string().cuid().optional(),
+})
+
 export const galleryGetValidator = z.object({
   cursor: z.string().cuid().optional(),
   limit: z.number().min(10).max(50).default(50),
