@@ -24,6 +24,28 @@ interface Props {
   showTitle?: boolean
 }
 
+const AuthGuard = ({ children }: { children: JSX.Element }) => {
+  const { status } = useSession()
+  if (status === 'loading') return <div className="text-title-color">Loading...</div>
+  if (status === 'authenticated') return <>{children}</>
+  if (status === 'unauthenticated')
+    return (
+      <div className="text-center mt-48 text-title-color">
+        <div className="text-5xl font-bold mb-6">로그인이 필요합니다</div>
+        <Button
+          onClick={() => {
+            setRedirect()
+            Router.push('/auth/signin')
+          }}
+          variant="primary"
+        >
+          로그인
+        </Button>
+      </div>
+    )
+  return children
+}
+
 export const MainTemplate = ({
   title,
   description,
@@ -36,34 +58,9 @@ export const MainTemplate = ({
 }: Props) => {
   const { status } = useSession()
 
-  const content = useMemo(() => {
-    if (!container) return children
-    const ContentInner = () => {
-      if (!requireAuth) return <>{children}</>
-      switch (status) {
-        case 'loading':
-          return <div className="text-title-color">Loading...</div>
-        case 'authenticated':
-          return <>{children}</>
-        case 'unauthenticated':
-          return (
-            <div className="text-center mt-48 text-title-color">
-              <div className="text-5xl font-bold mb-6">로그인이 필요합니다</div>
-              <Button
-                onClick={() => {
-                  setRedirect()
-                  Router.push('/auth/signin')
-                }}
-                variant="primary"
-              >
-                로그인
-              </Button>
-            </div>
-          )
-      }
-    }
-    return (
-      <div className={classNames('container mx-auto pt-4 pb-8 px-4 h-full', tiny && 'max-w-4xl')}>
+  const contentHeader = useMemo(
+    () => (
+      <div className={classNames('container mx-auto pt-4 px-4', tiny && 'max-w-4xl')}>
         {pageBack && <PageBack label={pageBack.label} to={pageBack.to} />}
         {showTitle && (
           <div
@@ -75,17 +72,37 @@ export const MainTemplate = ({
             {title}
           </div>
         )}
-        <ContentInner />
       </div>
+    ),
+    [pageBack, requireAuth, showTitle, status, tiny, title],
+  )
+
+  const content = useMemo(() => {
+    if (!container)
+      return (
+        <>
+          {contentHeader}
+          {children}
+        </>
+      )
+    return (
+      <>
+        {contentHeader}
+        <div className={classNames('container mx-auto pb-8 px-4 h-full', tiny && 'max-w-4xl')}>
+          {children}
+        </div>
+      </>
     )
-  }, [container, children, tiny, pageBack, showTitle, requireAuth, status, title])
+  }, [container, contentHeader, children, tiny])
 
   return (
     <>
       <NextSeo title={`${title} | NovelAI.APP`} description={description} />
       <MainNav />
 
-      <div className={'h-full pt-[70px]'}>{content}</div>
+      <div className={'h-full pt-[70px]'}>
+        {requireAuth ? <AuthGuard>{content}</AuthGuard> : content}
+      </div>
       {/* <MainFooter /> */}
     </>
   )
