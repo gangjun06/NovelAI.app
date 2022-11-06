@@ -1,10 +1,10 @@
-import { Image, Prisma, Software } from '@prisma/client'
+import { Image, Software } from '@prisma/client'
 import { z } from 'zod'
 
 import { customErrorMap } from '~/lib/form'
 
 export const galleryDetailGetValidator = z.object({
-  id: z.string().cuid().optional(),
+  id: z.string().cuid(),
 })
 
 export const galleryGetValidator = z.object({

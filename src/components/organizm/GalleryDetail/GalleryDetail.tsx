@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Image as ImageType } from '@prisma/client'
+import classNames from 'classnames'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -53,7 +54,12 @@ export const GalleryDetail = ({
         </Dialog.Title>
       )}
 
-      <div className="px-6 py-5 text-base-color overflow-y-auto custom-scroll flex-1">
+      <div
+        className={classNames(
+          forDialog && 'px-6 py-5',
+          'text-base-color overflow-y-auto custom-scroll flex-1',
+        )}
+      >
         <div className="relative">
           <Swiper
             modules={[FreeMode, Navigation, A11y, Thumbs]}
