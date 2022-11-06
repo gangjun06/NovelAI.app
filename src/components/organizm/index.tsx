@@ -1,4 +1,6 @@
 export * from './ErrorPage/ErrorPage'
+export * from './GalleryDetail/GalleryDetailModal'
+export * from './GalleryList/GalleryList'
 export * from './MainFooter/MainFooter'
 export * from './MainNav/MainNav'
 export * from './SettingModal/SettingModal'
