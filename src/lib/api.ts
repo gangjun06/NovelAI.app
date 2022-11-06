@@ -64,7 +64,13 @@ export const parseQuery = <T extends parserSchemaType, U extends parserSchemaTyp
     const query = Object.entries(req.query).reduce(
       (prev, [k, v]) => ({
         ...prev,
-        [k]: isNaN(v as unknown as any) ? v : typeof v === 'string' ? parseInt(v as string) : v,
+        [k.replace(/\[\]$/, '')]: isNaN(v as unknown as any)
+          ? k.endsWith('[]') && typeof v === 'string'
+            ? [v]
+            : v
+          : typeof v === 'string'
+          ? parseInt(v as string)
+          : v,
       }),
       {},
     )

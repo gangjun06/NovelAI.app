@@ -6,13 +6,13 @@ import { galleryDetailURL, galleryURL } from '~/assets/urls'
 
 const LIMIT = 50
 
-export const useGalleryList = (search: string[]) => {
+export const useGalleryList = (query: string[]) => {
   return useInfiniteQuery({
-    queryKey: ['gallery-images'],
+    queryKey: ['gallery-images', query],
     refetchOnWindowFocus: false,
     queryFn: async ({ pageParam }) => {
       const res = await axios.get(galleryURL, {
-        params: { cursor: pageParam, limit: LIMIT },
+        params: { cursor: pageParam, limit: LIMIT, query },
       })
 
       return res.data.images as (ImageType & { author: User; list?: ImageType[] })[]

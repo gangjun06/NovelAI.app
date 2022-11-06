@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { Button } from '~/components/atoms'
@@ -14,7 +14,7 @@ const Loader = () => (
 const GalleryPage = () => {
   const [searchQuery, setSearchQuery] = useState<string[]>([])
 
-  const { data: images, hasNextPage, fetchNextPage } = useGalleryList(searchQuery)
+  const { data: images, hasNextPage, fetchNextPage, isLoading } = useGalleryList(searchQuery)
 
   return (
     <>
@@ -25,6 +25,7 @@ const GalleryPage = () => {
             <MultiSelect
               className="w-full"
               onChange={(query) => setSearchQuery(query)}
+              maxValues={10}
               values={searchQuery}
             />
             <Button variant="primary">검색</Button>
@@ -46,6 +47,8 @@ const GalleryPage = () => {
                     return a
                   }, []) ?? []
                 }
+                loading={isLoading}
+                showUpload={searchQuery.length < 1}
                 onClickDetail={showDetail}
               />
             </InfiniteScroll>

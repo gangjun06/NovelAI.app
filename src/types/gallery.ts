@@ -10,6 +10,7 @@ export const galleryDetailGetValidator = z.object({
 export const galleryGetValidator = z.object({
   cursor: z.string().cuid().optional(),
   limit: z.number().min(10).max(50).default(50),
+  query: z.array(z.string().max(100)).max(10).optional(),
 })
 
 export interface GalleryGetRes {
