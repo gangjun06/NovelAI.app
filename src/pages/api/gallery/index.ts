@@ -5,7 +5,7 @@ import { galleryGetValidator } from '~/types/gallery'
 export default handler().get(
   ...getMiddlewares({ auth: null, query: galleryGetValidator }),
   async (req, res) => {
-    const { cursor, limit, query } = req.queryData
+    const { cursor, limit, query, authorId } = req.queryData
     const result = await prisma.image.findMany({
       ...(cursor
         ? {
@@ -28,6 +28,7 @@ export default handler().get(
             hasEvery: query.map((item) => item.replace(/_/g, ' ').toLowerCase()),
           },
         }),
+        authorId,
       },
       select: {
         id: true,

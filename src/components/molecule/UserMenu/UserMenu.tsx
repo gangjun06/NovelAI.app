@@ -5,13 +5,14 @@ import { Transition } from '~/components/atoms'
 import { Menu } from '~/components/molecule'
 
 interface Props {
+  id?: string
   name?: string | null
   image?: string | null
   email?: string | null
   openSetting?: () => void
 }
 
-export const UserMenu = ({ name, image, email, openSetting }: Props) => {
+export const UserMenu = ({ id, name, image, email, openSetting }: Props) => {
   return (
     <Menu>
       <Menu.Button>
@@ -23,6 +24,7 @@ export const UserMenu = ({ name, image, email, openSetting }: Props) => {
       </Menu.Button>
       <Transition type="size">
         <Menu.Dropdown>
+          <Menu.ItemLink href={`/profile/${id}`}>프로필</Menu.ItemLink>
           <Menu.Item onClick={openSetting}>설정</Menu.Item>
           <Menu.Item onClick={() => signOut()}>로그아웃</Menu.Item>
         </Menu.Dropdown>

@@ -78,7 +78,7 @@ export const MainTemplate = ({
         <ContentInner />
       </div>
     )
-  }, [container, pageBack, showTitle, children, requireAuth, status])
+  }, [container, children, tiny, pageBack, showTitle, requireAuth, status, title])
 
   return (
     <>
