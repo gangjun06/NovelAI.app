@@ -22,6 +22,7 @@ import { useDisclosure } from '~/hooks/useDisclosure'
 import { delay } from '~/utils'
 
 import Masonry from 'react-masonry-css'
+import { MultiSelect } from '~/components/atoms/MultiSelect/MultiSelect'
 
 const Loader = () => (
   <div className="w-full text-subtitle-color text-lg font-bold">데이터를 불러오고 있어요</div>
@@ -42,6 +43,7 @@ const LIMIT = 50
 
 const GalleryPage = () => {
   const [showDetailModal, handleShowDetailModal] = useDisclosure()
+  const [searchQuery, setSearchQuery] = useState<string[]>([])
   const setSelectedImageId = useSetAtom(selectedImageIdAtom)
 
   const {
@@ -92,7 +94,11 @@ const GalleryPage = () => {
           <div className="max-w-4xl mx-auto my-8 px-6">
             <div className="text-4xl text-title-color font-bold">AI 이미지 갤러리</div>
             <div className="mt-2 flex gap-x-2">
-              <Input className="w-full" placeholder="검색어를 입력해주세요..." />
+              <MultiSelect
+                className="w-full"
+                onChange={(query) => setSearchQuery(query)}
+                values={searchQuery}
+              />
               <Button variant="primary">검색</Button>
             </div>
           </div>

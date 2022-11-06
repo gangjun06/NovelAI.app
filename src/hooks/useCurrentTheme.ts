@@ -17,7 +17,7 @@ export const useCurrentTheme = () => {
   useEffect(() => {
     const html = document.getElementsByTagName('html')[0]
 
-    const observer = new MutationObserver(function (event) {
+    const observer = new MutationObserver(function (_event) {
       setTheme(
         themeSetting === 'system'
           ? document.getElementsByTagName('html')[0].classList.contains('dark')
