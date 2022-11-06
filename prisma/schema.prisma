@@ -110,7 +110,7 @@ model Image {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([createdAt])
+  @@index([createdAt(sort: Desc), tags, ucTags])
 }
 
 enum CollectionStatus {

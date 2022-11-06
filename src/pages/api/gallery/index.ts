@@ -17,6 +17,9 @@ export default handler().get(
           }
         : {}),
       take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         rootId: {
           equals: null,
@@ -29,6 +32,7 @@ export default handler().get(
         imageWidth: true,
         imageHeight: true,
         imageSoftware: true,
+        createdAt: true,
         images: {
           select: {
             id: true,

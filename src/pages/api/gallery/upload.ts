@@ -12,7 +12,6 @@ const TagRegex = new RegExp('[A-Za-z0-9 _]{2,40}', 'g')
 export default handler().post(
   ...getMiddlewares({ auth: 'USER', schema: galleryUploadPostValidator }),
   async (req, res) => {
-    console.log('A')
     const { title, content, uploadEach, list } = req.data
     if (!req.user) throw new Error('Server error')
 
