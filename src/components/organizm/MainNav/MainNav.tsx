@@ -8,6 +8,10 @@ import { Button, ButtonLink } from '~/components/atoms'
 import { UserMenu } from '~/components/molecule'
 
 import { SettingModal, showModalAtom } from '../SettingModal/SettingModal'
+import {
+  ProfileSettingModal,
+  showProfileModalAtom,
+} from '../ProfileSettingModal/ProfileSettingModal'
 
 const NavItem = ({ name, href, isActive }: { name: string; href: string; isActive: boolean }) => {
   return (
@@ -22,11 +26,13 @@ const NavItem = ({ name, href, isActive }: { name: string; href: string; isActiv
 export const MainNav = () => {
   const { pathname } = useRouter()
   const setShowSetting = useSetAtom(showModalAtom)
+  const setShowModalSetting = useSetAtom(showProfileModalAtom)
   const { data } = useSession()
 
   return (
     <>
       <SettingModal />
+      <ProfileSettingModal />
       <nav className="px-4 shadow fixed bg-white dark:bg-zinc-900 w-full z-10">
         <div className="sm:max-w-nav mx-auto flex justify-between items-center">
           <div className="flex gap-x-2 items-center overflow-x-scroll no-scroll py-4">
@@ -44,7 +50,11 @@ export const MainNav = () => {
           </div>
           <div className="flex items-center gap-x-2">
             {data ? (
-              <UserMenu {...data.user} openSetting={() => setShowSetting(true)} />
+              <UserMenu
+                {...data.user}
+                openSetting={() => setShowSetting(true)}
+                openProfileSetting={() => setShowModalSetting(true)}
+              />
             ) : (
               <>
                 <ButtonLink variant="light" className="my-4" href="/auth/signin">

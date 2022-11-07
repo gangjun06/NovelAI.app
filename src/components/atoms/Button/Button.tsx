@@ -11,7 +11,7 @@ interface DefaultProps extends StyleProps {
   children: string | ReactNode
 }
 
-const btnClassNames = (
+export const btnClassNames = (
   { compact, variant, forIcon }: StyleProps,
   { disabled, active }: { disabled?: boolean; active?: boolean },
   otherClasses?: string,

@@ -10,9 +10,10 @@ interface Props {
   image?: string | null
   email?: string | null
   openSetting?: () => void
+  openProfileSetting?: () => void
 }
 
-export const UserMenu = ({ id, name, image, email, openSetting }: Props) => {
+export const UserMenu = ({ id, name, image, email, openSetting, openProfileSetting }: Props) => {
   return (
     <Menu>
       <Menu.Button>
@@ -25,6 +26,7 @@ export const UserMenu = ({ id, name, image, email, openSetting }: Props) => {
       <Transition type="size">
         <Menu.Dropdown>
           <Menu.ItemLink href={`/profile/${id}`}>프로필</Menu.ItemLink>
+          <Menu.Item onClick={openProfileSetting}>프로필 설정</Menu.Item>
           <Menu.Item onClick={openSetting}>설정</Menu.Item>
           <Menu.Item onClick={() => signOut()}>로그아웃</Menu.Item>
         </Menu.Dropdown>
