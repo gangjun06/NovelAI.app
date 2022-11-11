@@ -12,6 +12,7 @@ export default handler().get(
       select: {
         id: true,
         name: true,
+        _count: { select: { images: true } },
       },
     })
     res.json({ list: collectionList })

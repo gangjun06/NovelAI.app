@@ -1,10 +1,13 @@
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { GetServerSideProps } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRightIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { NotFoundError } from '@prisma/client/runtime'
 
 import { GalleryDetailModalWrapper, GalleryList } from '~/components/organizm'
 import { MainTemplate } from '~/components/template'
+import { useMeCollectionList } from '~/hooks/useCollection'
 import { useGalleryList } from '~/hooks/useGallery'
 
 const Loader = () => (
@@ -13,6 +16,7 @@ const Loader = () => (
 
 export const ProfilePage = ({ data: { id, image, name } }: SSRProps) => {
   const { data: images, hasNextPage, fetchNextPage, isLoading } = useGalleryList([], id)
+  const { data: collections, isLoading: isLoadingCollections } = useMeCollectionList()
 
   return (
     <MainTemplate
@@ -25,9 +29,34 @@ export const ProfilePage = ({ data: { id, image, name } }: SSRProps) => {
         {image && (
           <Image src={image} alt="profile image" width={64} height={64} className="rounded-full" />
         )}
-        <div className="font-bold text-2xl">{name ?? '익명'}</div>
+        <div className="font-bold text-3xl tracking-wide">{name ?? '익명'}</div>
       </div>
+      {collections?.list.length && (
+        <div className="mb-4">
+          <div className="text-xl w-11/12 mx-auto font-semibold mb-2 text-subtitle-color">
+            컬렉션 목록
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 w-11/12 mx-auto gap-x-4">
+            {collections.list.map(({ id, name, ...other }) => (
+              <Link href={`/collection/${id}`} passHref key={id}>
+                <a className="flex card px-4 py-3 items-center justify-between" key={id}>
+                  <div className="flex flex-col">
+                    <div className="text-subtitle-color">{name}</div>
+                    <div className="text-description-color text-sm">{`${
+                      (other as any)._count?.images ?? '0'
+                    }개의 이미지`}</div>
+                  </div>
+                  <ChevronRightIcon className="w-5 h-5" />
+                </a>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
       <div>
+        <div className="text-xl w-11/12 mx-auto font-semibold mb-2 text-subtitle-color">
+          업로드한 이미지
+        </div>
         <GalleryDetailModalWrapper baseUrl={`/profile/${id}`}>
           {({ showDetail }) => (
             <InfiniteScroll

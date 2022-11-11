@@ -1,4 +1,4 @@
-import { Image as ImageType, User } from '@prisma/client'
+import { Collection, Image as ImageType, User } from '@prisma/client'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
@@ -33,7 +33,7 @@ export const useGalleryDetail = (imageId?: string | null) => {
       if (!id) return null
       const res = await axios.get(galleryDetailURL(id as string))
 
-      return res.data as ImageType & { images: ImageType[] }
+      return res.data as ImageType & { images: ImageType[]; collections: Pick<Collection, 'id'>[] }
     },
     suspense: true,
   })

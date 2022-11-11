@@ -14,8 +14,14 @@ interface Props {
 export const CollectionCreateModalContent = ({ show, onClose }: Props) => {
   return (
     <Modal.Root show={show} onClose={onClose}>
-      <Form schema={collectionPostValidator} url={collectionsURL}>
-        {({ registerForm, control, watch }) => (
+      <Form
+        schema={collectionPostValidator}
+        url={collectionsURL}
+        onSuccess={() => {
+          onClose()
+        }}
+      >
+        {({ registerForm, control, watch, formState: { isSubmitting } }) => (
           <Modal.Panel
             onClose={onClose}
             title="컬렉션 만들기"
@@ -24,7 +30,7 @@ export const CollectionCreateModalContent = ({ show, onClose }: Props) => {
                 <Button type="button" onClick={onClose}>
                   취소
                 </Button>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" loading={isSubmitting}>
                   만들기
                 </Button>
               </>

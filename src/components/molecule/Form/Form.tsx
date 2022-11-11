@@ -140,8 +140,9 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
   }
 
   const onSubmitRequest = async (data: z.infer<TSchema>) => {
-    let toastId
-    if (typeof onSuccess !== 'function') toastId = toast.loading('요청을 전송 중입니다')
+    // let toastId
+    // if (typeof onSuccess !== 'function') toastId = toast.loading('요청을 전송 중입니다')
+    const toastId = toast.loading('요청을 전송 중입니다')
     try {
       const res = await fetch(url!, {
         headers: {
@@ -153,9 +154,7 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
       if (res.status > 210) throw new Error('Error')
 
       if (typeof onSuccess === 'function') onSuccess()
-      else {
-        toast.success('성공적으로 전송되었습니다.', { id: toastId })
-      }
+      toast.success('성공적으로 전송되었습니다.', { id: toastId })
       methods.reset({ ...data })
       mutate({ ...data })
     } catch (e) {

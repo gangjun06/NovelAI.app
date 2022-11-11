@@ -1,9 +1,11 @@
 import { GetServerSideProps } from 'next'
+import { unstable_getServerSession } from 'next-auth'
 import { NotFoundError } from '@prisma/client/runtime'
 
 import { GalleryDetail } from '~/components/organizm/GalleryDetail/GalleryDetail'
 import { MainTemplate } from '~/components/template'
 
+import { authOptions } from '../api/auth/[...nextauth]'
 import { getGalleryDetail } from '../api/gallery/[id]'
 
 const GalleryImageDetail = ({ data }: SSRProps) => {
@@ -35,8 +37,10 @@ export const getServerSideProps: GetServerSideProps<SSRProps> = async (context) 
       notFound: true,
     }
 
+  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+
   try {
-    const result = await getGalleryDetail(id)
+    const result = await getGalleryDetail(id, session?.user.id)
 
     return {
       props: { data: result },

@@ -1,12 +1,15 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
+import toast from 'react-hot-toast'
 import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
-import { PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Image as ImageType } from '@prisma/client'
+import { CheckIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Collection, Image as ImageType } from '@prisma/client'
+import axios from 'axios'
 import classNames from 'classnames'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
+import { galleryCollectionManageURL } from '~/assets/urls'
 import { Button } from '~/components/atoms'
 import { Menu } from '~/components/molecule'
 import { useMeCollectionList } from '~/hooks/useCollection'
@@ -22,6 +25,7 @@ export const GalleryDetail = ({
   data?:
     | (ImageType & {
         images: ImageType[]
+        collections: Pick<Collection, 'id'>[]
       })
     | null
   onClose?: () => void
@@ -31,10 +35,40 @@ export const GalleryDetail = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const { data: collections } = useMeCollectionList()
   const [showCollectionCreate, handleShowCollectionCreate] = useDisclosure()
+  const [updatedCollectaion, setUpdatedCollection] = useState<{ [key: string]: boolean }>({})
 
   const onSlideChanage = useCallback((index: number) => {
     setCurrentIndex(index)
   }, [])
+
+  const handleManageCollection = useCallback(
+    async (id: string) => {
+      if (!data?.id) return
+      const remove =
+        typeof updatedCollectaion[id] === 'undefined'
+          ? !!data?.collections.find((collection) => collection.id === id)
+          : updatedCollectaion[id]
+
+      const toastId = toast.loading(
+        remove ? '컬렉션에서 제거하는 중이에요' : '컬렉션에 추가하는 중이에요',
+      )
+      try {
+        await axios.post(galleryCollectionManageURL(data?.id ?? ''), {
+          collectionId: id,
+          remove,
+        })
+        setUpdatedCollection((prev) => ({ ...prev, [id]: !remove }))
+        toast.success(remove ? '컬렉션에서 제거했어요' : '이미지를 컬렉션에 추가했어요', {
+          id: toastId,
+        })
+      } catch (_e) {
+        toast.error(`컬렉션에${remove ? '서 제거하는' : ' 추가하는'} 중 문제가 발생하였어요`, {
+          id: toastId,
+        })
+      }
+    },
+    [data?.collections, data?.id, updatedCollectaion],
+  )
 
   const curData = useMemo(() => {
     if (currentIndex === 0) {
@@ -144,7 +178,21 @@ export const GalleryDetail = ({
                 </Menu.Button>
                 <Menu.Dropdown>
                   {collections.list.map(({ id, name }) => (
-                    <Menu.Item key={id}>{name}</Menu.Item>
+                    <Menu.Item
+                      key={id}
+                      icon={
+                        typeof updatedCollectaion[id] === 'undefined'
+                          ? data?.collections.find((collection) => collection.id === id)
+                            ? CheckIcon
+                            : undefined
+                          : updatedCollectaion[id]
+                          ? CheckIcon
+                          : undefined
+                      }
+                      onClick={() => handleManageCollection(id)}
+                    >
+                      {name}
+                    </Menu.Item>
                   ))}
                   <Menu.Item icon={PlusCircleIcon} onClick={handleShowCollectionCreate.open}>
                     컬렉션 만들기

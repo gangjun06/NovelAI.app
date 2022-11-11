@@ -2,12 +2,13 @@ import { getMiddlewares, handler } from '~/lib/api'
 import prisma from '~/lib/prisma'
 import { galleryDetailGetValidator } from '~/types/gallery'
 
-export const getGalleryDetail = async (id: string) => {
+export const getGalleryDetail = async (id: string, userId?: string) => {
   const result = await prisma.image.findUniqueOrThrow({
     where: {
       id,
     },
     select: {
+      id: true,
       title: true,
       content: true,
       imageSoftware: true,
@@ -39,6 +40,18 @@ export const getGalleryDetail = async (id: string) => {
       },
       images: true,
       createdAt: true,
+      ...(userId
+        ? {
+            collections: {
+              where: {
+                authorId: userId,
+              },
+              select: {
+                id: true,
+              },
+            },
+          }
+        : {}),
     },
   })
   return result
@@ -48,7 +61,7 @@ export default handler().get(
   ...getMiddlewares({ auth: null, query: galleryDetailGetValidator }),
   async (req, res) => {
     const { id } = req.queryData
-    const result = await getGalleryDetail(id)
+    const result = await getGalleryDetail(id, req.user.id)
 
     res.json({ ...result })
     return

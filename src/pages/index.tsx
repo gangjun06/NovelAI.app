@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { Button } from '~/components/atoms'
@@ -18,7 +18,11 @@ const GalleryPage = () => {
 
   return (
     <>
-      <MainTemplate title="갤러리" description="인공지능으로 생성된 이미지들을 공유하세요">
+      <MainTemplate
+        title="갤러리"
+        description="인공지능으로 생성된 이미지들을 공유하세요"
+        showTitle={false}
+      >
         <div className="max-w-4xl mx-auto my-8 px-6">
           <div className="text-4xl text-title-color font-bold">AI 이미지 갤러리</div>
           <div className="mt-2 flex gap-x-2">

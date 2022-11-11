@@ -79,4 +79,9 @@ export const galleryUploadPostValidator = z
     }
   })
 
+export const galleryCollectionPostValidator = z.object({
+  collectionId: z.string().cuid(),
+  remove: z.boolean().default(false),
+})
+
 z.setErrorMap(customErrorMap)
