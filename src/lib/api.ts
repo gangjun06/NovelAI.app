@@ -74,7 +74,6 @@ export const parseQuery = <T extends parserSchemaType, U extends parserSchemaTyp
       }),
       {},
     )
-    console.log(query)
 
     const parsed = await schema.safeParseAsync(query)
     if (!parsed.success) {

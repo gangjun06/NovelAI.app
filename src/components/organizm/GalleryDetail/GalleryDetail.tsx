@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
-import { CheckBadgeIcon, CheckIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Image as ImageType } from '@prisma/client'
 import classNames from 'classnames'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
@@ -11,6 +11,7 @@ import { Button } from '~/components/atoms'
 import { Menu } from '~/components/molecule'
 import { useMeCollectionList } from '~/hooks/useCollection'
 import { useDisclosure } from '~/hooks/useDisclosure'
+
 import { CollectionCreateModal } from '../CollectionCreateModal/CollectionCreateModal'
 
 export const GalleryDetail = ({
@@ -142,8 +143,8 @@ export const GalleryDetail = ({
                   <Button>컬렉션에 추가</Button>
                 </Menu.Button>
                 <Menu.Dropdown>
-                  {collections.list.map(({ id, title }) => (
-                    <Menu.Item key={id}>{title}</Menu.Item>
+                  {collections.list.map(({ id, name }) => (
+                    <Menu.Item key={id}>{name}</Menu.Item>
                   ))}
                   <Menu.Item icon={PlusCircleIcon} onClick={handleShowCollectionCreate.open}>
                     컬렉션 만들기

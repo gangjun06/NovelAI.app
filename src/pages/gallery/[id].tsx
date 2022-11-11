@@ -37,7 +37,6 @@ export const getServerSideProps: GetServerSideProps<SSRProps> = async (context) 
 
   try {
     const result = await getGalleryDetail(id)
-    console.log(result)
 
     return {
       props: { data: result },

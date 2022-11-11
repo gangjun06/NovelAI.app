@@ -49,9 +49,9 @@ model User {
   role          UserRole     @default(USER)
   accounts      Account[]
   sessions      Session[]
-  Image         Image[]
-  Collection    Collection[]
-  Post          Post[]
+  images        Image[]
+  collections   Collection[]
+  posts         Post[]
 }
 
 enum Software {
@@ -113,17 +113,17 @@ model Image {
   @@index([createdAt(sort: Desc), tags, ucTags])
 }
 
-enum CollectionStatus {
+enum CollectionVisibility {
   PUBLIC
   UNLISTED
   PRIVATE
 }
 
 model Collection {
-  id          String           @id @default(cuid())
-  title       String
+  id          String               @id @default(cuid())
+  name        String
   description String
-  status      CollectionStatus
+  status      CollectionVisibility
   images      Image[]
 
   authorId String

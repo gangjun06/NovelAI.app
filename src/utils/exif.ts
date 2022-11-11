@@ -66,7 +66,6 @@ export const fileGetterWIthExif = async (
               })
 
               const imageData = await Exifr.parse(dataURL, {})
-              console.log(imageData)
 
               if (!imageData) return reject(new ParseExifError('nodata'))
 
@@ -130,8 +129,6 @@ export const fileGetterWIthExif = async (
                   info.imageHypernet = item.replace('Hypernet: ', '')
                 }
               }
-
-              console.log(info)
 
               file!.info = info
               return resolve(file)

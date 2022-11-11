@@ -4,7 +4,6 @@ import { z } from 'zod'
 
 import { BadRequestError, getMiddlewares, handler, UnauthorizedError } from '~/lib/api'
 import prisma from '~/lib/prisma'
-import AuthError from '~/pages/auth/error'
 import { galleryUploadPostData, galleryUploadPostValidator } from '~/types/gallery'
 
 const TagRegex = new RegExp('[A-Za-z0-9 _]{2,40}', 'g')
@@ -24,7 +23,6 @@ export default handler().post(
         else resolve(decoded)
       })
     })
-    console.log(tokenData)
 
     const imageList = (tokenData as any).imageList as string[]
 

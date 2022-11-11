@@ -11,7 +11,7 @@ export default handler().get(
       },
       select: {
         id: true,
-        title: true,
+        name: true,
       },
     })
     res.json({ list: collectionList })

@@ -83,7 +83,6 @@ const NewImage = () => {
           onSubmit(data)
         }}
         onInvalid={(errors) => {
-          console.log(errors)
           toast.error('입력한 내용을 다시 확인해주세요')
         }}
         initialValues={{ list: [] }}
@@ -159,7 +158,6 @@ const Content = ({
   }
 
   const onImageRemoveAll = useCallback(() => {
-    console.log('Remove all')
     setImages([])
     replace([])
   }, [replace, setImages])

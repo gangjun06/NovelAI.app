@@ -147,7 +147,7 @@ export const Form = <TSchema extends z.ZodType<any, any, any>>({
         headers: {
           'Content-Type': 'application/json',
         },
-        ...(data ? { body: superjson.stringify(data) } : {}),
+        ...(data ? { body: JSON.stringify(data) } : {}),
         method,
       })
       if (res.status > 210) throw new Error('Error')
