@@ -1,4 +1,7 @@
+export const meCollectionsURL = `/api/@me/collections`
 export const profileImageURL = `/api/@me/profile`
+
+export const collectionsURL = `/api/collections`
 
 export const galleryURL = `/api/gallery`
 export const galleryDetailURL = (id: string) => `/api/gallery/${id}`

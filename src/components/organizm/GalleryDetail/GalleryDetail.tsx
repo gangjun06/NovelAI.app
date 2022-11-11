@@ -1,13 +1,17 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { Dialog } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { CheckBadgeIcon, CheckIcon, PlusCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Image as ImageType } from '@prisma/client'
 import classNames from 'classnames'
 import { A11y, FreeMode, Navigation, Thumbs } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { Button } from '~/components/atoms'
+import { Menu } from '~/components/molecule'
+import { useMeCollectionList } from '~/hooks/useCollection'
+import { useDisclosure } from '~/hooks/useDisclosure'
+import { CollectionCreateModal } from '../CollectionCreateModal/CollectionCreateModal'
 
 export const GalleryDetail = ({
   data,
@@ -24,6 +28,8 @@ export const GalleryDetail = ({
 }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(undefined)
   const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const { data: collections } = useMeCollectionList()
+  const [showCollectionCreate, handleShowCollectionCreate] = useDisclosure()
 
   const onSlideChanage = useCallback((index: number) => {
     setCurrentIndex(index)
@@ -40,6 +46,10 @@ export const GalleryDetail = ({
 
   return (
     <>
+      <CollectionCreateModal
+        show={showCollectionCreate}
+        onClose={handleShowCollectionCreate.close}
+      />
       {forDialog && (
         <Dialog.Title
           as="h3"
@@ -126,6 +136,21 @@ export const GalleryDetail = ({
         </div>
         {curData && (
           <div className="w-full mt-8 flex flex-col gap-y-4">
+            {collections && (
+              <Menu>
+                <Menu.Button>
+                  <Button>컬렉션에 추가</Button>
+                </Menu.Button>
+                <Menu.Dropdown>
+                  {collections.list.map(({ id, title }) => (
+                    <Menu.Item key={id}>{title}</Menu.Item>
+                  ))}
+                  <Menu.Item icon={PlusCircleIcon} onClick={handleShowCollectionCreate.open}>
+                    컬렉션 만들기
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            )}
             {curData.title ||
               (curData.content && (
                 <div>
