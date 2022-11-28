@@ -78,7 +78,7 @@ export const TagToolContent = () => {
           !item.category.includes(debouncedText) &&
           !item.subCategory.includes(debouncedText) &&
           !item.name.includes(debouncedText) &&
-          !item.tags.includes(debouncedText)
+          !(item.tags.findIndex((item) => item.includes(debouncedText)) > -1)
         )
           return
         result.push(item)
